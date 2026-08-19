@@ -771,29 +771,17 @@ select.inp{
    23. 上にもどる
    ========================================================= */
 .totop{
-  position:fixed;right:clamp(14px,2.4vw,28px);bottom:clamp(14px,2.4vw,28px);z-index:70;
-  width:52px;height:52px;border-radius:50%;display:grid;place-items:center;
-  border:1px solid rgba(201,162,83,.5);color:var(--gold-100);
-  background:linear-gradient(160deg,rgba(61,33,89,.94),rgba(9,6,20,.96));
-  backdrop-filter:blur(10px);box-shadow:var(--sh-soft);
-  opacity:0;visibility:hidden;transform:translateY(12px);
-  transition:opacity .45s var(--ease),transform .45s var(--ease-out),visibility .45s,border-color .35s;
+  position:fixed;right:clamp(14px,2vw,24px);bottom:clamp(14px,2vw,24px);z-index:70;
+  width:38px;height:38px;border-radius:50%;display:grid;place-items:center;
+  border:1px solid rgba(201,162,83,.45);color:var(--gold-100);
+  background:linear-gradient(160deg,rgba(61,33,89,.92),rgba(9,6,20,.95));
+  backdrop-filter:blur(10px);box-shadow:0 8px 22px -12px rgba(0,0,0,.9);
+  opacity:0;visibility:hidden;transform:translateY(10px);
+  transition:opacity .4s var(--ease),transform .4s var(--ease-out),visibility .4s,border-color .3s;
 }
 .totop.on{opacity:1;visibility:visible;transform:none;}
-.totop:hover{border-color:var(--gold-200);box-shadow:var(--sh-gold);}
-.totop svg{width:16px;height:16px;}
-.totop span{position:absolute;bottom:5px;font-size:.44rem;letter-spacing:.1em;color:var(--gold-400);}
-#readerTop{z-index:95;}
-
-/* セクション間のインライン「上にもどる」 */
-.uptop{
-  display:flex;align-items:center;justify-content:center;gap:9px;margin:34px auto 0;
-  padding:.65em 1.6em;border-radius:100px;border:1px solid var(--veil-2);
-  font-size:.76rem;letter-spacing:.14em;color:var(--text-dim);
-  background:rgba(9,6,20,.5);transition:.4s var(--ease);
-}
-.uptop:hover{border-color:rgba(201,162,83,.5);color:var(--gold-100);transform:translateY(-2px);}
-.uptop svg{width:11px;height:11px;}
+.totop:hover{border-color:var(--gold-200);box-shadow:0 0 20px -6px rgba(201,162,83,.8);}
+.totop svg{width:14px;height:14px;}
 
 /* =========================================================
    24. 図表の強化

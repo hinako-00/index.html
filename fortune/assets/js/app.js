@@ -714,9 +714,6 @@
     if (ch.type === 'relation') return relationSVG(ch.a, ch.b, ch.x);
     return '';
   }
-  const UPTOP = '<button class="uptop" data-uptop>' +
-    '<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M6 10V2M2 6l4-4 4 4"/></svg>' +
-    '上にもどる</button>';
   function charts(s){
     const list = s.charts || (s.chart ? [s.chart] : []);
     return list.map(chartHTML).join('');
@@ -737,11 +734,10 @@
       h += '<div class="pillars">' + doc.head.pillars.map(([g,k,v,s]) =>
         '<div class="pil"><div class="g">'+g+'︎</div><p class="k">'+k+'</p><p class="v">'+v+'</p><p class="s">'+s+'</p></div>').join('') + '</div>';
 
-    h += doc.free.map((x,i) => secHTML(x) + (i === doc.free.length - 1 ? '' : '')).join('');
-    h += UPTOP;
+    h += doc.free.map(secHTML).join('');
 
     if (open){
-      h += doc.paid.map((x,i) => secHTML(x) + ((i+1) % 2 === 0 && i < doc.paid.length-1 ? UPTOP : '')).join('');
+      h += doc.paid.map(secHTML).join('');
       if (menu.free) h += '<div class="freebar">✦　<b>この鑑定は全文無料</b>です。登録も課金もありません。' +
         '気に入っていただけたら、他の鑑定もどうぞ。</div>';
       h += '<div class="res-end">' + nextUpHTML(menu) +
@@ -753,7 +749,7 @@
       const first = doc.paid[0];
       h += '<div class="fadeout"><div class="clip">'+secHTML(first)+'</div><div class="veil"></div></div>';
       h += gateHTML(doc);
-      h += '<div class="res-end">' + nextUpHTML(menu) + UPTOP + '</div>';
+      h += '<div class="res-end">' + nextUpHTML(menu) + '</div>';
     }
     h += '</div></div>';
     rBody.innerHTML = h;
@@ -803,20 +799,16 @@
       if (CUR.menu.e === 'tarot') renderPick(CUR.menu); else renderAsk(CUR.menu);
     };
     const cl = $('#resClose'); if (cl) cl.onclick = closeReader;
-    $$('[data-uptop]', rBody).forEach(b => b.addEventListener('click', () => {
-      rBody.scrollTo({ top:0, behavior: REDUCED ? 'auto' : 'smooth' });
-    }));
   }
 
-  /* ---------- 上にもどるボタン ---------- */
+  /* ---------- 上にもどる（ホームのみ） ---------- */
   (function toTop(){
-    const pageBtn = $('#pageTop'), readBtn = $('#readerTop');
-    const onPage = () => pageBtn.classList.toggle('on', scrollY > innerHeight * .6);
-    onPage(); addEventListener('scroll', onPage, { passive:true });
-    pageBtn.addEventListener('click', () => scrollTo({ top:0, behavior: REDUCED ? 'auto' : 'smooth' }));
-    const onRead = () => readBtn.classList.toggle('on', rBody.scrollTop > 480);
-    rBody.addEventListener('scroll', onRead, { passive:true });
-    readBtn.addEventListener('click', () => rBody.scrollTo({ top:0, behavior: REDUCED ? 'auto' : 'smooth' }));
+    const btn = $('#pageTop');
+    // 鑑定オーバーレイを開いているあいだは隠す
+    const on = () => btn.classList.toggle('on', scrollY > innerHeight * .6 && !reader.classList.contains('on'));
+    on(); addEventListener('scroll', on, { passive:true });
+    new MutationObserver(on).observe(reader, { attributes:true, attributeFilter:['class'] });
+    btn.addEventListener('click', () => scrollTo({ top:0, behavior: REDUCED ? 'auto' : 'smooth' }));
   })();
 
   function doUnlock(kind){
