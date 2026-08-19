@@ -92,12 +92,73 @@
     return out;
   }
 
+
+  /* ---------- 札を引く ---------- */
+  function ymdKey(d) { return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate(); }
+  function drawCards(seedStr, n) {
+    const r = mulberry32(hash32(seedStr));
+    const deck = D.TAROT.slice(), out = [];
+    for (let i = 0; i < n && deck.length; i++) {
+      const c = deck.splice(Math.floor(r() * deck.length), 1)[0];
+      out.push({ card: c, rev: r() < 0.38 });
+    }
+    return out;
+  }
+
+  /* ---------- 姓名判断（かな画数） ---------- */
+  function kanaStrokes(str) {
+    const out = [];
+    for (const ch of String(str)) {
+      // カタカナはひらがなへ寄せる
+      let c = ch;
+      const code = c.codePointAt(0);
+      if (code >= 0x30a1 && code <= 0x30f6) c = String.fromCodePoint(code - 0x60);
+      let base = c, add = 0;
+      // 濁点・半濁点を分解
+      const dakuten = 'がぎぐげござじずぜぞだぢづでどばびぶべぼゔ';
+      const handaku = 'ぱぴぷぺぽ';
+      const plain   = 'かきくけこさしすせそたちつてとはひふへほう';
+      if (dakuten.includes(c)) { base = String.fromCodePoint(c.codePointAt(0) - 1); add = 2; }
+      else if (handaku.includes(c)) { base = String.fromCodePoint(c.codePointAt(0) - 2); add = 1; }
+      if (add && !plain.includes(base) && base !== 'う') base = c;
+      const v = D.KANA[base];
+      if (v == null) return null;               // 未知の文字が混じっている
+      out.push(v + add);
+    }
+    return out;
+  }
+  function kakuMeaning(n) {
+    if (D.KAKU[n]) return D.KAKU[n];
+    let k = n; while (k > 52) k -= 52;          // 52 を超える格は還元して読む
+    return D.KAKU[k] || D.KAKU[1];
+  }
+  const SANSAI = { 1:'木', 2:'木', 3:'火', 4:'火', 5:'土', 6:'土', 7:'金', 8:'金', 9:'水', 0:'水' };
+  function seimeiChart(sei, mei) {
+    const a = kanaStrokes(sei), b = kanaStrokes(mei);
+    if (!a || !b || !a.length || !b.length) return null;
+    const sum = arr => arr.reduce((x, y) => x + y, 0);
+    const ten  = sum(a);                                   // 天格：姓の総和
+    const chi  = sum(b);                                   // 地格：名の総和
+    const jin  = a[a.length - 1] + b[0];                    // 人格：姓の末＋名の頭
+    const soto = (a.length === 1 ? 1 : a[0]) + (b.length === 1 ? 1 : b[b.length - 1]); // 外格
+    const sou  = ten + chi;                                 // 総格
+    const el = v => SANSAI[v % 10];
+    return {
+      sei, mei, seiStrokes: a, meiStrokes: b,
+      ten, jin, chi, soto, sou,
+      m: { ten: kakuMeaning(ten), jin: kakuMeaning(jin), chi: kakuMeaning(chi),
+           soto: kakuMeaning(soto), sou: kakuMeaning(sou) },
+      sansai: [el(ten), el(jin), el(chi)],
+      code: 'SM-' + String(hash32(sei + mei) % 100000).padStart(5, '0') + '-' + sou
+    };
+  }
+
   /* ---------- 3. チャート算出 ---------- */
   function buildChart(input, now) {
     now = now || new Date();
     const y = input.y, m = input.m, d = input.d;
     const birth = new Date(y, m - 1, d);
-    const seedStr = [input.name || '名無し', y, m, d, input.hour || '-', input.concern, input.mood].join('|');
+    const seedStr = [input.name || '名無し', y, m, d, input.hour == null ? '-' : input.hour].join('|');
     const seed = hash32(seedStr);
     const r = mulberry32(seed);
 
@@ -116,15 +177,8 @@
     const pm = personalMonth(py, now.getMonth() + 1);
     const color = D.COLORS[(lp + branch.jp.charCodeAt(0) + y) % D.COLORS.length];
 
-    // タロット（当日固定・利用者固定）
-    const tSeed = hash32(seedStr + '|tarot|' + now.getFullYear() + '-' + (now.getMonth() + 1));
-    const tr = mulberry32(tSeed);
-    const deck = D.TAROT.slice();
-    const draw = [];
-    for (let i = 0; i < 5; i++) {
-      const c = deck.splice(Math.floor(tr() * deck.length), 1)[0];
-      draw.push({ card: c, rev: tr() < 0.38 });
-    }
+    // タロット（当日・利用者固定）
+    const draw = drawCards(seedStr + '|tarot|' + ymdKey(now), 5);
 
     // 12ヶ月の運勢曲線
     const months = [];
@@ -170,8 +224,6 @@
       birthMoon: birthMoon.moon,
       bio, py, pm, color, draw, months, best, worst, turning,
       luckyNums, dir: dirs[domEl],
-      concern: D.CONCERNS[input.concern] || D.CONCERNS.self,
-      mood: D.MOODS[input.mood] || D.MOODS.lost,
       code: 'HY-' + (seed % 100000).toString().padStart(5, '0') + '-' + sign.en.slice(0, 2).toUpperCase() + lp
     };
   }
@@ -209,5 +261,6 @@
   }
 
   global.HOSHI_ENGINE = { hash32, mulberry32, pick, pickN, sunSign, reduceNum, lifePath,
-    personalYear, personalMonth, moonPhase, biorhythm, buildChart, compatibility, daysBetween };
+    personalYear, personalMonth, moonPhase, biorhythm, buildChart, compatibility, daysBetween,
+    drawCards, kanaStrokes, seimeiChart, kakuMeaning, ymdKey };
 })(window);

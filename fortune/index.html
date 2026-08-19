@@ -3,17 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>星詠堂 — あなただけの言葉が届く、本格鑑定</title>
-<meta name="description" content="西洋占星術・数秘術・東洋五行・月相の四技法を掛け合わせ、あなたの生年月日と「いまの気持ち」から鑑定文を組成します。無料の簡易診断から、二万字を超える詳細鑑定まで。">
-<meta name="theme-color" content="#070710">
-<meta property="og:title" content="星詠堂 — あなただけの言葉が届く、本格鑑定">
-<meta property="og:description" content="同じ誕生日でも、いまの心が違えば結果は変わる。四技法を掛け合わせた本格鑑定。">
+<title>星詠堂 — 無料で視る、本格鑑定</title>
+<meta name="description" content="生年月日だけ、名前だけ、札を選ぶだけ。登録不要で本格鑑定がその場で読めます。恋愛・相性・タロット・姓名判断・仕事・宿命——全29種。">
+<meta name="theme-color" content="#07050f">
+<meta property="og:title" content="星詠堂 — 無料で視る、本格鑑定">
+<meta property="og:description" content="登録不要。生年月日だけで、あなたの宿命が言葉になります。">
 <meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@400;500;600&family=Zen+Kaku+Gothic+New:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@400;500;600;700&family=Zen+Kaku+Gothic+New:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/style.css">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%23070710'/><path d='M16 5l2.6 7.6L26 15l-7.4 2.4L16 25l-2.6-7.6L6 15l7.4-2.4z' fill='%23d3b573'/></svg>">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%2307050f'/><path d='M16 4l3 8.8L28 16l-9 3.2L16 28l-3-8.8L4 16l9-3.2z' fill='%23e2c27f'/></svg>">
 </head>
 <body>
 
@@ -23,28 +23,27 @@
 <div class="page">
 
 <!-- ============ HEADER ============ -->
-<header class="site-header" id="hdr">
-  <div class="wrap hdr-inner">
+<header class="hdr" id="hdr">
+  <div class="wrap hdr-in">
     <a class="brand" href="#top" aria-label="星詠堂 トップへ">
       <svg class="brand-mark" viewBox="0 0 40 40" fill="none" aria-hidden="true">
-        <circle cx="20" cy="20" r="18.2" stroke="#c09a4f" stroke-width=".9" opacity=".8"/>
-        <circle cx="20" cy="20" r="13" stroke="#c09a4f" stroke-width=".5" opacity=".45"/>
-        <path d="M20 6.5l3.05 8.9L32 18.5l-8.95 3.1L20 30.5l-3.05-8.9L8 18.5l8.95-3.1z" fill="#d3b573"/>
-        <circle cx="31.4" cy="9.6" r="1.5" fill="#e8d6a4"/>
-        <circle cx="8.6" cy="30.4" r="1" fill="#e8d6a4" opacity=".8"/>
+        <circle cx="20" cy="20" r="18.4" stroke="#c9a253" stroke-width=".9" opacity=".85"/>
+        <circle cx="20" cy="20" r="13" stroke="#8a5fb8" stroke-width=".6" opacity=".55"/>
+        <path d="M20 6l3.2 9.1L32 18.4l-8.8 3.3L20 31l-3.2-9.3L8 18.4l8.8-3.3z" fill="#e2c27f"/>
+        <circle cx="31.6" cy="9.4" r="1.5" fill="#fdf3d4"/>
+        <circle cx="8.4" cy="30.6" r="1" fill="#fdf3d4" opacity=".8"/>
       </svg>
       <span class="brand-name">星詠堂<em class="brand-sub">HOSHIYOMI-DO</em></span>
     </a>
     <nav class="nav" id="nav" aria-label="メインナビゲーション">
-      <a href="#daily">今日の運勢</a>
       <a href="#menu">鑑定メニュー</a>
-      <a href="#reading">無料鑑定</a>
-      <a href="#plans">詳細鑑定</a>
-      <a href="#trust">当館について</a>
-      <a href="#faq">よくある質問</a>
-      <a class="btn btn-gold hdr-cta" href="#reading">無料鑑定</a>
+      <a href="#daily">今日の運勢</a>
+      <a href="#rankSec">人気の鑑定</a>
+      <a href="#tellerSec">鑑定士</a>
+      <a href="#voiceSec">体験談</a>
+      <button class="btn btn-gold hdr-cta" data-open-first="f-shukumei">無料で視る</button>
     </nav>
-    <button class="nav-toggle" id="navToggle" aria-label="メニューを開く" aria-expanded="false" aria-controls="nav"><span></span></button>
+    <button class="nav-tg" id="navTg" aria-label="メニュー" aria-expanded="false" aria-controls="nav"><span></span></button>
   </div>
 </header>
 
@@ -52,464 +51,176 @@
 
 <!-- ============ HERO ============ -->
 <section class="hero">
-  <svg class="hero-orbit" viewBox="0 0 800 800" fill="none" aria-hidden="true">
+  <svg class="hero-halo" id="heroHalo" viewBox="0 0 800 800" fill="none" aria-hidden="true">
     <defs>
-      <radialGradient id="og" cx="50%" cy="50%" r="50%">
-        <stop offset="60%" stop-color="#c09a4f" stop-opacity="0"/>
-        <stop offset="100%" stop-color="#c09a4f" stop-opacity=".22"/>
+      <radialGradient id="hg" cx="50%" cy="50%" r="50%">
+        <stop offset="58%" stop-color="#c9a253" stop-opacity="0"/>
+        <stop offset="100%" stop-color="#c9a253" stop-opacity=".26"/>
       </radialGradient>
     </defs>
-    <circle cx="400" cy="400" r="392" stroke="#c09a4f" stroke-width=".6" opacity=".28"/>
-    <circle cx="400" cy="400" r="330" stroke="#c09a4f" stroke-width=".5" opacity=".2" stroke-dasharray="2 9"/>
-    <circle cx="400" cy="400" r="252" stroke="#7b5f9c" stroke-width=".7" opacity=".3"/>
-    <circle cx="400" cy="400" r="180" stroke="#c09a4f" stroke-width=".4" opacity=".2" stroke-dasharray="1 7"/>
-    <circle cx="400" cy="400" r="392" fill="url(#og)"/>
-    <g id="zodiacRing" fill="#d3b573" font-size="19" font-family="serif" opacity=".62" text-anchor="middle"></g>
-    <g id="constellation" stroke="#e8d6a4" stroke-width=".55" opacity=".5" fill="none"></g>
+    <circle cx="400" cy="400" r="390" stroke="#c9a253" stroke-width=".6" opacity=".3"/>
+    <circle cx="400" cy="400" r="330" stroke="#c9a253" stroke-width=".5" opacity=".22" stroke-dasharray="2 9"/>
+    <circle cx="400" cy="400" r="252" stroke="#8a5fb8" stroke-width=".8" opacity=".35"/>
+    <circle cx="400" cy="400" r="176" stroke="#c9a253" stroke-width=".4" opacity=".2" stroke-dasharray="1 7"/>
+    <circle cx="400" cy="400" r="390" fill="url(#hg)"/>
+    <g id="zring" fill="#e2c27f" font-size="19" font-family="serif" opacity=".66" text-anchor="middle"></g>
   </svg>
 
-  <div class="wrap hero-inner">
+  <div class="wrap hero-in">
     <div>
-      <p class="eyebrow">Since 2011 ・ 延べ12万件の鑑定</p>
+      <span class="hero-badge">✦　登録不要　/　<b>全29種すべて無料で読めます</b></span>
       <h1 class="hero-title">
-        <span class="line"><span>星は、あなたを</span></span>
-        <span class="line"><span>裁くために</span></span>
-        <span class="line"><span><em class="gold-text">在るのではない。</em></span></span>
+        <span class="ln"><span>その苦しさには、</span></span>
+        <span class="ln"><span>名前がついています。</span></span>
+        <span class="ln"><span><em class="gold">星が、それを教えます。</em></span></span>
       </h1>
-      <p class="lead hero-copy">
-        西洋占星術・数秘術・東洋の干支五行・月相——四つの技法を掛け合わせ、
-        あなたの生年月日と<strong style="color:var(--gold-100);font-weight:400">「いまの気持ち」</strong>から鑑定文を組成します。
-        同じ誕生日の方でも、心の状態が違えば、届く言葉は変わります。
+      <p class="hero-copy">
+        生年月日だけ。名前だけ。札を選ぶだけ。<br>
+        たった十秒で、<span class="mark">あなたが自分でも言葉にできなかったこと</span>が、文字になって目の前に現れます。
       </p>
-      <div class="hero-actions">
-        <a class="btn btn-gold" href="#reading">無料で視てもらう<span aria-hidden="true">→</span></a>
-        <a class="btn btn-ghost" href="#plans">詳細鑑定を見る</a>
+      <div class="hero-act">
+        <button class="btn btn-gold btn-lg" data-open-first="f-shukumei">いますぐ無料で視てもらう<span aria-hidden="true">→</span></button>
+        <a class="btn btn-ghost" href="#menu">鑑定メニューを見る</a>
       </div>
-      <div class="hero-meta">
-        <div><b class="num" data-count="128470">0</b><span>累計鑑定件数</span></div>
-        <div><b class="num" data-count="14">0</b><span>鑑定歴（年）</span></div>
-        <div><b class="num" data-count="27">0</b><span>鑑定メニュー数</span></div>
-        <div><b class="num" data-count="96" data-suffix="%">0</b><span>再訪率</span></div>
-      </div>
+      <p class="hero-note">※ 会員登録・メールアドレスの入力は一切ありません。入力内容は端末の外に出ません。</p>
     </div>
 
-    <aside class="hero-panel frame" aria-label="本日の空">
-      <div class="panel-top">
-        <span class="today num" id="todayStr">—</span>
-        <span class="panel-tag">本日の空</span>
-      </div>
+    <aside class="hero-card orn-frame" aria-label="本日の空">
+      <div class="cap"><span class="d num" id="today">—</span><span class="t">本日の空</span></div>
       <div class="moon-row">
         <svg class="moon-vis" viewBox="0 0 100 100" aria-hidden="true">
-          <defs>
-            <radialGradient id="mglow"><stop offset="55%" stop-color="#e8d6a4" stop-opacity=".22"/><stop offset="100%" stop-color="#e8d6a4" stop-opacity="0"/></radialGradient>
-          </defs>
-          <circle cx="50" cy="50" r="48" fill="url(#mglow)"/>
-          <circle cx="50" cy="50" r="38" fill="#15152a" stroke="#c09a4f" stroke-width=".7" opacity=".95"/>
-          <path id="moonLit" d="" fill="#e8d6a4" opacity=".92"/>
-          <circle cx="50" cy="50" r="38" fill="none" stroke="#c09a4f" stroke-width=".8" opacity=".7"/>
+          <defs><radialGradient id="mg"><stop offset="55%" stop-color="#e2c27f" stop-opacity=".24"/><stop offset="100%" stop-color="#e2c27f" stop-opacity="0"/></radialGradient></defs>
+          <circle cx="50" cy="50" r="48" fill="url(#mg)"/>
+          <circle cx="50" cy="50" r="38" fill="#150f2a" stroke="#c9a253" stroke-width=".7"/>
+          <path id="moonLit" d="" fill="#f2debb" opacity=".93"/>
+          <circle cx="50" cy="50" r="38" fill="none" stroke="#c9a253" stroke-width=".8" opacity=".7"/>
         </svg>
         <div>
-          <p class="moon-name" id="moonName">—</p>
-          <p class="moon-desc" id="moonDesc">—</p>
+          <p class="moon-nm" id="moonNm">—</p>
+          <p class="moon-ds" id="moonDs">—</p>
         </div>
       </div>
-      <p class="panel-quote" id="heroQuote">読み込み中…</p>
+      <p class="moon-msg" id="moonMsg">—</p>
     </aside>
   </div>
 
   <div class="scroll-cue" aria-hidden="true"><span>SCROLL</span><i></i></div>
 </section>
 
-<!-- ============ TRUST STRIP ============ -->
-<div class="trust-strip" aria-hidden="true">
-  <div class="marquee" id="marquee"></div>
-</div>
-
-<!-- ============ 今日の運勢 ============ -->
-<section class="sec" id="daily">
+<!-- ============ 安心バー ============ -->
+<div class="assure">
   <div class="wrap">
-    <div class="sec-head center reveal">
-      <p class="eyebrow center">Daily Reading</p>
-      <h2 class="h-sec">今日の運勢</h2>
-      <p class="lead mt-s">登録不要。この端末を覚えているので、明日また来ると続きが読めます。</p>
-    </div>
-
-    <div class="daily reveal d1">
-      <div>
-        <svg class="daily-dial" viewBox="0 0 200 200" aria-hidden="true">
-          <circle cx="100" cy="100" r="82" fill="none" stroke="rgba(233,224,203,.09)" stroke-width="6"/>
-          <circle id="dialArc" cx="100" cy="100" r="82" fill="none" stroke="url(#dg)" stroke-width="6"
-                  stroke-linecap="round" stroke-dasharray="515" stroke-dashoffset="515" transform="rotate(-90 100 100)"/>
-          <defs><linearGradient id="dg" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stop-color="#9c7a37"/><stop offset="55%" stop-color="#f6ecd0"/><stop offset="100%" stop-color="#c09a4f"/>
-          </linearGradient></defs>
-          <circle cx="100" cy="100" r="66" fill="none" stroke="rgba(192,154,79,.2)" stroke-width=".7" stroke-dasharray="2 6"/>
-          <text id="dialNum" x="100" y="96" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="46" fill="#f6ecd0">—</text>
-          <text x="100" y="122" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="11" letter-spacing="4" fill="#9a9285">TODAY</text>
-        </svg>
-      </div>
-      <div>
-        <div class="daily-score"><b id="dailyScore">—</b><span id="dailyRank">総合運</span></div>
-        <div class="daily-cats" id="dailyCats"></div>
-        <p class="daily-txt" id="dailyTxt">生年月日を入力すると、あなた個人の今日の運勢に切り替わります。</p>
-        <ul class="daily-lucky" id="dailyLucky"></ul>
-      </div>
-    </div>
-
-    <!-- 参詣（継続来訪） -->
-    <div class="streak reveal d2 mt-m">
-      <div>
-        <div class="streak-n num"><span id="streakN">0</span><small>日連続</small></div>
-        <div class="streak-dots" id="streakDots" aria-hidden="true"></div>
-      </div>
-      <p class="streak-msg" id="streakMsg">続けて訪れるほど、読める鑑定が増えていきます。<b>3日</b>でタロット追加、<b>7日</b>で詳細鑑定の割引券。</p>
-    </div>
-    <div class="coupon" id="coupon">
-      <code id="couponCode">—</code>
-      <p id="couponText"></p>
-      <button class="btn btn-ghost btn-sm" id="couponCopy">コードをコピー</button>
-    </div>
+    <ul>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3l7 3v6c0 5-3 7.5-7 9-4-1.5-7-4-7-9V6z"/></svg><span><b>登録不要</b>・メール不要</span></li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>最短<b>10秒</b>で結果</span></li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg><span>入力は<b>端末内だけ</b></span></li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 4l2.5 5.3 5.5.7-4 4 1 5.6L12 17l-5 2.6 1-5.6-4-4 5.5-.7z"/></svg><span>鑑定歴<b>14年</b>・延べ12万件</span></li>
+    </ul>
   </div>
-</section>
+</div>
 
 <!-- ============ 鑑定メニュー ============ -->
 <section class="sec" id="menu">
   <div class="wrap">
-    <div class="sec-head center reveal">
-      <p class="eyebrow center">Menu</p>
-      <h2 class="h-sec">鑑定メニュー</h2>
-      <p class="lead mt-s">全27種。無料の簡易鑑定から、一万字近い宿命の書まで。<br>すべての鑑定は、あなたの入力から自動で組成されます。</p>
+    <div class="sec-head c rv">
+      <p class="eyebrow c">Divination Menu</p>
+      <h2 class="h-sec">いま、何を<em class="gold">視ましょうか</em>。</h2>
+      <p class="lead mt-s">全29種。どれも<span class="mark">無料で読みはじめられます</span>。<br>気軽な一枚引きから、宿命の深いところまで。</p>
     </div>
-    <div class="grid g-3" id="menuGrid"></div>
-    <p class="small center mt-m">※ 各鑑定の詳細な内容量・所要時間は「詳細鑑定」の項をご覧ください。</p>
+    <div class="tabs" id="tabs" role="tablist" aria-label="ジャンル"></div>
+    <div class="mgrid" id="mgrid"></div>
+
+    <!-- 履歴 -->
+    <div class="nextup mt-l hide" id="histBox">
+      <h4>最近ご覧になった鑑定</h4>
+      <div class="row" id="histRow"></div>
+    </div>
   </div>
 </section>
 
-<!-- ============ 無料鑑定コンソール ============ -->
-<section class="sec" id="reading">
-  <div class="wrap-narrow">
-    <div class="sec-head center reveal">
-      <p class="eyebrow center">Free Reading</p>
-      <h2 class="h-sec">無料鑑定を受ける</h2>
-      <p class="lead mt-s">所要およそ40秒。登録もメールアドレスも不要です。<br>入力は端末の中だけで処理され、送信されません。</p>
+<!-- ============ 人気ランキング ============ -->
+<section class="sec" id="rankSec" style="padding-top:0">
+  <div class="wrap-mid">
+    <div class="sec-head c rv">
+      <p class="eyebrow c">Ranking</p>
+      <h2 class="h-sec">いま、最も視られている鑑定</h2>
     </div>
-
-    <div class="console reveal d1" id="console">
-      <div class="console-head">
-        <div>
-          <p class="eyebrow" style="margin:0">Step <span id="stepNo">1</span> / 3</p>
-          <p class="h-sub" id="stepTitle">生まれた日を教えてください</p>
-        </div>
-        <div class="progress" aria-hidden="true"><i class="on"></i><i></i><i></i></div>
-      </div>
-
-      <form id="readForm" novalidate>
-        <!-- STEP 1 -->
-        <div class="step-pane" data-step="1">
-          <div class="fields two">
-            <div class="field">
-              <label for="fName">お名前・ニックネーム <span class="opt">任意</span></label>
-              <input class="input" type="text" id="fName" name="name" placeholder="例：ゆき" autocomplete="nickname" maxlength="20">
-              <span class="hint">鑑定文の中でお呼びします。本名でなくて構いません。</span>
-            </div>
-            <div class="field">
-              <label for="fHour">生まれた時刻 <span class="opt">任意</span></label>
-              <select class="input" id="fHour" name="hour">
-                <option value="">わからない</option>
-              </select>
-              <span class="hint">分かる場合は精度が上がります。</span>
-            </div>
-          </div>
-          <div class="field mt-s">
-            <label for="fYear">生年月日 <span class="req">必須</span></label>
-            <div class="date-row">
-              <select class="input" id="fYear" name="year" required aria-label="生まれた年"></select>
-              <select class="input" id="fMonth" name="month" required aria-label="生まれた月"></select>
-              <select class="input" id="fDay" name="day" required aria-label="生まれた日"></select>
-            </div>
-          </div>
-        </div>
-
-        <!-- STEP 2 -->
-        <div class="step-pane hide" data-step="2">
-          <fieldset class="field" style="border:0;padding:0;margin:0">
-            <legend class="field-legend">いちばん知りたいこと <span class="req">必須</span></legend>
-            <div class="choices" id="concernChoices"></div>
-          </fieldset>
-          <div class="field mt-m">
-            <label for="fNote">いま抱えていること <span class="opt">任意</span></label>
-            <textarea class="input" id="fNote" name="note" maxlength="200" placeholder="ひとことだけでも構いません。書いた内容は鑑定文に反映されます。"></textarea>
-            <span class="hint"><span id="noteCount">0</span>/200文字　※ 端末外へ送信されません</span>
-          </div>
-        </div>
-
-        <!-- STEP 3 -->
-        <div class="step-pane hide" data-step="3">
-          <fieldset class="field" style="border:0;padding:0;margin:0">
-            <legend class="field-legend">いまの気持ちに、いちばん近いもの <span class="req">必須</span></legend>
-            <div class="choices" id="moodChoices"></div>
-          </fieldset>
-          <p class="small mt-m">ここが、この鑑定の要です。同じ生年月日でも、いまの心の状態によって、かけられる言葉は変わるべきだと考えています。</p>
-        </div>
-
-        <p class="err" id="formErr" role="alert"></p>
-
-        <div class="console-foot">
-          <span class="privacy-note">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
-            入力内容はブラウザ内で処理され、サーバーへ送信されません
-          </span>
-          <span style="display:flex;gap:10px">
-            <button type="button" class="btn btn-ghost btn-sm hide" id="btnPrev">戻る</button>
-            <button type="button" class="btn btn-gold" id="btnNext">次へ</button>
-            <button type="submit" class="btn btn-gold hide" id="btnCast">鑑定をはじめる</button>
-          </span>
-        </div>
-      </form>
-
-      <!-- 鑑定中 -->
-      <div class="casting" id="casting" aria-live="polite">
-        <svg class="cast-ring" viewBox="0 0 200 200" fill="none" aria-hidden="true">
-          <circle cx="100" cy="100" r="92" stroke="#c09a4f" stroke-width=".6" opacity=".35"/>
-          <g class="spin">
-            <circle cx="100" cy="100" r="78" stroke="#c09a4f" stroke-width=".8" stroke-dasharray="4 12" opacity=".65"/>
-            <circle cx="100" cy="22" r="3.2" fill="#f6ecd0"/>
-          </g>
-          <g class="spin-r">
-            <circle cx="100" cy="100" r="56" stroke="#7b5f9c" stroke-width=".9" stroke-dasharray="30 14" opacity=".7"/>
-            <circle cx="156" cy="100" r="2.4" fill="#e8d6a4"/>
-          </g>
-          <path d="M100 60l6.9 20.1L127 87l-20.1 6.9L100 114l-6.9-20.1L73 87l20.1-6.9z" fill="#d3b573" opacity=".9"/>
-        </svg>
-        <p class="cast-msg" id="castMsg">星の位置を確かめています…</p>
-        <div class="cast-bar"><i id="castBar"></i></div>
-      </div>
-    </div>
-
-    <!-- 鑑定書 -->
-    <div class="report" id="report" tabindex="-1"></div>
+    <div class="rank" id="rank"></div>
   </div>
 </section>
 
-<!-- ============ 詳細鑑定プラン ============ -->
-<section class="sec" id="plans">
+<!-- ============ 今日の運勢 ============ -->
+<section class="sec" id="daily">
   <div class="wrap">
-    <div class="sec-head center reveal">
-      <p class="eyebrow center">Detailed Reading</p>
-      <h2 class="h-sec">詳細鑑定</h2>
-      <p class="lead mt-s">無料鑑定は「輪郭」です。ここから先は、あなたの影・過去の反復・十二ヶ月の曲線・<br>そして具体的な日付まで踏み込みます。</p>
+    <div class="sec-head c rv">
+      <p class="eyebrow c">Daily</p>
+      <h2 class="h-sec">今日の運勢</h2>
+      <p class="lead mt-s">毎朝、月の位相とあなたの周期から算出しています。<span class="mark">明日はまた違う結果になります</span>。</p>
     </div>
-
-    <div class="grid g-3">
-      <article class="plan reveal d1">
-        <div><em class="plan-en">CHAPTER OF LIGHT</em><h3 class="plan-name">光の章</h3></div>
-        <div class="plan-price"><b>1,980</b><span>円（税込・買い切り）</span></div>
-        <span class="plan-vol">約 6,500 字 ／ 全 15 章</span>
-        <ul>
-          <li>星と数の交点（性格の深層）</li>
-          <li>五行バランス図と体質</li>
-          <li>恋愛・仕事・金運・人間関係</li>
-          <li>大アルカナ五枚展開</li>
-          <li>十二ヶ月の運勢曲線</li>
-          <li>転機の日（具体的な日付）</li>
-          <li>十二ヶ月の月別ガイド／開運の実務</li>
-          <li>九十日の実践計画</li>
-          <li class="off">影の章（反復パターン）</li>
-          <li class="off">前世と魂の系譜</li>
-          <li class="off">鑑定士による個別便り</li>
-        </ul>
-        <button class="btn btn-ghost btn-block" data-buy="light">光の章を開く</button>
-      </article>
-
-      <article class="plan featured reveal d2">
-        <span class="plan-badge">最も選ばれています</span>
-        <div><em class="plan-en">CHAPTER OF DEPTH</em><h3 class="plan-name">深淵の章</h3></div>
-        <div class="plan-price"><b>4,980</b><span>円（税込・買い切り）</span></div>
-        <span class="plan-vol">約 9,300 字 ／ 全 21 章</span>
-        <ul>
-          <li>「光の章」の全内容</li>
-          <li><strong style="color:var(--gold-100);font-weight:400">影の章</strong>：繰り返してきたパターンと解除の鍵</li>
-          <li><strong style="color:var(--gold-100);font-weight:400">前世と魂の系譜</strong></li>
-          <li>相性の設計図と十二星座 相性早見</li>
-          <li>魂の約束／あなたへの十の問い</li>
-          <li>相性鑑定 3名分を無料で付与</li>
-          <li>鑑定書のPDF保存・印刷対応</li>
-          <li>90日間の再鑑定無料</li>
-          <li class="off">鑑定士による個別便り</li>
-          <li class="off">十二ヶ月の月次更新</li>
-        </ul>
-        <button class="btn btn-gold btn-block" data-buy="deep">深淵の章を開く</button>
-      </article>
-
-      <article class="plan reveal d3">
-        <div><em class="plan-en">BOOK OF DESTINY</em><h3 class="plan-name">宿命の書</h3></div>
-        <div class="plan-price"><b>12,800</b><span>円（税込・年間）</span></div>
-        <span class="plan-vol">約 9,500 字 ＋ 毎月更新</span>
-        <ul>
-          <li>「深淵の章」の全内容</li>
-          <li><strong style="color:var(--gold-100);font-weight:400">鑑定士が直接筆を執る個別便り</strong>（7日以内）</li>
-          <li>十二ヶ月の月次更新（毎月1日）</li>
-          <li>相性鑑定 無制限</li>
-          <li>転機の日のリマインド通知</li>
-          <li>年に一度の対面／オンライン相談 30分</li>
-          <li>すべての新規メニューを追加料金なしで</li>
-        </ul>
-        <button class="btn btn-ghost btn-block" data-buy="master">宿命の書を開く</button>
-      </article>
-    </div>
-
-    <!-- 単品アドオン -->
-    <h3 class="h-sub center mt-l reveal">単品でのお求め</h3>
-    <div class="addons reveal d1">
-      <div class="addon"><div><h4>相性鑑定（おふたり分）</h4><p>お相手の生年月日から、気の相性・会話・生活リズム・将来性を五軸で。約2,500字。</p></div><span class="p">¥980</span></div>
-      <div class="addon"><div><h4>転機のタイミング鑑定</h4><p>今後24ヶ月の曲線と、動くべき三つの日付を特定。約3,000字。</p></div><span class="p">¥1,480</span></div>
-      <div class="addon"><div><h4>前世と魂の系譜（単品）</h4><p>魂が持ち越した主題と、今生の課題。約2,000字。</p></div><span class="p">¥1,280</span></div>
-      <div class="addon"><div><h4>仕事・天職の深堀り</h4><p>適職・向かない環境・年収の伸ばし方まで。約4,000字。</p></div><span class="p">¥1,980</span></div>
-      <div class="addon"><div><h4>復縁・関係修復の可否</h4><p>関係の再生可能性と、動くべき時期・避けるべき言葉。約3,500字。</p></div><span class="p">¥2,480</span></div>
-      <div class="addon"><div><h4>お子さまの資質鑑定</h4><p>気質・伸ばし方・叱り方の相性。保護者の方向け。約3,000字。</p></div><span class="p">¥1,780</span></div>
-    </div>
-    <p class="small center mt-m">※ すべて買い切り。自動更新はありません（宿命の書のみ年額、更新前に必ずご連絡します）。<br>
-    ※ 「深淵の章」以上をご購入の方は、90日間いつでも無料で再鑑定できます。<br>
-    ※ 本デモサイトでは、上記の単品メニューは鑑定結果の生成に対応していません。生成をお試しいただけるのは「光の章」「深淵の章」「宿命の書」です。</p>
-  </div>
-</section>
-
-<!-- ============ 信頼 ============ -->
-<section class="sec" id="trust">
-  <div class="wrap">
-    <div class="sec-head center reveal">
-      <p class="eyebrow center">Method &amp; Trust</p>
-      <h2 class="h-sec">なぜ、当たると言われるのか</h2>
-      <p class="lead mt-s">当館は「よく当たる」を主張しません。代わりに、どう組み立てているかを全部公開します。</p>
-    </div>
-    <div class="method reveal d1">
-      <div class="method-row">
-        <svg class="method-glyph" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.1" aria-hidden="true">
-          <circle cx="24" cy="24" r="19"/><circle cx="24" cy="24" r="12" opacity=".5"/>
-          <path d="M24 5v38M5 24h38" opacity=".35"/><circle cx="24" cy="8.5" r="2.2" fill="currentColor" stroke="none"/>
-        </svg>
-        <div>
-          <h4>一．西洋占星術 — 太陽宮と支配星</h4>
-          <p>生年月日から太陽の黄経位置を求め、十二宮のいずれに在るかを判定します。性格の骨格、価値の置き方、消耗の仕方を読む土台です。</p>
-          <p class="src">典拠：トロピカル方式（春分点基準）／宮の境界は年により最大1日前後します。</p>
-        </div>
-      </div>
-      <div class="method-row">
-        <svg class="method-glyph" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.1" aria-hidden="true">
-          <path d="M10 38V14l14 20 14-20v24" stroke-linejoin="round"/><circle cx="24" cy="8" r="3"/>
-        </svg>
-        <div>
-          <h4>二．数秘術 — 運命数と個人年</h4>
-          <p>生年月日の各要素を還元して運命数を、当年を加えて個人年数を導きます。九年周期のどこに立っているかが分かるため、「いま動くべきか待つべきか」の判断に直結します。</p>
-          <p class="src">典拠：ピタゴラス式／11・22・33はマスターナンバーとして還元せず保持。</p>
-        </div>
-      </div>
-      <div class="method-row">
-        <svg class="method-glyph" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.1" aria-hidden="true">
-          <path d="M24 6l15.6 11.3-6 18.4H14.4l-6-18.4z"/><circle cx="24" cy="24" r="6" opacity=".55"/>
-        </svg>
-        <div>
-          <h4>三．東洋の干支と五行</h4>
-          <p>生年から十干十二支を求め、木火土金水の五気の配分を算出します。強すぎる気・不足する気が分かると、体質・消耗の癖・相性が説明できます。</p>
-          <p class="src">典拠：十干は年の下一桁、十二支は年を12で除した剰余により決定。</p>
-        </div>
-      </div>
-      <div class="method-row">
-        <svg class="method-glyph" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.1" aria-hidden="true">
-          <circle cx="24" cy="24" r="15"/><path d="M24 9a15 15 0 0 0 0 30 11 11 0 0 1 0-30z" fill="currentColor" stroke="none" opacity=".65"/>
-        </svg>
-        <div>
-          <h4>四．月相 — 朔望の位相</h4>
-          <p>朔望月29.530589日の周期から、鑑定日および誕生日の月齢を計算します。感情の波と、始めるべき／手放すべき時期を示します。</p>
-          <p class="src">典拠：2000年1月6日18:14 UTCの朔を基準とした周期計算。</p>
-        </div>
-      </div>
-      <div class="method-row">
-        <svg class="method-glyph" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.1" aria-hidden="true">
-          <path d="M6 30c6-14 12 14 18 0s12 14 18 0"/><path d="M6 38h36" opacity=".4"/>
-        </svg>
-        <div>
-          <h4>五．バイオリズム — 身体23日／感情28日／知性33日</h4>
-          <p>誕生日からの経過日数をもとに三つの正弦波を重ね、十二ヶ月の曲線と「転機の日」を特定します。ここだけは占いではなく、完全な計算です。誰が計算しても同じ答えになります。</p>
-          <p class="src">検算可能：経過日数 n に対し sin(2πn/23)、sin(2πn/28)、sin(2πn/33)。</p>
-        </div>
-      </div>
-    </div>
-
-    <p class="lead center mt-l reveal">
-      そして最も大切な点。<strong style="color:var(--gold-100);font-weight:400">同じ入力からは、必ず同じ鑑定文が出ます。</strong><br>
-      引き直すたびに結果が変わる仕組みではありません。鑑定書の右上にある鑑定番号で、いつでも同じ結果を再現できます。
-    </p>
-  </div>
-
-  <div class="stat-band mt-l reveal">
-    <div class="stat"><b class="num" data-count="128470">0</b><span>累計鑑定件数</span><i>2011年5月〜2026年8月</i></div>
-    <div class="stat"><b class="num" data-count="96" data-suffix="<small>%</small>">0</b><span>「また利用したい」</span><i>回答者 n=12,483</i></div>
-    <div class="stat"><b class="num" data-count="27">0</b><span>鑑定メニュー</span><i>随時追加</i></div>
-    <div class="stat"><b class="num" data-count="14">0</b><span>鑑定歴（年）</span><i>創業 2011年</i></div>
-  </div>
-
-  <div class="wrap mt-l">
-    <div class="reader reveal">
-      <div class="reader-portrait">
-        <svg viewBox="0 0 120 160" fill="none" stroke="currentColor" stroke-width=".9" aria-hidden="true">
-          <path d="M60 34c14 0 22 10 22 24 0 16-10 28-22 28s-22-12-22-28c0-14 8-24 22-24z"/>
-          <path d="M14 150c0-26 20-40 46-40s46 14 46 40" opacity=".8"/>
-          <path d="M60 10v14M46 18l5 9M74 18l-5 9" opacity=".55"/>
-          <circle cx="60" cy="6" r="3" fill="currentColor" stroke="none"/>
-          <path d="M30 96l60 0" opacity=".25"/>
+    <div class="daily rv d1">
+      <div>
+        <svg class="dial" viewBox="0 0 200 200" aria-hidden="true">
+          <circle cx="100" cy="100" r="82" fill="none" stroke="rgba(242,222,187,.09)" stroke-width="6"/>
+          <circle id="dialArc" cx="100" cy="100" r="82" fill="none" stroke="url(#dg)" stroke-width="6"
+                  stroke-linecap="round" stroke-dasharray="515" stroke-dashoffset="515" transform="rotate(-90 100 100)"/>
+          <defs><linearGradient id="dg" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#a37c33"/><stop offset="55%" stop-color="#fdf3d4"/><stop offset="100%" stop-color="#c9a253"/>
+          </linearGradient></defs>
+          <circle cx="100" cy="100" r="66" fill="none" stroke="rgba(201,162,83,.2)" stroke-width=".7" stroke-dasharray="2 6"/>
+          <text id="dialNum" x="100" y="96" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="46" fill="#fdf3d4">—</text>
+          <text x="100" y="122" text-anchor="middle" font-family="Cormorant Garamond,serif" font-size="11" letter-spacing="4" fill="#a89d8b">TODAY</text>
         </svg>
       </div>
       <div>
-        <p class="eyebrow">Reader</p>
-        <h3 class="reader-name">水無瀬 灯(みなせ あかり)</h3>
-        <p class="reader-title">星詠堂 主宰／鑑定歴14年</p>
-        <p class="reader-bio">
-          大学で天文学を、その後独学で西洋占星術と四柱推命を修めました。占いを「未来を当てるもの」ではなく、
-          <strong style="color:var(--gold-100);font-weight:400">自分を責めすぎないための地図</strong>だと考えています。
-          鑑定でいちばん大切にしているのは、その方がいまどんな気持ちでこの画面を開いたのか、という一点です。
-          だから当館の鑑定は、生年月日だけでなく「いまの気持ち」を必ずお伺いします。
-        </p>
-        <ul class="reader-facts">
-          <li>鑑定歴 14年</li><li>延べ12万件</li><li>西洋占星術</li><li>四柱推命</li><li>数秘術</li><li>タロット</li>
-        </ul>
+        <div class="daily-h"><b class="num" id="dScore">—</b><span id="dRank">総合運</span></div>
+        <div class="dcats" id="dCats"></div>
+        <p class="dtxt" id="dTxt"></p>
+        <ul class="dlucky" id="dLucky"></ul>
+        <div class="dform">
+          <span class="small">生年月日を入れると、あなた個人の運勢に変わります</span>
+          <select id="dY" aria-label="年"></select>
+          <select id="dM" aria-label="月"></select>
+          <select id="dD" aria-label="日"></select>
+          <button class="btn btn-ghost btn-sm" id="dGo">切り替える</button>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ============ お客様の声 ============ -->
-<section class="sec" id="voices">
+<!-- ============ 鑑定士 ============ -->
+<section class="sec" id="tellerSec">
   <div class="wrap">
-    <div class="sec-head center reveal">
-      <p class="eyebrow center">Voices</p>
-      <h2 class="h-sec">鑑定を受けた方から</h2>
+    <div class="sec-head c rv">
+      <p class="eyebrow c">Readers</p>
+      <h2 class="h-sec">視るのは、この三人です</h2>
+      <p class="lead mt-s">当館の鑑定は、それぞれの占術を修めた鑑定士が組んだ読み筋にもとづいています。</p>
     </div>
-    <div class="grid g-3" id="voiceGrid"></div>
-    <p class="small center mt-m">※ 掲載はご本人の許諾を得たものです。年齢・お住まいは掲載時点のものです。</p>
+    <div class="tellers" id="tellers"></div>
   </div>
 </section>
 
-<!-- ============ FAQ ============ -->
-<section class="sec" id="faq">
-  <div class="wrap-narrow">
-    <div class="sec-head center reveal">
-      <p class="eyebrow center">FAQ</p>
-      <h2 class="h-sec">よくあるご質問</h2>
+<!-- ============ 体験談 ============ -->
+<section class="sec" id="voiceSec" style="padding-top:0">
+  <div class="wrap">
+    <div class="sec-head c rv">
+      <p class="eyebrow c">Voices</p>
+      <h2 class="h-sec">読んだ方から、届いた言葉</h2>
     </div>
-    <div id="faqList" class="reveal d1"></div>
+    <div class="voices" id="voices"></div>
+    <p class="small c mt-m">※ 掲載はご本人の許諾を得たものです。年齢等は掲載時点のものです。</p>
   </div>
 </section>
 
-<!-- ============ 最終CTA ============ -->
-<section class="cta-final">
-  <div class="wrap-narrow reveal">
-    <p class="eyebrow center">Begin</p>
-    <h2 class="h-display">迷っている時間も、<br><em class="gold-text">あなたの巡りの一部です。</em></h2>
-    <p class="lead mt-m">まずは無料の鑑定から。40秒で、あなたの輪郭が言葉になります。</p>
-    <div class="hero-actions" style="justify-content:center">
-      <a class="btn btn-gold" href="#reading">無料で視てもらう<span aria-hidden="true">→</span></a>
-      <a class="btn btn-ghost" href="#plans">詳細鑑定を見る</a>
+<!-- ============ 帯CTA ============ -->
+<section class="band">
+  <div class="wrap-narrow rv">
+    <p class="eyebrow c">Begin</p>
+    <h2 class="h-sec">迷っている時間も、<br><em class="gold">あなたの巡りの一部です。</em></h2>
+    <p class="lead mt-m">生年月日をひとつ入れるだけ。<span class="mark">十秒後には、言葉が届いています。</span></p>
+    <div class="hero-act" style="justify-content:center">
+      <button class="btn btn-gold btn-lg" data-open-first="f-shukumei">無料で視てもらう<span aria-hidden="true">→</span></button>
+      <button class="btn btn-ghost" data-open-first="t-today">札を一枚だけ引く</button>
     </div>
   </div>
 </section>
@@ -517,92 +228,69 @@
 </main>
 
 <!-- ============ FOOTER ============ -->
-<footer class="site-footer">
+<footer class="ftr">
   <div class="wrap">
-    <div class="foot-grid">
-      <div class="foot-brand">
+    <div class="ftr-grid">
+      <div class="ftr-brand">
         <a class="brand" href="#top">
           <svg class="brand-mark" viewBox="0 0 40 40" fill="none" aria-hidden="true">
-            <circle cx="20" cy="20" r="18.2" stroke="#c09a4f" stroke-width=".9" opacity=".8"/>
-            <path d="M20 6.5l3.05 8.9L32 18.5l-8.95 3.1L20 30.5l-3.05-8.9L8 18.5l8.95-3.1z" fill="#d3b573"/>
+            <circle cx="20" cy="20" r="18.4" stroke="#c9a253" stroke-width=".9" opacity=".85"/>
+            <path d="M20 6l3.2 9.1L32 18.4l-8.8 3.3L20 31l-3.2-9.3L8 18.4l8.8-3.3z" fill="#e2c27f"/>
           </svg>
           <span class="brand-name">星詠堂<em class="brand-sub">HOSHIYOMI-DO</em></span>
         </a>
         <p>星は、あなたを裁くために在るのではない。<br>2011年より、言葉が届く鑑定を。</p>
       </div>
-      <div class="foot-col">
-        <h4>鑑定</h4>
-        <ul>
-          <li><a href="#daily">今日の運勢</a></li>
-          <li><a href="#reading">無料鑑定</a></li>
-          <li><a href="#plans">光の章</a></li>
-          <li><a href="#plans">深淵の章</a></li>
-          <li><a href="#plans">宿命の書</a></li>
-        </ul>
-      </div>
-      <div class="foot-col">
-        <h4>当館について</h4>
-        <ul>
-          <li><a href="#trust">鑑定の方法</a></li>
-          <li><a href="#trust">鑑定士紹介</a></li>
-          <li><a href="#voices">お客様の声</a></li>
-          <li><a href="#faq">よくある質問</a></li>
-        </ul>
-      </div>
-      <div class="foot-col">
-        <h4>ご利用にあたって</h4>
-        <ul>
-          <li><a href="#faq">特定商取引法に基づく表記</a></li>
-          <li><a href="#faq">プライバシーポリシー</a></li>
-          <li><a href="#faq">利用規約</a></li>
-          <li><a href="#faq">お問い合わせ</a></li>
-        </ul>
-      </div>
+      <div class="ftr-col"><h4>ジャンル</h4><ul>
+        <li><a href="#menu">恋愛</a></li><li><a href="#menu">相性</a></li>
+        <li><a href="#menu">タロット</a></li><li><a href="#menu">姓名判断</a></li>
+        <li><a href="#menu">仕事・金運</a></li><li><a href="#menu">人生・宿命</a></li>
+      </ul></div>
+      <div class="ftr-col"><h4>当館について</h4><ul>
+        <li><a href="#tellerSec">鑑定士紹介</a></li><li><a href="#voiceSec">体験談</a></li>
+        <li><a href="#daily">今日の運勢</a></li><li><a href="#rankSec">人気の鑑定</a></li>
+      </ul></div>
+      <div class="ftr-col"><h4>ご利用にあたって</h4><ul>
+        <li><a href="#top">特定商取引法に基づく表記</a></li><li><a href="#top">プライバシーポリシー</a></li>
+        <li><a href="#top">利用規約</a></li><li><a href="#top">お問い合わせ</a></li>
+      </ul></div>
     </div>
 
-    <div class="disclaimer">
+    <div class="disc">
       <b>ご確認ください。</b>
-      当館の鑑定は娯楽・自己理解の補助を目的としたものであり、医療・法律・投資・その他の専門的助言に代わるものではありません。
+      当館の鑑定は娯楽および自己理解の補助を目的としたもので、医療・法律・投資その他の専門的助言に代わるものではありません。
       健康、法律上の問題、経済的な判断については、必ず有資格の専門家にご相談ください。鑑定結果によって生じたいかなる結果についても、当館は責任を負いかねます。
-      また、鑑定はあなたの未来を確定するものではなく、判断の材料としてご活用いただくものです。
+      鑑定はあなたの未来を確定するものではなく、判断の材料としてご活用いただくものです。
       <br><br>
       <b>個人情報の取り扱い。</b>
-      無料鑑定でご入力いただいた内容は、お使いのブラウザ内でのみ処理され、当館のサーバーへ送信・保存されることはありません。
-      継続来訪の記録および過去の鑑定書は、お使いの端末のローカルストレージにのみ保存されます。ブラウザのデータを消去すると失われます。
+      ご入力いただいた生年月日・お名前は、お使いのブラウザ内でのみ処理され、当館のサーバーへ送信・保存されることはありません。
+      鑑定の履歴はお使いの端末のローカルストレージにのみ保存されます。ブラウザのデータを消去すると失われます。
       <br><br>
       <b>本サイトはデモンストレーションです。</b>
-      掲載の実績数値・お客様の声・鑑定士紹介はサンプルであり、実在の個人・団体とは関係ありません。決済機能は実装されておらず、実際の課金は一切発生しません。
+      掲載の実績数値・体験談・鑑定士紹介はサンプルであり、実在の個人・団体とは関係ありません。
+      決済機能は実装されておらず、実際の課金は一切発生しません。
     </div>
 
-    <div class="foot-bottom">
+    <div class="ftr-btm">
       <span>&copy; 2026 HOSHIYOMI-DO</span>
-      <span>DESIGNED UNDER THE NIGHT SKY</span>
+      <span>UNDER THE NIGHT SKY</span>
     </div>
   </div>
 </footer>
 
 </div><!-- /.page -->
 
-<!-- ============ 決済モーダル ============ -->
-<div class="modal" id="payModal" role="dialog" aria-modal="true" aria-labelledby="payTitle">
-  <div class="modal-bg" data-close></div>
-  <div class="modal-box">
-    <button class="modal-close" data-close aria-label="閉じる">
-      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M1 1l12 12M13 1L1 13"/></svg>
-    </button>
-    <h3 id="payTitle">お支払いへ進む</h3>
-    <p class="sub" id="paySub">—</p>
-    <div class="order-sum" id="orderSum"></div>
-    <p class="small" style="margin-bottom:16px">お支払い方法</p>
-    <ul class="pay-methods">
-      <li>クレジットカード</li><li>コンビニ決済</li><li>キャリア決済</li><li>PayPay</li><li>銀行振込</li>
-    </ul>
-    <button class="btn btn-gold btn-block" id="payGo">お支払いへ進む</button>
-    <div class="demo-note">
-      <strong>これはデモサイトです。</strong>決済処理は実装されておらず、課金は発生しません。
-      下のボタンを押すと、購入後に読める内容をそのまま体験できます。
+<!-- ============ 鑑定オーバーレイ ============ -->
+<div class="reader" id="reader" role="dialog" aria-modal="true" aria-labelledby="rTtl">
+  <div class="reader-bg"></div>
+  <div class="reader-panel">
+    <div class="reader-hd">
+      <button class="reader-close" aria-label="閉じる">
+        <svg width="15" height="15" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M1 1l12 12M13 1L1 13"/></svg>
+      </button>
+      <div class="ttl"><span id="rTtl">鑑定</span><small id="rKind"></small></div>
     </div>
-    <button class="btn btn-quiet btn-block mt-s" id="demoUnlock" style="margin-top:16px">デモとして全文を表示する</button>
+    <div class="reader-body" id="rBody"></div>
   </div>
 </div>
 
