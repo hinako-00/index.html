@@ -62,7 +62,26 @@ body{
   margin:0;font-family:var(--f-min);background:var(--ink-900);color:var(--text);
   line-height:1.95;font-size:16px;letter-spacing:.04em;
   -webkit-font-smoothing:antialiased;overflow-x:hidden;
+  /* 日本語の折り返し：句読点や小書き文字の直前で切らない */
+  line-break:strict;
+  word-break:normal;
+  overflow-wrap:normal;
+  hanging-punctuation:allow-end;
 }
+/* 見出し・リード文は文節単位で折り返す（対応ブラウザ） */
+h1,h2,h3,h4,.hero-title,.h-sec,.gate-h,.gate-lead,.lead,.hero-copy,
+.mcard h3,.mcard .catch,.rank-ttl,.rank-ct,.ask-head h2,.ask-head .catch,
+.res-hero h2,.pull,.bigline,.meter-lb,.teller h3,.voice p{
+  word-break:auto-phrase;
+  text-wrap:balance;
+}
+/* 本文は行末を整える */
+.res-body p,.res-body li,.gate-why,.gate-list li,.dtxt,.teller p,.disc,.fhint{
+  word-break:auto-phrase;
+  text-wrap:pretty;
+}
+/* 切ってはいけない語のかたまり */
+.nb{white-space:nowrap;}
 body.locked{overflow:hidden;}
 img,svg{max-width:100%;height:auto;display:block;}
 button,input,select,textarea{font:inherit;color:inherit;}
@@ -104,6 +123,7 @@ ul,ol{margin:0;padding:0;list-style:none;}
   color:var(--gold-100);font-style:normal;font-weight:600;
   font-size:1.12em;letter-spacing:.09em;
   text-shadow:0 0 20px rgba(226,194,127,.55);
+  word-break:auto-phrase;
 }
 .hl-lg{                    /* さらに強い一語 */
   display:inline-block;color:var(--gold-100);font-style:normal;font-weight:600;
@@ -113,11 +133,13 @@ ul,ol{margin:0;padding:0;list-style:none;}
 .warn{                     /* 危機感 */
   color:var(--crimson);font-style:normal;font-weight:600;font-size:1.08em;
   text-shadow:0 0 18px rgba(212,80,106,.5);
+  word-break:auto-phrase;
 }
 .calm{color:var(--jade);font-style:normal;font-weight:500;}
 .mark{                     /* 下線マーカー */
   background:linear-gradient(transparent 62%,rgba(201,162,83,.36) 62%);
   padding:0 .12em;color:var(--paper);
+  box-decoration-break:clone;-webkit-box-decoration-break:clone;
 }
 .bigline{
   display:block;font-size:clamp(1.15rem,2.9vw,1.6rem);line-height:1.75;
@@ -342,8 +364,8 @@ section[id]{scroll-margin-top:74px;}
 .badge.hot{border-color:transparent;color:#fff;background:linear-gradient(100deg,#9c2f47,#d4506a);}
 .badge.easy{border-color:rgba(240,184,200,.5);color:var(--sakura);}
 .mcard h3{font-size:1.02rem;letter-spacing:.07em;color:var(--paper);line-height:1.6;}
-.mcard .catch{font-size:.85rem;line-height:1.95;color:var(--gold-200);}
-.mcard .desc{font-size:.79rem;line-height:1.9;color:var(--text-dim);}
+.mcard .catch{font-size:.86rem;line-height:2;color:var(--gold-200);}
+.mcard .desc{font-size:.8rem;line-height:2;color:var(--text-dim);}
 .mcard .foot{
   margin-top:auto;padding-top:13px;border-top:1px solid var(--veil);
   display:flex;align-items:center;justify-content:space-between;gap:10px;
@@ -584,20 +606,20 @@ select.inp{
 .res-h .n{font-family:var(--f-en);font-size:.76rem;letter-spacing:.2em;color:var(--gold-400);flex:none;}
 .res-h h3{font-size:clamp(1.08rem,2.4vw,1.34rem);letter-spacing:.11em;color:var(--paper);flex:none;}
 .res-h .ln{flex:1;height:1px;background:linear-gradient(90deg,rgba(201,162,83,.55),transparent);}
-.res-body{font-size:clamp(.94rem,1.8vw,1rem);line-height:2.45;color:var(--text);}
-.res-body p+p{margin-top:1.3em;}
+.res-body{font-size:clamp(.95rem,1.8vw,1.02rem);line-height:2.6;color:var(--text);letter-spacing:.05em;}
+.res-body p+p{margin-top:1.5em;}
 .res-body strong{color:var(--paper);font-weight:600;}
 
 .pull{
-  margin:26px 0;padding:24px clamp(18px,3vw,32px);border-left:2px solid var(--gold-400);
+  margin:28px 0;padding:26px clamp(20px,3vw,34px);border-left:2px solid var(--gold-400);
   background:linear-gradient(90deg,rgba(201,162,83,.11),transparent 82%);
-  font-size:clamp(1rem,2.1vw,1.15rem);line-height:2.05;color:var(--gold-100);letter-spacing:.08em;
+  font-size:clamp(1rem,2.1vw,1.12rem);line-height:2.25;color:var(--gold-100);letter-spacing:.07em;
 }
 .pull-warn{border-left-color:var(--crimson);background:linear-gradient(90deg,rgba(212,80,106,.13),transparent 82%);color:#f4c9d3;}
 .kv{display:grid;gap:1px;background:var(--veil);border:1px solid var(--veil);margin-top:18px;}
 .kv-r{display:grid;grid-template-columns:minmax(88px,140px) 1fr;background:rgba(10,7,20,.92);}
 .kv-r dt{padding:14px 16px;font-size:.75rem;letter-spacing:.12em;color:var(--gold-300);border-right:1px solid var(--veil);}
-.kv-r dd{padding:14px 16px;margin:0;font-size:.86rem;line-height:1.95;}
+.kv-r dd{padding:15px 18px;margin:0;font-size:.88rem;line-height:2.15;}
 @media (max-width:520px){.kv-r{grid-template-columns:1fr;}.kv-r dt{border-right:0;border-bottom:1px solid var(--veil);padding-bottom:5px;}}
 
 /* 図表 */
@@ -606,7 +628,7 @@ select.inp{
 .chart-t span{color:var(--text-faint);letter-spacing:.06em;font-size:.68rem;}
 .bar-r{display:grid;grid-template-columns:78px 1fr 42px;align-items:center;gap:11px;margin-top:10px;font-size:.77rem;}
 .bar-tr{height:5px;background:rgba(242,222,187,.1);border-radius:4px;overflow:hidden;}
-.bar-fl{height:100%;width:0;border-radius:4px;background:linear-gradient(90deg,var(--gold-500),var(--gold-100));transition:width 1.4s var(--ease-out);}
+.bar-fl{display:block;height:100%;width:0;border-radius:6px;background:linear-gradient(90deg,var(--gold-500),var(--gold-100));transition:width 1.4s var(--ease-out);}
 .bar-r .v{font-family:var(--f-en);color:var(--gold-200);text-align:right;white-space:nowrap;}
 
 /* 相性メーター */
@@ -663,14 +685,14 @@ select.inp{
   box-shadow:var(--sh-gold);
 }
 .gate-key svg{width:24px;height:24px;}
-.gate-lead{font-size:clamp(1.02rem,2.4vw,1.28rem);line-height:1.95;color:var(--gold-100);letter-spacing:.08em;}
-.gate-h{font-size:clamp(1.3rem,3.4vw,1.95rem);line-height:1.55;letter-spacing:.09em;color:var(--paper);margin:14px 0 16px;}
-.gate-why{font-size:.92rem;line-height:2.15;color:var(--text-dim);max-width:40em;margin-inline:auto;}
+.gate-lead{font-size:clamp(1rem,2.2vw,1.2rem);line-height:2.05;color:var(--gold-100);letter-spacing:.08em;max-width:26em;margin-inline:auto;}
+.gate-h{font-size:clamp(1.24rem,3vw,1.8rem);line-height:1.7;letter-spacing:.08em;color:var(--paper);margin:16px auto 18px;max-width:22em;}
+.gate-why{font-size:.93rem;line-height:2.3;color:var(--text-dim);max-width:36em;margin-inline:auto;}
 .gate-list{
   display:grid;gap:10px;max-width:30em;margin:26px auto 0;text-align:left;
 }
 .gate-list li{
-  position:relative;padding:12px 16px 12px 40px;font-size:.87rem;line-height:1.8;
+  position:relative;padding:13px 18px 13px 42px;font-size:.88rem;line-height:2;
   border:1px solid var(--veil);border-radius:4px;background:rgba(8,6,18,.6);color:var(--text);
 }
 .gate-list li::before{
@@ -744,3 +766,148 @@ select.inp{
   body{background:#fff;color:#111;}
   .res-body,.pil .v,.h-sec{color:#111;}
 }
+
+/* =========================================================
+   23. 上にもどる
+   ========================================================= */
+.totop{
+  position:fixed;right:clamp(14px,2.4vw,28px);bottom:clamp(14px,2.4vw,28px);z-index:70;
+  width:52px;height:52px;border-radius:50%;display:grid;place-items:center;
+  border:1px solid rgba(201,162,83,.5);color:var(--gold-100);
+  background:linear-gradient(160deg,rgba(61,33,89,.94),rgba(9,6,20,.96));
+  backdrop-filter:blur(10px);box-shadow:var(--sh-soft);
+  opacity:0;visibility:hidden;transform:translateY(12px);
+  transition:opacity .45s var(--ease),transform .45s var(--ease-out),visibility .45s,border-color .35s;
+}
+.totop.on{opacity:1;visibility:visible;transform:none;}
+.totop:hover{border-color:var(--gold-200);box-shadow:var(--sh-gold);}
+.totop svg{width:16px;height:16px;}
+.totop span{position:absolute;bottom:5px;font-size:.44rem;letter-spacing:.1em;color:var(--gold-400);}
+#readerTop{z-index:95;}
+
+/* セクション間のインライン「上にもどる」 */
+.uptop{
+  display:flex;align-items:center;justify-content:center;gap:9px;margin:34px auto 0;
+  padding:.65em 1.6em;border-radius:100px;border:1px solid var(--veil-2);
+  font-size:.76rem;letter-spacing:.14em;color:var(--text-dim);
+  background:rgba(9,6,20,.5);transition:.4s var(--ease);
+}
+.uptop:hover{border-color:rgba(201,162,83,.5);color:var(--gold-100);transform:translateY(-2px);}
+.uptop svg{width:11px;height:11px;}
+
+/* =========================================================
+   24. 図表の強化
+   ========================================================= */
+/* 数値バッジつきバー */
+.bar-r{grid-template-columns:96px 1fr 68px;gap:13px;margin-top:13px;font-size:.8rem;}
+.bar-tr{height:9px;background:rgba(242,222,187,.08);border-radius:6px;overflow:hidden;position:relative;}
+.bar-tr::before{
+  content:"";position:absolute;inset:0;pointer-events:none;z-index:0;
+  background:repeating-linear-gradient(90deg,transparent 0 19%,rgba(242,222,187,.14) 19% 19.6%);
+}
+.bar-tr>.bar-fl{position:relative;z-index:1;}
+.bar-fl{display:block;height:100%;border-radius:6px;box-shadow:0 0 14px -2px rgba(201,162,83,.7);}
+.bar-fl.top{background:linear-gradient(90deg,#a37c33,#fdf3d4);}
+.bar-fl.low{background:linear-gradient(90deg,#7a2c40,#d4506a);box-shadow:0 0 14px -2px rgba(212,80,106,.7);}
+.bar-r .v{display:flex;align-items:center;justify-content:flex-end;gap:6px;}
+.bar-r .v b{font-family:var(--f-en);font-size:1.05rem;color:var(--gold-100);font-weight:500;}
+.bar-r .v .tag{
+  font-size:.58rem;letter-spacing:.06em;padding:.2em .5em;border-radius:3px;
+  border:1px solid var(--veil-2);color:var(--text-faint);white-space:nowrap;
+}
+.bar-r .v .tag.hi{border-color:rgba(201,162,83,.55);color:var(--gold-200);}
+.bar-r .v .tag.lo{border-color:rgba(212,80,106,.5);color:var(--crimson);}
+.bar-r>span:first-child{color:var(--text);letter-spacing:.06em;}
+
+/* 図の見出し・凡例 */
+.chart-box{padding:clamp(18px,2.6vw,30px);}
+.chart-t{font-size:.8rem;letter-spacing:.16em;color:var(--gold-200);margin-bottom:16px;align-items:baseline;}
+.chart-legend{
+  display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:16px;padding-top:14px;
+  border-top:1px solid var(--veil);font-size:.74rem;color:var(--text-dim);
+}
+.chart-legend i{display:inline-block;width:14px;height:4px;border-radius:3px;margin-right:7px;vertical-align:middle;}
+.chart-note{margin-top:12px;font-size:.76rem;line-height:1.9;color:var(--text-faint);}
+.chart-note b{color:var(--gold-200);font-weight:400;}
+
+/* 表（データテーブル） */
+.tbl{width:100%;border-collapse:collapse;margin-top:18px;font-size:.84rem;}
+.tbl th,.tbl td{padding:12px 14px;border:1px solid var(--veil);text-align:left;line-height:1.85;}
+.tbl thead th{
+  background:linear-gradient(180deg,rgba(61,33,89,.7),rgba(12,9,24,.7));
+  color:var(--gold-200);font-weight:500;font-size:.75rem;letter-spacing:.12em;white-space:nowrap;
+}
+.tbl tbody tr:nth-child(odd){background:rgba(12,9,24,.55);}
+.tbl tbody tr:nth-child(even){background:rgba(24,16,44,.4);}
+.tbl td.num{font-family:var(--f-en);text-align:right;color:var(--gold-100);white-space:nowrap;}
+.tbl td .pill{
+  display:inline-block;font-size:.66rem;padding:.2em .6em;border-radius:100px;border:1px solid var(--veil-2);
+  color:var(--text-dim);white-space:nowrap;
+}
+.tbl td .pill.g{border-color:rgba(201,162,83,.5);color:var(--gold-200);}
+.tbl td .pill.r{border-color:rgba(212,80,106,.5);color:var(--crimson);}
+.tbl-wrap{overflow-x:auto;}
+
+/* 札の絵柄 */
+.dcard-fr{gap:5px;padding:9px 8px;}
+.dcard-art{display:block;width:74%;max-width:92px;color:var(--gold-200);margin:3px auto 2px;}
+.dcard-art svg{width:100%;height:auto;}
+.dcard-b .back-art{width:66%;color:var(--gold-500);opacity:.9;}
+.dcard-fr .nm{font-size:.88rem;margin-top:1px;}
+.pick svg{width:58%;}
+.pick .pick-n{position:absolute;bottom:6px;font-family:var(--f-en);font-size:.62rem;color:var(--gold-500);}
+.pick{position:relative;}
+
+/* 大きな一枚（結論札） */
+.hero-card-art{
+  display:flex;gap:clamp(16px,3vw,28px);align-items:center;margin-top:20px;
+  padding:clamp(18px,2.6vw,26px);border:1px solid rgba(201,162,83,.34);border-radius:5px;
+  background:linear-gradient(150deg,rgba(61,33,89,.5),rgba(9,6,20,.9));flex-wrap:wrap;
+}
+.hero-card-art .frame{
+  width:clamp(104px,26vw,132px);aspect-ratio:5/8;flex:none;border-radius:6px;
+  border:1px solid rgba(201,162,83,.5);display:grid;place-items:center;
+  background:linear-gradient(165deg,#1c1436,#0a0716);color:var(--gold-200);
+  box-shadow:var(--sh-gold);
+}
+.hero-card-art .frame svg{width:66%;}
+.hero-card-art .meta{flex:1;min-width:170px;}
+.hero-card-art .meta .rn{font-family:var(--f-en);font-size:.78rem;color:var(--gold-400);letter-spacing:.2em;}
+.hero-card-art .meta .nm{font-size:clamp(1.15rem,2.8vw,1.5rem);color:var(--paper);letter-spacing:.1em;margin:6px 0;}
+.hero-card-art .meta .en{font-family:var(--f-en);font-style:italic;font-size:.8rem;color:var(--text-faint);}
+.hero-card-art .meta .kw{margin-top:10px;font-size:.9rem;color:var(--gold-100);letter-spacing:.08em;}
+
+/* 五行の輪・周期の輪 */
+.diagram{margin-top:20px;padding:clamp(16px,2.4vw,26px);border:1px solid var(--veil);border-radius:4px;background:rgba(8,6,18,.6);}
+.diagram svg{max-width:100%;margin-inline:auto;display:block;}
+.diagram .d-t{font-size:.8rem;letter-spacing:.16em;color:var(--gold-200);margin-bottom:14px;}
+.diagram .d-n{margin-top:12px;font-size:.76rem;line-height:1.95;color:var(--text-faint);}
+
+/* 手順・時系列 */
+.steps{display:grid;gap:0;margin-top:18px;counter-reset:st;}
+.step{
+  display:grid;grid-template-columns:auto 1fr;gap:16px;padding:16px 0;
+  border-bottom:1px dashed var(--veil-2);align-items:start;
+}
+.step:last-child{border-bottom:0;}
+.step-n{
+  counter-increment:st;width:34px;height:34px;border-radius:50%;flex:none;
+  display:grid;place-items:center;font-family:var(--f-en);font-size:.86rem;
+  border:1px solid rgba(201,162,83,.45);color:var(--gold-200);background:rgba(9,6,20,.6);
+}
+.step-n::before{content:counter(st);}
+.step h5{font-size:.92rem;letter-spacing:.1em;color:var(--paper);margin-bottom:6px;}
+.step p{font-size:.84rem;line-height:2;color:var(--text-dim);}
+
+/* 全文無料バッジ */
+.badge.allfree{
+  border-color:transparent;color:#123;font-weight:700;
+  background:linear-gradient(100deg,#8fd6bb,#e8fff5 50%,#8fd6bb);
+}
+.freebar{
+  display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;
+  margin-top:34px;padding:18px 22px;border-radius:5px;text-align:center;
+  border:1px solid rgba(99,168,143,.45);background:rgba(99,168,143,.09);
+  font-size:.88rem;letter-spacing:.08em;color:var(--text);
+}
+.freebar b{color:var(--jade);font-weight:600;}

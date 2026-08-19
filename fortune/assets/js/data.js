@@ -356,6 +356,58 @@
       rv:{kw:'未完・惜別', msg:'あと一歩で完成する何かがあります。飽きではなく疲れなので、休んでから戻ってください。'} }
   ];
 
+
+  /* ---------- 大アルカナの絵柄（viewBox 0 0 100 100 / stroke=currentColor） ---------- */
+  const TAROT_ART = {
+    0:'<circle cx="74" cy="24" r="9"/><path d="M20 84h60"/><path d="M36 84V46l20-16"/>' +
+      '<path d="M56 30l10-5 3 11-11 1z"/><circle cx="28" cy="70" r="6"/><path d="M22 70l-4-4"/>',
+    1:'<path d="M22 68h56"/><path d="M50 64V22"/><path d="M44 22h12"/>' +
+      '<path d="M36 40c-6 0-10 3-10 7s4 7 10 7 12-14 20-14 10 3 10 7-4 7-10 7-14-14-20-14z"/>',
+    2:'<path d="M28 82V32M72 82V32"/><path d="M24 32h52"/><path d="M18 88h64"/>' +
+      '<path d="M60 58a13 13 0 1 1-15-15 11 11 0 0 0 15 15z"/>',
+    3:'<path d="M30 48l6-18 14 13 14-13 6 18z"/><path d="M28 48h44"/>' +
+      '<path d="M50 86V56"/><path d="M50 62l9-7M50 70l9-7M50 78l9-7M50 62l-9-7M50 70l-9-7M50 78l-9-7"/>',
+    4:'<path d="M34 84V46h32v38"/><path d="M34 46l-7-12h46l-7 12"/><path d="M24 84h52"/>' +
+      '<path d="M50 34V18"/><circle cx="50" cy="14" r="4"/>',
+    5:'<path d="M38 42h24M35 52h30M32 62h36"/><path d="M50 36V24"/><circle cx="50" cy="20" r="3"/>' +
+      '<path d="M42 68l-8 14M58 68l8 14"/><circle cx="32" cy="84" r="4"/><circle cx="68" cy="84" r="4"/>',
+    6:'<circle cx="38" cy="64" r="15"/><circle cx="62" cy="64" r="15"/>' +
+      '<path d="M50 24l4 10 10 4-10 4-4 10-4-10-10-4 10-4z"/>',
+    7:'<circle cx="50" cy="66" r="15"/><path d="M50 51v30M35 66h30"/><path d="M30 46h40l-6-14H36z"/>' +
+      '<path d="M50 18l3 7 7 3-7 3-3 7-3-7-7-3 7-3z"/>',
+    8:'<circle cx="50" cy="64" r="17"/><path d="M40 58l-7-9M60 58l7-9"/>' +
+      '<circle cx="44" cy="62" r="2"/><circle cx="56" cy="62" r="2"/><path d="M44 72q6 6 12 0"/>' +
+      '<path d="M34 26c-5 0-8 3-8 6s3 6 8 6 10-12 16-12 8 3 8 6-3 6-8 6-11-12-16-12z"/>',
+    9:'<path d="M43 32h14l4 10-4 22H43l-4-22z"/><path d="M50 42v22"/><path d="M50 28v-8"/>' +
+      '<path d="M74 20L58 86"/><path d="M28 42l7 4M28 56l7-2M30 68l6-4"/>',
+    10:'<circle cx="50" cy="52" r="26"/><circle cx="50" cy="52" r="9"/>' +
+      '<path d="M50 26v52M24 52h52M32 34l36 36M68 34L32 70"/>',
+    11:'<path d="M50 22v56"/><path d="M24 40h52"/><path d="M24 40l-8 15h16zM76 40l-8 15h16z"/>' +
+      '<path d="M36 78h28"/><circle cx="50" cy="18" r="3"/>',
+    12:'<path d="M24 22h52"/><path d="M50 22v14"/><circle cx="50" cy="72" r="9"/>' +
+      '<path d="M50 36v27M50 42l14 9M50 48l-13 10"/>',
+    13:'<path d="M30 86L72 26"/><path d="M72 26c-15 0-27 9-31 21 17 2 29-6 31-21z"/><path d="M26 90h22"/>',
+    14:'<path d="M26 34h22l-5 15H31z"/><path d="M52 58h22l-5 15H57z"/>' +
+      '<path d="M43 49c11 2 14 6 14 11"/><path d="M28 82h46"/>',
+    15:'<path d="M34 36l-9-15M66 36l9-15"/><circle cx="50" cy="50" r="17"/>' +
+      '<circle cx="43" cy="46" r="2"/><circle cx="57" cy="46" r="2"/><path d="M42 58q8 6 16 0"/>' +
+      '<circle cx="37" cy="82" r="6"/><circle cx="63" cy="82" r="6"/><path d="M43 82h14"/>',
+    16:'<path d="M36 86V42h28v44z"/><path d="M31 42l19-14 19 14z"/>' +
+      '<path d="M64 18L50 38h10l-9 15"/><path d="M26 90h48"/>' +
+      '<circle cx="43" cy="60" r="3"/><circle cx="58" cy="72" r="3"/>',
+    17:'<path d="M50 14l6 16 16 6-16 6-6 16-6-16-16-6 16-6z"/>' +
+      '<path d="M33 66h17l-3 13H36z"/><path d="M50 72c9 2 13 8 13 15"/>' +
+      '<circle cx="72" cy="62" r="3"/><circle cx="24" cy="54" r="2.4"/>',
+    18:'<path d="M64 40a17 17 0 1 1-19-19 14 14 0 0 0 19 19z"/>' +
+      '<path d="M24 88V62l7-9 7 9v26zM62 88V62l7-9 7 9v26z"/><path d="M16 92h68"/>',
+    19:'<circle cx="50" cy="50" r="17"/>' +
+      '<path d="M50 22V8M50 92V78M22 50H8M92 50H78M30 30l-9-9M79 79l-9-9M70 30l9-9M21 79l9-9"/>',
+    20:'<path d="M24 48l34-13v26z"/><path d="M58 35l16-7v34l-16-7z"/>' +
+      '<path d="M20 68q15-11 30 0M20 80q15-11 30 0"/><path d="M50 86h30"/>',
+    21:'<ellipse cx="50" cy="52" rx="19" ry="29"/><path d="M50 36v32M40 52h20"/>' +
+      '<circle cx="20" cy="22" r="4"/><circle cx="80" cy="22" r="4"/><circle cx="20" cy="82" r="4"/><circle cx="80" cy="82" r="4"/>'
+  };
+
   /* ---------- 魂の色（カラーオラクル） ---------- */
   const COLORS = [
     { jp:'金襴(きんらん)', hex:'#d3b573', msg:'人の目を引く華があり、責任ある役割が自然に集まる年回りです。' },
@@ -471,15 +523,15 @@
   --------------------------------------------------------- */
   const MENUS = [
     /* --- タロット（入力なし・最速） --- */
-    { id:'t-today', g:'tarot', e:'tarot', theme:'today', n:1, ic:'札', teller:'yoi',
+    { id:'t-today', free:true, g:'tarot', e:'tarot', theme:'today', n:1, ic:'札', teller:'yoi',
       t:'今日引くべき一枚', c:'今日のあなたに、札は何と言うか。',
-      d:'生年月日も名前もいりません。直感で一枚めくるだけ。', tags:['入力なし','10秒'] },
+      d:'生年月日も名前もいりません。直感で一枚めくるだけ。', tags:['全文無料', '入力なし','10秒'] },
     { id:'t-honne', g:'tarot', e:'tarot', theme:'honne', n:3, ic:'札', teller:'yoi',
       t:'あの人の本音', c:'口では言わない、その人の本当の気持ち。',
       d:'思い浮かべながら三枚めくってください。', tags:['入力なし','人気'] },
-    { id:'t-yesno', g:'tarot', e:'tarot', theme:'yesno', n:1, ic:'札', teller:'yoi',
+    { id:'t-yesno', free:true, g:'tarot', e:'tarot', theme:'yesno', n:1, ic:'札', teller:'yoi',
       t:'今すぐ答えが欲しい YES / NO', c:'迷っているその一件、答えは出ています。',
-      d:'一枚めくるだけ。即答します。', tags:['入力なし','10秒'] },
+      d:'一枚めくるだけ。即答します。', tags:['全文無料', '入力なし','10秒'] },
     { id:'t-cross', g:'tarot', e:'tarot', theme:'cross', n:5, ic:'札', teller:'yoi',
       t:'五枚展開・運命の岐路', c:'現在／障害／根源／近い未来／結論。',
       d:'本格スプレッド。いま抱えている問題の全体像が見えます。', tags:['入力なし','本格'] },
@@ -491,9 +543,9 @@
     { id:'s-basic', g:'seimei', e:'seimei', theme:'basic', ic:'名', teller:'kotone',
       t:'名前が示すあなたの本質', c:'その名前に込められた、生涯の設計図。',
       d:'姓名をひらがなで入れるだけ。五格すべてを鑑定します。', tags:['名前だけ','本格'] },
-    { id:'s-love', g:'seimei', e:'seimei', theme:'love', ic:'名', teller:'kotone',
+    { id:'s-love', free:true, g:'seimei', e:'seimei', theme:'love', ic:'名', teller:'kotone',
       t:'名前で視る恋愛運', c:'あなたが愛される形と、傷つく形。',
-      d:'名前の画数から、恋愛での癖を読み解きます。', tags:['名前だけ'] },
+      d:'名前の画数から、恋愛での癖を読み解きます。', tags:['全文無料', '名前だけ'] },
     { id:'s-work', g:'seimei', e:'seimei', theme:'work', ic:'名', teller:'kotone',
       t:'名前で視る仕事運・金運', c:'その名前は、何で稼ぐようにできているか。',
       d:'総格と外格から、職業適性と財の集まり方を。', tags:['名前だけ'] },
@@ -514,9 +566,9 @@
     { id:'a-back', g:'aisho', e:'compat', theme:'back', ic:'縁', teller:'kotone',
       t:'復縁の可能性', c:'終わった縁が、もう一度動くか。',
       d:'再生の可否と、連絡すべき時期・避けるべき言葉。', tags:['深い'] },
-    { id:'a-friend', g:'aisho', e:'compat', theme:'friend', ic:'縁', teller:'kotone',
+    { id:'a-friend', free:true, g:'aisho', e:'compat', theme:'friend', ic:'縁', teller:'kotone',
       t:'この人と組んで大丈夫？', c:'友人・同僚・取引先との相性。',
-      d:'恋愛以外の関係の相性を、気の流れから判定します。', tags:[] },
+      d:'恋愛以外の関係の相性を、気の流れから判定します。', tags:['全文無料'] },
 
     /* --- 恋愛 --- */
     { id:'l-honshitsu', g:'love', e:'natal', theme:'love', ic:'恋', teller:'akari',
@@ -565,10 +617,10 @@
     { id:'f-year', g:'life', e:'natal', theme:'year', ic:'命', teller:'akari',
       t:'これから一年の運勢', c:'いつ動き、いつ潜るか。',
       d:'十二ヶ月を月ごとに。曲線と月別の指針つき。', tags:['本格'] },
-    { id:'f-kenko', g:'life', e:'natal', theme:'health', ic:'命', teller:'akari',
+    { id:'f-kenko', free:true, g:'life', e:'natal', theme:'health', ic:'命', teller:'akari',
       t:'気の巡りと体質', c:'その不調は、性格ではなく気の偏りです。',
-      d:'五行の過不足から、消耗の癖と養生の方向を。', tags:[] }
+      d:'五行の過不足から、消耗の癖と養生の方向を。', tags:['全文無料'] }
   ];
 
-  global.HOSHI_DATA = { SIGNS, NUMBERS, ELEMENTS, BRANCHES, STEMS, MOONS, TAROT, COLORS, KANA, KAKU, GENRES, MENUS, TELLERS };
+  global.HOSHI_DATA = { SIGNS, NUMBERS, ELEMENTS, BRANCHES, STEMS, MOONS, TAROT, TAROT_ART, COLORS, KANA, KAKU, GENRES, MENUS, TELLERS };
 })(window);

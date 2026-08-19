@@ -18,6 +18,13 @@
   const PULL = s => '<blockquote class="pull">' + s + '</blockquote>';
   const PULLW= s => '<blockquote class="pull pull-warn">' + s + '</blockquote>';
   const KV   = rows => '<dl class="kv">' + rows.map(([k,v]) => '<div class="kv-r"><dt>'+k+'</dt><dd>'+v+'</dd></div>').join('') + '</dl>';
+  const TBL  = (head, rows) => '<div class="tbl-wrap"><table class="tbl"><thead><tr>' +
+    head.map(h => '<th>'+h+'</th>').join('') + '</tr></thead><tbody>' +
+    rows.map(r => '<tr>' + r.map(c => (typeof c === 'object' ? '<td class="'+(c.cls||'')+'">'+c.v+'</td>' : '<td>'+c+'</td>')).join('') + '</tr>').join('') +
+    '</tbody></table></div>';
+  const STEPS = items => '<div class="steps">' + items.map(([t,b]) =>
+    '<div class="step"><span class="step-n"></span><div><h5>'+t+'</h5><p>'+b+'</p></div></div>').join('') + '</div>';
+  const PILL = (v, cls) => '<span class="pill '+(cls||'')+'">'+v+'</span>';
   const WD   = ['日','月','火','水','木','金','土'];
   const jd   = dt => dt.getFullYear() + '年' + (dt.getMonth()+1) + '月' + dt.getDate() + '日（' + WD[dt.getDay()] + '）';
   const jm   = dt => dt.getFullYear() + '年' + (dt.getMonth()+1) + '月';
@@ -192,13 +199,14 @@
         '<strong>動くべき時期</strong>：' + HL(jm(c.best.date)) + '（指数 ' + c.best.score + '）。逆に' +
         WARN(jm(c.worst.date)) + 'の決断は避けてください。',
         '個人年' + c.py + 'の今年は、' + pyLine(c.py) + workTiming(c.py)
-      ) + KV([
-        ['職能の核', c.num.gift],
-        ['向く環境', WORK_ENV[c.domEl]],
-        ['消耗する環境', WORK_BAD[c.domEl]],
-        ['動く月', jm(c.best.date)],
-        ['避ける月', jm(c.worst.date)]
-      ])
+      ) + TBL(['', '向いている', '消耗する'], [
+        ['環境', {v:WORK_ENV[c.domEl]}, {v:WORK_BAD[c.domEl]}],
+        ['役割', {v:c.num.gift + 'を発揮できる位置'}, {v:c.num.trap + 'が出る位置'}],
+        ['評価軸', {v:c.domEl === '土' || c.domEl === '金' ? '積み上げと精度' : '速さと発信'},
+                  {v:c.domEl === '土' || c.domEl === '金' ? '短期の数字だけ' : '長期の待機だけ'}],
+        ['時期', {v:jm(c.best.date), cls:'num'}, {v:jm(c.worst.date), cls:'num'}]
+      ]),
+      charts:c => [{ type:'pyring', py:c.py }]
     },
     career:{
       kind:'転機タイミング鑑定',
@@ -219,7 +227,7 @@
         '曲線が下がる時期は不運ではありません。' + CALM('潜る時期です。') +
         c.domEl + 'の気が強いあなたは特に、下降期に無理をすると回復に倍の時間がかかります。'
       ),
-      chart:c => ({ type:'line', data:c.months })
+      charts:c => [{ type:'line', data:c.months }, { type:'pyring', py:c.py }]
     },
     money:{
       kind:'金運鑑定',
@@ -238,13 +246,19 @@
         '<strong>財が動く月</strong>：' + HLL(jm(c.best.date)) + '。臨時収入・昇給交渉・大きな買い物は、この月に。',
         '<strong>あなたの財の護符</strong>：色は' + HL(c.color.jp) + '、方位は' + HL(c.dir) + '、数は' + HL(c.luckyNums.join('・')) + '。' +
         '財布や通帳に、この色を一点入れてください。'
-      ) + KV([
-        ['お金の型', MONEY_STYLE[c.domEl]],
-        ['詰まりの原因', c.weakEl + 'の不足'],
-        ['解消法', D.ELEMENTS[c.weakEl].care],
-        ['財が動く月', jm(c.best.date)],
-        ['幸運の数', c.luckyNums.join('・')]
-      ])
+      ) + TBL(['項目','あなたの場合','対処'], [
+        ['お金の入り方', MONEY_STYLE[c.domEl], '得意な形を否定しない'],
+        ['詰まりの原因', {v:c.weakEl + 'の不足', cls:''}, D.ELEMENTS[c.weakEl].care],
+        ['財が動く月', {v:jm(c.best.date), cls:'num'}, '大きな支出・交渉はこの月に'],
+        ['避けたい月', {v:jm(c.worst.date), cls:'num'}, '新規契約を控える'],
+        ['幸運の数', {v:c.luckyNums.join('・'), cls:'num'}, '金額の端数・口座の末尾に'],
+        ['吉方', c.dir, '財布や通帳をこの方位へ']
+      ]) + STEPS([
+        ['固定費をひとつ止める', '今月中に、契約を三つ書き出して一つ解約してください。' + c.domEl + 'の気が強い時期の整理は驚くほど進みます。'],
+        [c.weakEl + 'の気を補う', D.ELEMENTS[c.weakEl].care + 'これを三ヶ月続けた方から、変化のご報告をいただくことが最も多いです。'],
+        [jm(c.best.date) + 'に動く', '交渉・申請・投資判断はこの月へ寄せてください。同じ行動でも通り方が変わります。']
+      ]),
+      charts:c => [{ type:'pyring', py:c.py }]
     },
     social:{
       kind:'人間関係鑑定',
@@ -265,7 +279,13 @@
         MK('「今回は難しいです」') + 'で文を終える。これだけで関係は変わります。',
         '<strong>大切にすべき相手</strong>：' + CALM(NEEDERS[c.domEl]),
         '<strong>整う時期</strong>：' + HL(jm(c.best.date)) + '。人間関係の入れ替わりが起きます。去る人は追わないでください。'
-      )
+      ) + TBL(['型','特徴','あなたへの影響','距離'], [
+        [{v:'削る人', cls:''}, DRAIN[c.weakEl], '会ったあと理由のない疲れが残る', {v:PILL('離れる','r')}],
+        ['支える人', NEEDERS[c.domEl], '一緒にいると回復が早い', {v:PILL('近づく','g')}],
+        ['鏡の人', '同じ' + c.domEl + 'の気を持つ人', '相手の欠点が自分の欠点に見える', {v:PILL('見習う')}],
+        ['育てる人', ({'木':'火','火':'土','土':'金','金':'水','水':'木'})[c.domEl] + 'の気を持つ人',
+         'あなたが与える側になる', {v:PILL('量を決める')}]
+      ])
     },
     destiny:{
       kind:'宿命鑑定',
@@ -295,7 +315,7 @@
         ['主たる気', c.domEl + '／薄いのは' + c.weakEl],
         ['魂の色', c.color.jp]
       ]),
-      chart:c => ({ type:'radar', data:c.balance })
+      charts:c => [{ type:'radar', data:c.balance }, { type:'elcycle', dom:c.domEl, weak:c.weakEl }, { type:'pyring', py:c.py }]
     },
     pastlife:{
       kind:'前世鑑定',
@@ -312,7 +332,11 @@
         'だから今生のあなたは、' + pastLife(c).now,
         '<strong>魂の色</strong>は' + HL(c.color.jp) + '。' + c.color.msg,
         CALM('信じる信じないは、読み終えてから決めてください。') + 'ただ、心当たりのある一行があったなら、それがあなたの魂の記憶です。'
-      )
+      ) + TBL(['前世で','今生では'], [
+        [pastLife(c).theme.split('。')[0] + 'が役割だった', '同じ主題が、仕事や関係の形を変えて現れている'],
+        ['自分の願いを口に出せなかった', '「望まれる前に自分から望む」ことが課題になっている'],
+        [pastLife(c).unfinished.split('。')[0], '伝えそびれることに、人一倍の痛みを感じる']
+      ])
     },
     turning:{
       kind:'転機の日 特定鑑定',
@@ -334,7 +358,7 @@
         '<strong>守りに徹する月</strong>：' + WARN(jm(c.worst.date)) + '（指数 ' + c.worst.score + '）',
         CALM('手帳に印をつけてください。') + 'その日が来たら、思い出せるように。'
       ),
-      chart:c => ({ type:'line', data:c.months })
+      charts:c => [{ type:'line', data:c.months }, { type:'pyring', py:c.py }]
     },
     shadow:{
       kind:'影の鑑定',
@@ -354,7 +378,11 @@
         '<strong>解除の鍵</strong>：' + HL(shadowKey(c)),
         c.num.lesson,
         CALM('この反復はあなたの欠陥ではありません。') + '生き延びるために身につけた技術が、平時になっても作動し続けているだけです。技術は、意識すれば下ろせます。'
-      )
+      ) + STEPS([
+        ['気づく', 'その場面が来たとき「あ、これだ」と心の中で名前をつけるだけ。変えようとしなくて構いません。'],
+        ['ずらす', '一度だけ、いつもと違う反応をしてみる。' + shadowKey(c)],
+        ['確かめる', 'それで何が起きたかを見る。ほとんどの場合、恐れていたことは起きません。']
+      ])
     },
     year:{
       kind:'年運鑑定',
@@ -373,8 +401,13 @@
         'この月のものは、あとで負担に変わりやすい配置です。予定を三割減らしておいてください。',
         '<strong>逆に</strong>、' + HLL(jm(c.best.date)) + 'は迷っている案件を通すべき月です。' +
         'そして' + HL(jd(c.turning)) + 'が、今年最大の一日になります。'
-      ) + KV(c.months.map(mo => [ jm(mo.date) + '（' + mo.score + '）', monthLine(mo) ])),
-      chart:c => ({ type:'line', data:c.months })
+      ) + TBL(['月','指数','流れ','この月にすべきこと'], c.months.map(mo => [
+        {v:jm(mo.date), cls:'num'},
+        {v:String(mo.score), cls:'num'},
+        {v: mo.score >= 70 ? PILL('追い風','g') : mo.score >= 40 ? PILL('横ばい') : PILL('潜る','r')},
+        {v:monthLine(mo)}
+      ])),
+      charts:c => [{ type:'line', data:c.months }, { type:'pyring', py:c.py }]
     },
     health:{
       kind:'気の巡り鑑定',
@@ -398,8 +431,13 @@
         ['負担の出る所', HEALTH[c.domEl].organ],
         ['養生', HEALTH[c.domEl].adv],
         ['吉方', c.dir]
-      ]),
-      chart:c => ({ type:'radar', data:c.balance })
+      ]) + TBL(['気','状態','出やすい不調','養生'], Object.keys(D.ELEMENTS).map(k => [
+        {v:k + '（' + D.ELEMENTS[k].en + '）'},
+        {v: k === c.domEl ? PILL('最も強い','g') : k === c.weakEl ? PILL('最も薄い','r') : PILL('標準')},
+        {v: HEALTH[k].organ},
+        {v: k === c.domEl || k === c.weakEl ? HEALTH[k].adv.slice(0, 34) + '…' : '—'}
+      ])),
+      charts:c => [{ type:'radar', data:c.balance }, { type:'elcycle', dom:c.domEl, weak:c.weakEl }]
     }
   };
 
@@ -409,10 +447,14 @@
   const COMPAT = {
     love:{
       kind:'相性鑑定',
+      coreCharts:(a,b,x) => [{ type:'relation', a, b, x }],
       core:(a,b,x) => meterHTML(x.score, compatLabel(x.score)) + P(
         'おふたりの気は、' + HL(a.domEl) + 'と' + HL(b.domEl) + '。' + relLine(a, b, x),
-        '星座では' + HL(a.sign.jp) + 'と' + HL(b.sign.jp) + '。' + signRel(a, b, x) 
-      ) + axesHTML(x.axes),
+        '星座では' + HL(a.sign.jp) + 'と' + HL(b.sign.jp) + '。' + signRel(a, b, x)
+      ) + axesHTML(x.axes) + TBL(['軸','点','読み方'], Object.entries(x.axes).map(([k,v]) => [
+        k, {v:String(v), cls:'num'},
+        {v: v >= 75 ? PILL('強い結びつき','g') : v >= 55 ? PILL('安定') : PILL('要注意','r')}
+      ])),
       risk:(a,b,x) => P(
         'ただ、この配置には' + WARN('ひとつだけ弱点') + 'があります。' +
         '五軸のうち最も低いのは' + WARN(lowAxis(x.axes)) + '。ここが、いずれ関係の亀裂になります。',
@@ -425,7 +467,11 @@
         '<strong>相手にかけるべき言葉</strong>：' + HL('「' + goodWord(b) + '」') + '<br>' +
         '<strong>絶対に言ってはいけない言葉</strong>：' + WARN('「' + badWord(b) + '」'),
         CALM('相性は固定ではありません。') + '数値は「いまの噛み合い方」です。扱い方を変えれば、この数字は動きます。'
-      )
+      ) + STEPS([
+        ['いま〜' + jm(a.months[1].date), '相手を変えようとしないこと。' + lowAxis(x.axes) + 'の低さは、いまは触れずに置いてください。'],
+        [jm(a.best.date) + '前後', '関係が動く時期です。' + axisFix(lowAxis(x.axes))],
+        [jd(a.turning) + '', '最も言葉が通る日。大事な話は、この日に切り出してください。']
+      ])
     },
     honne:{
       kind:'本音鑑定',
@@ -448,6 +494,7 @@
     },
     marry:{
       kind:'結婚可否鑑定',
+      coreCharts:(a,b,x) => [{ type:'relation', a, b, x }],
       core:(a,b,x) => meterHTML(x.score, compatLabel(x.score)) + P(
         '結婚の相性は、恋愛の相性とは別の軸で見ます。見るのは' + HL('生活のリズム') + 'と' + HL('価値観') + '、そして' + HL('将来性') + '。',
         relLine(a, b, x)
@@ -485,6 +532,7 @@
     },
     friend:{
       kind:'関係相性鑑定',
+      coreCharts:(a,b,x) => [{ type:'relation', a, b, x }],
       core:(a,b,x) => meterHTML(x.score, compatLabel(x.score)) + P(
         '恋愛以外の関係——友人、同僚、取引先。この相性は' + HL('気の流れ') + 'で見ます。',
         relLine(a, b, x)
@@ -500,7 +548,12 @@
         '<strong>うまく付き合う条件</strong>：' + HL(friendFix(a, b, x)),
         '<strong>距離を置くべき合図</strong>：' + WARN('会ったあと、理由のわからない疲れが二日残るとき') + '。',
         '<strong>逆に、この人から得られるもの</strong>：' + CALM(friendGain(a, b, x))
-      )
+      ) + TBL(['場面','おすすめの距離','理由'], [
+        ['仕事で組む', {v: x.elBad ? PILL('役割を分ける','r') : PILL('よく合う','g')}, x.elBad ? '同じ工程に入ると摩擦になります' : '補い合える配置です'],
+        ['長時間ともに過ごす', {v: x.elBad ? PILL('時間を区切る','r') : PILL('問題なし')}, x.elBad ? '会う頻度を先に決めると安定します' : '自然体で構いません'],
+        ['お金が絡む', {v: PILL('書面にする')}, '口約束はどの相性でも縁を削ります'],
+        ['相談する', {v: PILL('向いている','g')}, friendGain(a, b, x)]
+      ])
     }
   };
 
@@ -943,13 +996,21 @@
     const jin = s.m.jin, chi = s.m.chi;
     const head = menu.theme === 'love' ? '恋愛でのあなたは、人格の数に強く支配されます。'
       : menu.theme === 'work' ? '仕事と財は、総格と外格が握っています。' : '五格すべてを開きます。';
-    return seimeiTable(s) + P(
+    return kakuNote(s) + seimeiTable(s) + P(
       head,
       '中心となるのは' + HL('人格 ' + s.jin) + '（' + jin.t + '・' + jin.k + '）。' + jin.m,
       '若年期を支える' + HL('地格 ' + s.chi) + '（' + chi.t + '）は、' + chi.m,
       '三才の配置は' + HL(s.sansai.join('・')) + '。' + sansaiRead(s.sansai)
-    );
+    ) + TBL(['格','数','吉凶','意味','司るもの'], [
+      ['天格', {v:String(s.ten), cls:'num'}, {v:kikyo(s.m.ten.k)}, s.m.ten.t, '家系から受け継いだ運'],
+      ['人格', {v:String(s.jin), cls:'num'}, {v:kikyo(s.m.jin.k)}, s.m.jin.t, '性格の中心・生涯の主運'],
+      ['地格', {v:String(s.chi), cls:'num'}, {v:kikyo(s.m.chi.k)}, s.m.chi.t, '若年運と才能の芽'],
+      ['外格', {v:String(s.soto), cls:'num'}, {v:kikyo(s.m.soto.k)}, s.m.soto.t, '対人・社会での見え方'],
+      ['総格', {v:String(s.sou), cls:'num'}, {v:kikyo(s.m.sou.k)}, s.m.sou.t, '人生全体の総運']
+    ]);
   }
+  function kikyo(k){ return PILL(k, k === '大吉' ? 'g' : k === '凶' ? 'r' : ''); }
+  function kakuNote(s){ return ''; }
   function seimeiRisk(s, menu){
     const bad = [['天格',s.ten,s.m.ten],['人格',s.jin,s.m.jin],['地格',s.chi,s.m.chi],
                  ['外格',s.soto,s.m.soto],['総格',s.sou,s.m.sou]].filter(x => x[2].k === '凶');
@@ -1023,7 +1084,10 @@
         ] };
       free.push(S(0, 'あなたという人', 'Who You Are', seeBlock(c) + T.core(c)));
       free.push(S(1, '気がかりなこと', 'The Warning', T.risk(c)));
-      paid.push(S(2, 'その答え', 'The Answer', T.answer(c), T.chart ? T.chart(c) : null));
+      const nsec = S(2, 'その答え', 'The Answer', T.answer(c));
+      if (T.charts) nsec.charts = T.charts(c);
+      else if (T.chart) nsec.charts = [T.chart(c)];
+      paid.push(nsec);
       paid.push(S(3, '開運の実務', 'Charms', charms(c)));
       paid.push(S(4, '結び', 'Closing', closing(c, menu)));
 
@@ -1038,7 +1102,9 @@
           ['彼', 'お相手', b.sign.jp, '運命数' + b.lp],
           ['気', '気の関係', a.domEl + '×' + b.domEl, x.elGood ? '相生' : x.elBad ? '相剋' : '並立']
         ] };
-      free.push(S(0, 'ふたりの相性', 'Affinity', T.core(a, b, x)));
+      const csec = S(0, 'ふたりの相性', 'Affinity', T.core(a, b, x));
+      if (T.coreCharts) { csec.charts = T.coreCharts(a, b, x); csec.pre = true; }
+      free.push(csec);
       free.push(S(1, 'ひとつの弱点', 'The Crack', T.risk(a, b, x)));
       paid.push(S(2, 'この先に起きること', 'What Comes', T.answer(a, b, x)));
       paid.push(S(3, '結び', 'Closing', P(
@@ -1053,7 +1119,11 @@
         pillars:ctx.draw.map((x, i) => ['札', t.pos[i], x.card.jp, x.rev ? '逆位置' : '正位置']) };
       free.push(S(0, '引かれた札', 'The Cards', tarotCore(ctx, menu), { type:'cards', data:ctx.draw, pos:t.pos }));
       free.push(S(1, '札が告げていること', 'The Warning', tarotRisk(ctx, menu)));
-      paid.push(S(2, '札の答え', 'The Answer', tarotAnswer(ctx, menu)));
+      const tsec = S(2, '札の答え', 'The Answer', tarotAnswer(ctx, menu));
+      tsec.charts = [{ type:'heroCard', data:ctx.draw[ctx.draw.length - 1],
+        label: ctx.draw.length > 1 ? '結論の札' : 'あなたの札' }];
+      tsec.pre = true;
+      paid.push(tsec);
       paid.push(S(3, '結び', 'Closing', P(
         CALM('札は、あなたを裁くために出たのではありません。'),
         '同じ札は、日が変わればもう出ません。今日この配置を見たことに、意味があります。'
@@ -1069,12 +1139,19 @@
                    ['己','あなたの人格',String(s.jin),s.m.jin.t],
                    ['彼','お相手の人格',String(s2.jin),s2.m.jin.t],
                    ['差','総格の差',String(pr.tot),pr.tot <= 8 ? '近い' : '離れている']] };
-        free.push(S(0, 'ふたつの名前', 'Two Names',
+        const psec = S(0, 'ふたつの名前', 'Two Names',
           meterHTML(pr.score, compatLabel(pr.score)) + seimeiTable(s) + seimeiTable(s2) + P(
             'あなたの人格は' + HL(String(s.jin)) + '（' + s.m.jin.t + '）、お相手は' + HL(String(s2.jin)) + '（' + s2.m.jin.t + '）。',
             pr.diff <= 4 ? '数が近く、' + CALM('感覚が似ています') + '。言わなくても伝わる場面が多いはずです。'
                          : '数が離れており、' + HL('見えている世界が違います') + '。それは欠点ではなく、補い合える配置です。'
-          )));
+          ) + TBL(['','あなた','お相手'], [
+            ['人格', {v:String(s.jin)+'（'+s.m.jin.t+'）'}, {v:String(s2.jin)+'（'+s2.m.jin.t+'）'}],
+            ['総格', {v:String(s.sou)+'（'+s.m.sou.k+'）'}, {v:String(s2.sou)+'（'+s2.m.sou.k+'）'}],
+            ['外格', {v:String(s.soto)}, {v:String(s2.soto)}],
+            ['三才', {v:s.sansai.join('・')}, {v:s2.sansai.join('・')}]
+          ]));
+        psec.charts = [{ type:'kaku', data:s }, { type:'kaku', data:s2 }];
+        free.push(psec);
         free.push(S(1, '名前の影', 'The Shadow', P(
           '<strong>ただ、この組み合わせには気がかりがあります。</strong>' +
           '総格の差が' + WARN(String(pr.tot)) + '。' +
@@ -1099,7 +1176,10 @@
           pillars:[['天','天格',String(s.ten),s.m.ten.k],['人','人格',String(s.jin),s.m.jin.k],
                    ['地','地格',String(s.chi),s.m.chi.k],['外','外格',String(s.soto),s.m.soto.k],
                    ['総','総格',String(s.sou),s.m.sou.k]] };
-        free.push(S(0, '五格が示すもの', 'Five Numbers', seimeiCore(s, menu)));
+        const ssec = S(0, '五格が示すもの', 'Five Numbers', seimeiCore(s, menu));
+        ssec.charts = [{ type:'kaku', data:s }];
+        ssec.pre = true;
+        free.push(ssec);
         free.push(S(1, '名前の影', 'The Shadow', seimeiRisk(s, menu)));
         paid.push(S(2, '総格が示す人生', 'The Answer', seimeiAnswer(s, menu)));
         paid.push(S(3, '結び', 'Closing', P(

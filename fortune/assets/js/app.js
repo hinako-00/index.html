@@ -167,10 +167,10 @@
 
   function menuCard(m){
     const tags = (m.tags||[]).map(t =>
-      '<span class="badge '+(t==='人気'?'hot':t==='入力なし'||t==='10秒'?'easy':'')+'">'+t+'</span>').join('');
+      '<span class="badge '+(t==='全文無料'?'allfree':t==='人気'?'hot':t==='入力なし'||t==='10秒'?'easy':'')+'">'+t+'</span>').join('');
     return '<button class="mcard rv" data-menu="'+m.id+'">' +
       '<div class="mcard-top"><span class="mcard-ic">'+m.ic+'</span>' +
-      '<div class="mcard-badges"><span class="badge free">無料で読める</span>'+tags+'</div></div>' +
+      '<div class="mcard-badges">'+(m.free?'':'<span class="badge free">無料で読める</span>')+tags+'</div></div>' +
       '<h3>'+esc(m.t)+'</h3>' +
       '<p class="catch">'+esc(m.c)+'</p>' +
       '<p class="desc">'+esc(m.d)+'</p>' +
@@ -379,7 +379,8 @@
     rBody.innerHTML = '<div class="wrap-narrow">' + askHead(menu) +
       '<p class="pick-msg">心を静めて、<em class="hl">'+n+'枚</em>お選びください。<br>考えず、目に留まったものを。</p>' +
       '<div class="pick-row" id="pickRow">' +
-      Array.from({length:total},(_,i)=>'<button class="pick" data-i="'+i+'" aria-label="'+(i+1)+'枚目">'+PICK_ART+'</button>').join('') +
+      Array.from({length:total},(_,i)=>'<button class="pick" data-i="'+i+'" aria-label="'+(i+1)+'枚目の札">'+
+        CARD_BACK+'<span class="pick-n">'+(i+1)+'</span></button>').join('') +
       '</div><p class="c small mt-m" id="pickCount">あと '+n+' 枚</p></div>';
     const chosen = [];
     $('#pickRow').addEventListener('click', e => {
@@ -436,75 +437,297 @@
     '<path d="M60 24l5.6 16.4L82 46l-16.4 5.6L60 68l-5.6-16.4L38 46l16.4-5.6z" fill="#e2c27f"/>' +
     '<path d="M38 80h44M45 88h30" stroke="#c9a253" stroke-width=".7" opacity=".5"/></svg>';
 
+
+  /* ---------- 札の絵柄 ---------- */
+  const CARD_BACK = '<svg class="back-art" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.1">' +
+    '<circle cx="50" cy="50" r="30" opacity=".55"/><circle cx="50" cy="50" r="20" opacity=".35"/>' +
+    '<path d="M50 26l5 14 14 5-14 5-5 14-5-14-14-5 14-5z" fill="currentColor" stroke="none" opacity=".85"/>' +
+    '<path d="M50 6v10M50 84v10M6 50h10M84 50h10M20 20l7 7M73 73l7 7M80 20l-7 7M27 73l-7 7" opacity=".45"/></svg>';
+  function cardArt(card, cls){
+    const a = D.TAROT_ART[card.n] || D.TAROT_ART[0];
+    return '<svg class="' + (cls || 'dcard-art') + '" viewBox="0 0 100 100" fill="none" stroke="currentColor" ' +
+      'stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + a + '</svg>';
+  }
+
+  /* ---------- 五行の輪（相生・相剋） ---------- */
+  function elCycleSVG(dom, weak){
+    const K = ['木','火','土','金','水'], R = 74, cx = 110, cy = 106;
+    const pt = i => { const a = i/5*6.2832 - 1.5708; return [cx+Math.cos(a)*R, cy+Math.sin(a)*R]; };
+    let out = '';
+    // 相生（外周の矢印）
+    for (let i=0;i<5;i++){
+      const p0 = pt(i), p1 = pt((i+1)%5);
+      const mx = (p0[0]+p1[0])/2, my = (p0[1]+p1[1])/2;
+      const nx = (mx-cx)*0.16, ny = (my-cy)*0.16;
+      out += '<path d="M'+p0[0].toFixed(1)+' '+p0[1].toFixed(1)+' Q'+(mx+nx).toFixed(1)+' '+(my+ny).toFixed(1)+
+        ' '+p1[0].toFixed(1)+' '+p1[1].toFixed(1)+'" fill="none" stroke="#c9a253" stroke-width="1.3" opacity=".75" marker-end="url(#arw)"/>';
+    }
+    // 相剋（内側の点線）
+    for (let i=0;i<5;i++){
+      const p0 = pt(i), p1 = pt((i+2)%5);
+      out += '<line x1="'+p0[0].toFixed(1)+'" y1="'+p0[1].toFixed(1)+'" x2="'+p1[0].toFixed(1)+'" y2="'+p1[1].toFixed(1)+
+        '" stroke="#d4506a" stroke-width=".9" stroke-dasharray="3 5" opacity=".45"/>';
+    }
+    // 節点
+    K.forEach((k,i) => {
+      const p = pt(i), isD = k===dom, isW = k===weak;
+      out += '<circle cx="'+p[0].toFixed(1)+'" cy="'+p[1].toFixed(1)+'" r="'+(isD?21:16)+'" fill="'+
+        (isD?'url(#elg)':'rgba(9,6,20,.95)')+'" stroke="'+(isD?'#fdf3d4':isW?'#d4506a':'#c9a253')+
+        '" stroke-width="'+(isD?1.6:1)+'"'+(isW?' stroke-dasharray="3 3"':'')+'/>';
+      out += '<text x="'+p[0].toFixed(1)+'" y="'+(p[1]+6).toFixed(1)+'" text-anchor="middle" font-size="'+(isD?19:15)+
+        '" fill="'+(isD?'#2a1a05':isW?'#d4506a':'#e2c27f')+'" font-family="Shippori Mincho B1,serif" font-weight="600">'+k+'</text>';
+      if (isD) out += '<text x="'+p[0].toFixed(1)+'" y="'+(p[1]+34).toFixed(1)+'" text-anchor="middle" font-size="9" fill="#fdf3d4" letter-spacing="1">最強</text>';
+      if (isW) out += '<text x="'+p[0].toFixed(1)+'" y="'+(p[1]+30).toFixed(1)+'" text-anchor="middle" font-size="9" fill="#d4506a" letter-spacing="1">最弱</text>';
+    });
+    return '<div class="diagram"><p class="d-t">五行の相生・相剋図</p>' +
+      '<svg viewBox="0 0 220 216" role="img" aria-label="五行の相生相剋図" style="max-width:300px">' +
+      '<defs><marker id="arw" viewBox="0 0 8 8" refX="6" refY="4" markerWidth="5" markerHeight="5" orient="auto">' +
+      '<path d="M0 0L8 4L0 8z" fill="#c9a253"/></marker>' +
+      '<radialGradient id="elg"><stop offset="0%" stop-color="#fdf3d4"/><stop offset="100%" stop-color="#c9a253"/></radialGradient></defs>' +
+      out + '</svg>' +
+      '<div class="chart-legend"><span><i style="background:#c9a253"></i>相生（生かす流れ）</span>' +
+      '<span><i style="background:#d4506a"></i>相剋（抑える流れ）</span></div>' +
+      '<p class="d-n">金色の丸があなたの最も強い気、破線の丸が最も薄い気です。' +
+      '<b>' + dom + '</b>を生かすのは<b>' + ({'木':'水','火':'木','土':'火','金':'土','水':'金'})[dom] + '</b>の気。' +
+      '不足する<b>' + weak + '</b>を補うと、全体の巡りが整います。</p></div>';
+  }
+
+  /* ---------- 個人年の九年周期リング ---------- */
+  const PY_LABEL = {1:'種まき',2:'育てる',3:'花',4:'土台',5:'変化',6:'責任',7:'内省',8:'収穫',9:'完了'};
+  function pyRingSVG(py){
+    const R = 78, cx = 110, cy = 110, N = 9;
+    let out = '<circle cx="110" cy="110" r="96" fill="none" stroke="rgba(242,222,187,.08)" stroke-width="1"/>';
+    for (let i=1;i<=N;i++){
+      const a = (i-1)/N*6.2832 - 1.5708, p = [cx+Math.cos(a)*R, cy+Math.sin(a)*R];
+      const cur = i === py;
+      out += '<circle cx="'+p[0].toFixed(1)+'" cy="'+p[1].toFixed(1)+'" r="'+(cur?19:13)+'" fill="'+
+        (cur?'url(#pyg)':'rgba(9,6,20,.92)')+'" stroke="'+(cur?'#fdf3d4':'rgba(201,162,83,.45)')+'" stroke-width="'+(cur?1.6:.9)+'"/>';
+      out += '<text x="'+p[0].toFixed(1)+'" y="'+(p[1]+(cur?6:5)).toFixed(1)+'" text-anchor="middle" font-size="'+(cur?18:13)+
+        '" font-family="Cormorant Garamond,serif" fill="'+(cur?'#2a1a05':'#a89d8b')+'">'+i+'</text>';
+      const lp = [cx+Math.cos(a)*(R+27), cy+Math.sin(a)*(R+27)];
+      out += '<text x="'+lp[0].toFixed(1)+'" y="'+(lp[1]+4).toFixed(1)+'" text-anchor="middle" font-size="10" fill="'+
+        (cur?'#fdf3d4':'#776e60')+'" font-family="Shippori Mincho B1,serif">'+PY_LABEL[i]+'</text>';
+    }
+    // 進行方向
+    out += '<circle cx="110" cy="110" r="46" fill="none" stroke="rgba(201,162,83,.28)" stroke-width=".9" stroke-dasharray="4 6"/>';
+    out += '<text x="110" y="105" text-anchor="middle" font-size="11" fill="#a89d8b" letter-spacing="3">いまここ</text>';
+    out += '<text x="110" y="128" text-anchor="middle" font-size="21" fill="#fdf3d4" font-family="Cormorant Garamond,serif">'+py+' / 9</text>';
+    return '<div class="diagram"><p class="d-t">九年周期のいまの位置</p>' +
+      '<svg viewBox="0 0 220 220" role="img" aria-label="個人年の九年周期" style="max-width:320px">' +
+      '<defs><radialGradient id="pyg"><stop offset="0%" stop-color="#fdf3d4"/><stop offset="100%" stop-color="#c9a253"/></radialGradient></defs>' +
+      out + '</svg><p class="d-n">運勢は九年でひと巡りします。あなたは<b>' + py + '年目「' + PY_LABEL[py] +
+      '」</b>。ここで蒔いたものが、九年かけて形になります。</p></div>';
+  }
+
+  /* ---------- 姓名の五格構造図 ---------- */
+  function kakuDiagram(s){
+    const chars = [...s.sei].map((c,i) => ({c, v:s.seiStrokes[i], side:'sei'}))
+      .concat([...s.mei].map((c,i) => ({c, v:s.meiStrokes[i], side:'mei'})));
+    const W = 46, GAP = 14, PADL = 74, TOP = 56;
+    const nSei = s.sei.length, nMei = s.mei.length;
+    const x = i => PADL + i*W + (i >= nSei ? GAP : 0);
+    const total = PADL + chars.length*W + GAP + 84;
+    let out = '';
+    chars.forEach((ch,i) => {
+      const X = x(i);
+      out += '<rect x="'+X+'" y="'+TOP+'" width="'+(W-6)+'" height="46" rx="4" fill="rgba(24,16,44,.85)" stroke="rgba(201,162,83,.4)"/>';
+      out += '<text x="'+(X+(W-6)/2)+'" y="'+(TOP+30)+'" text-anchor="middle" font-size="21" fill="#fbf6ea" font-family="Shippori Mincho B1,serif">'+ch.c+'</text>';
+      out += '<text x="'+(X+(W-6)/2)+'" y="'+(TOP+64)+'" text-anchor="middle" font-size="12" fill="#c9a253" font-family="Cormorant Garamond,serif">'+ch.v+'</text>';
+    });
+    const brace = (x1,x2,y,dir,label,val,color) => {
+      const d = dir === 'up' ? -1 : 1;
+      return '<path d="M'+x1+' '+y+' L'+x1+' '+(y+8*d)+' L'+x2+' '+(y+8*d)+' L'+x2+' '+y+'" fill="none" stroke="'+color+'" stroke-width="1.1"/>' +
+        '<text x="'+((x1+x2)/2)+'" y="'+(y+(dir==='up'? -14 : 24))+'" text-anchor="middle" font-size="12" fill="'+color+'" font-family="Shippori Mincho B1,serif">'+label+' '+val+'</text>';
+    };
+    // 天格（姓）／地格（名）：上
+    out += brace(x(0)+2, x(nSei-1)+W-8, TOP-4, 'up', '天格', s.ten, '#8fd6bb');
+    out += brace(x(nSei)+2, x(chars.length-1)+W-8, TOP-4, 'up', '地格', s.chi, '#8fd6bb');
+    // 人格：下（姓の末＋名の頭）
+    out += brace(x(nSei-1)+2, x(nSei)+W-8, TOP+74, 'down', '人格', s.jin, '#fdf3d4');
+    // 総格：さらに下
+    out += brace(x(0)+2, x(chars.length-1)+W-8, TOP+110, 'down', '総格', s.sou, '#c9a253');
+    // 外格
+    out += '<text x="'+(PADL-12)+'" y="'+(TOP+30)+'" text-anchor="end" font-size="12" fill="#d4506a" font-family="Shippori Mincho B1,serif">外格</text>';
+    out += '<text x="'+(PADL-12)+'" y="'+(TOP+50)+'" text-anchor="end" font-size="14" fill="#d4506a" font-family="Cormorant Garamond,serif">'+s.soto+'</text>';
+    out += '<path d="M'+(PADL-8)+' '+(TOP+24)+' L'+(x(0)-4)+' '+(TOP+24)+'" stroke="#d4506a" stroke-width=".9" stroke-dasharray="3 3"/>';
+    return '<div class="diagram"><p class="d-t">五格の成り立ち</p><div style="overflow-x:auto">' +
+      '<svg viewBox="0 0 '+total+' 210" role="img" aria-label="五格の構造図" style="min-width:'+Math.min(total,520)+'px">' + out + '</svg></div>' +
+      '<p class="d-n">各文字の下の数字が<b>かな画数</b>です。姓の合計が天格、名の合計が地格、' +
+      '姓の末字と名の頭字の和が<b>人格</b>（生涯の主運）、全体の和が総格になります。</p></div>';
+  }
+
+  /* ---------- 相性：気の関係図 ---------- */
+  function relationSVG(a, b, x){
+    const kind = x.elGood ? '相生' : x.elBad ? '相剋' : '並立';
+    const col = x.elGood ? '#8fd6bb' : x.elBad ? '#d4506a' : '#c9a253';
+    const note = x.elGood ? '一方が他方を生かす、伸びやかな流れです。'
+      : x.elBad ? '一方が他方を抑える配置。惹かれ合いますが、消耗も早くなります。'
+      : '互いを大きく変えない、静かな並びです。';
+    return '<div class="diagram"><p class="d-t">おふたりの気の関係</p>' +
+      '<svg viewBox="0 0 340 150" role="img" aria-label="気の関係図" style="max-width:420px">' +
+      '<defs><marker id="rel" viewBox="0 0 8 8" refX="6" refY="4" markerWidth="6" markerHeight="6" orient="auto">' +
+      '<path d="M0 0L8 4L0 8z" fill="'+col+'"/></marker></defs>' +
+      '<circle cx="66" cy="72" r="44" fill="rgba(24,16,44,.9)" stroke="#c9a253" stroke-width="1.2"/>' +
+      '<text x="66" y="68" text-anchor="middle" font-size="30" fill="#fdf3d4" font-family="Shippori Mincho B1,serif">'+a.domEl+'</text>' +
+      '<text x="66" y="90" text-anchor="middle" font-size="10" fill="#a89d8b">あなた</text>' +
+      '<circle cx="274" cy="72" r="44" fill="rgba(24,16,44,.9)" stroke="#c9a253" stroke-width="1.2"/>' +
+      '<text x="274" y="68" text-anchor="middle" font-size="30" fill="#fdf3d4" font-family="Shippori Mincho B1,serif">'+b.domEl+'</text>' +
+      '<text x="274" y="90" text-anchor="middle" font-size="10" fill="#a89d8b">お相手</text>' +
+      '<path d="M116 60 L222 60" stroke="'+col+'" stroke-width="1.6" marker-end="url(#rel)"'+(x.elBad?' stroke-dasharray="5 4"':'')+'/>' +
+      '<path d="M222 88 L116 88" stroke="'+col+'" stroke-width="1.6" marker-end="url(#rel)" opacity=".5"'+(x.elBad?' stroke-dasharray="5 4"':'')+'/>' +
+      '<text x="170" y="42" text-anchor="middle" font-size="15" fill="'+col+'" font-family="Shippori Mincho B1,serif">'+kind+'</text>' +
+      '<text x="170" y="118" text-anchor="middle" font-size="26" fill="#fdf3d4" font-family="Cormorant Garamond,serif">'+x.score+'</text>' +
+      '<text x="170" y="136" text-anchor="middle" font-size="9" fill="#776e60" letter-spacing="2">AFFINITY</text>' +
+      '</svg><p class="d-n">'+note+'</p></div>';
+  }
+
   function radarSVG(bal){
-    const keys = ['木','火','土','金','水'], R = 84, cx = 118, cy = 112;
+    const keys = ['木','火','土','金','水'], R = 84, cx = 124, cy = 134;
+    const sorted = Object.entries(bal).sort((a,b)=>b[1]-a[1]);
+    const dom = sorted[0][0], weak = sorted[4][0];
     const pt = (i,r) => { const a = i/5*6.2832 - 1.5708; return [cx+Math.cos(a)*r, cy+Math.sin(a)*r]; };
     let g = '';
-    [.25,.5,.75,1].forEach(f => { g += '<polygon points="'+keys.map((_,i)=>pt(i,R*f).map(n=>n.toFixed(1)).join(',')).join(' ')+
-      '" fill="none" stroke="rgba(242,222,187,.13)" stroke-width=".7"/>'; });
-    keys.forEach((_,i) => { const p = pt(i,R); g += '<line x1="'+cx+'" y1="'+cy+'" x2="'+p[0].toFixed(1)+'" y2="'+p[1].toFixed(1)+'" stroke="rgba(242,222,187,.13)" stroke-width=".7"/>'; });
-    const poly = keys.map((k,i)=>pt(i,R*(bal[k]/100)).map(n=>n.toFixed(1)).join(',')).join(' ');
-    const dots = keys.map((k,i)=>{ const p = pt(i,R*(bal[k]/100)); return '<circle cx="'+p[0].toFixed(1)+'" cy="'+p[1].toFixed(1)+'" r="3" fill="#fdf3d4"/>'; }).join('');
-    const lb = keys.map((k,i)=>{ const p = pt(i,R+20);
-      return '<text x="'+p[0].toFixed(1)+'" y="'+(p[1]+5).toFixed(1)+'" text-anchor="middle" font-size="14" fill="#e2c27f">'+k+'</text>' +
-        '<text x="'+p[0].toFixed(1)+'" y="'+(p[1]+19).toFixed(1)+'" text-anchor="middle" font-size="9" fill="#776e60" font-family="Cormorant Garamond,serif">'+bal[k]+'</text>'; }).join('');
-    return '<svg viewBox="0 0 236 244" role="img" aria-label="五行バランス図" style="max-width:330px;margin:0 auto">' +
+    [.25,.5,.75,1].forEach((f,n) => {
+      g += '<polygon points="'+keys.map((_,i)=>pt(i,R*f).map(v=>v.toFixed(1)).join(',')).join(' ')+
+        '" fill="none" stroke="rgba(242,222,187,'+(n===3?'.22':'.11')+')" stroke-width=".8"/>';
+    });
+    keys.forEach((_,i)=>{ const p=pt(i,R);
+      g += '<line x1="'+cx+'" y1="'+cy+'" x2="'+p[0].toFixed(1)+'" y2="'+p[1].toFixed(1)+'" stroke="rgba(242,222,187,.11)" stroke-width=".8"/>'; });
+    // 目盛り
+    [25,50,75,100].forEach(v=>{ const p=pt(0,R*v/100);
+      g += '<text x="'+(p[0]+7)+'" y="'+(p[1]+3).toFixed(1)+'" font-size="8" fill="#5f5849" font-family="Cormorant Garamond,serif">'+v+'</text>'; });
+    const poly = keys.map((k,i)=>pt(i,R*(bal[k]/100)).map(v=>v.toFixed(1)).join(',')).join(' ');
+    let dots='', lb='';
+    keys.forEach((k,i)=>{
+      const p = pt(i, R*(bal[k]/100));
+      const isD = k===dom, isW = k===weak;
+      dots += '<circle cx="'+p[0].toFixed(1)+'" cy="'+p[1].toFixed(1)+'" r="'+(isD?5:isW?4.4:3.2)+'" fill="'+
+        (isD?'#fdf3d4':isW?'#d4506a':'#c9a253')+'" stroke="rgba(9,6,20,.9)" stroke-width="1"/>';
+      const l = pt(i, R+26);
+      const col = isD?'#fdf3d4':isW?'#d4506a':'#e2c27f';
+      lb += '<text x="'+l[0].toFixed(1)+'" y="'+(l[1]+2).toFixed(1)+'" text-anchor="middle" font-size="17" fill="'+col+
+        '" font-family="Shippori Mincho B1,serif" font-weight="600">'+k+'</text>';
+      lb += '<rect x="'+(l[0]-17).toFixed(1)+'" y="'+(l[1]+8).toFixed(1)+'" width="34" height="16" rx="8" fill="rgba(9,6,20,.85)" stroke="'+col+'" stroke-opacity=".5"/>';
+      lb += '<text x="'+l[0].toFixed(1)+'" y="'+(l[1]+20).toFixed(1)+'" text-anchor="middle" font-size="11" fill="'+col+
+        '" font-family="Cormorant Garamond,serif">'+bal[k]+'</text>';
+    });
+    return '<svg viewBox="0 0 248 282" role="img" aria-label="五行バランス図" style="max-width:348px;margin:0 auto">' +
       '<defs><linearGradient id="rg" x1="0" y1="0" x2="1" y2="1">' +
-      '<stop offset="0%" stop-color="#c9a253" stop-opacity=".55"/><stop offset="100%" stop-color="#8a5fb8" stop-opacity=".5"/></linearGradient></defs>' +
-      g + '<polygon points="'+poly+'" fill="url(#rg)" stroke="#f2debb" stroke-width="1.2"/>' + dots + lb + '</svg>';
+      '<stop offset="0%" stop-color="#c9a253" stop-opacity=".62"/><stop offset="100%" stop-color="#8a5fb8" stop-opacity=".55"/></linearGradient></defs>' +
+      g + '<polygon points="'+poly+'" fill="url(#rg)" stroke="#f2debb" stroke-width="1.5"/>' + dots + lb + '</svg>';
   }
   function lineSVG(months){
-    const W = 720, H = 236, PL = 32, PR = 14, PT = 20, PB = 38;
+    const W = 760, H = 268, PL = 40, PR = 18, PT = 26, PB = 52;
     const iw = W-PL-PR, ih = H-PT-PB;
     const x = i => PL + i/(months.length-1)*iw, y = v => PT + ih - v/100*ih;
-    let g = '';
-    [0,25,50,75,100].forEach(v => { g += '<line x1="'+PL+'" y1="'+y(v).toFixed(1)+'" x2="'+(W-PR)+'" y2="'+y(v).toFixed(1)+'" stroke="rgba(242,222,187,.1)" stroke-width=".7"/>' +
-      '<text x="'+(PL-7)+'" y="'+(y(v)+3.5).toFixed(1)+'" text-anchor="end" font-size="9" fill="#776e60" font-family="Cormorant Garamond,serif">'+v+'</text>'; });
+    // 帯（追い風／横ばい／潜る）
+    let g = '<rect x="'+PL+'" y="'+y(100)+'" width="'+iw+'" height="'+(y(70)-y(100))+'" fill="rgba(201,162,83,.10)"/>' +
+      '<rect x="'+PL+'" y="'+y(70)+'" width="'+iw+'" height="'+(y(40)-y(70))+'" fill="rgba(242,222,187,.03)"/>' +
+      '<rect x="'+PL+'" y="'+y(40)+'" width="'+iw+'" height="'+(y(0)-y(40))+'" fill="rgba(212,80,106,.09)"/>';
+    [0,25,50,75,100].forEach(v => {
+      g += '<line x1="'+PL+'" y1="'+y(v).toFixed(1)+'" x2="'+(W-PR)+'" y2="'+y(v).toFixed(1)+'" stroke="rgba(242,222,187,.12)" stroke-width=".7"/>' +
+        '<text x="'+(PL-9)+'" y="'+(y(v)+4).toFixed(1)+'" text-anchor="end" font-size="10" fill="#776e60" font-family="Cormorant Garamond,serif">'+v+'</text>';
+    });
+    g += '<text x="'+(W-PR-4)+'" y="'+(y(85)+4).toFixed(1)+'" text-anchor="end" font-size="9.5" fill="rgba(226,194,127,.75)">追い風</text>' +
+      '<text x="'+(W-PR-4)+'" y="'+(y(20)+4).toFixed(1)+'" text-anchor="end" font-size="9.5" fill="rgba(212,80,106,.8)">潜る時期</text>';
     const pts = months.map((m,i)=>[x(i),y(m.score)]);
     let d = 'M'+pts[0][0].toFixed(1)+' '+pts[0][1].toFixed(1);
     for (let i=1;i<pts.length;i++){ const p0=pts[i-1],p1=pts[i],mx=(p0[0]+p1[0])/2;
       d += ' C'+mx.toFixed(1)+' '+p0[1].toFixed(1)+','+mx.toFixed(1)+' '+p1[1].toFixed(1)+','+p1[0].toFixed(1)+' '+p1[1].toFixed(1); }
     const area = d+' L'+pts[pts.length-1][0].toFixed(1)+' '+(PT+ih)+' L'+pts[0][0].toFixed(1)+' '+(PT+ih)+' Z';
-    const bi = months.indexOf(months.reduce((a,b)=>b.score>a.score?b:a));
-    const dots = months.map((m,i)=>'<circle cx="'+x(i).toFixed(1)+'" cy="'+y(m.score).toFixed(1)+'" r="'+(i===bi?4.6:2.8)+'" fill="'+(i===bi?'#fdf3d4':'#c9a253')+'"/>').join('');
-    const lbs = months.map((m,i)=>'<text x="'+x(i).toFixed(1)+'" y="'+(H-14)+'" text-anchor="middle" font-size="9.5" fill="'+(i===bi?'#f2debb':'#776e60')+'">'+m.label+'</text>').join('');
-    return '<div style="overflow-x:auto"><svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="十二ヶ月の運勢曲線" style="min-width:590px">' +
+    const best = months.reduce((a,b)=>b.score>a.score?b:a), worst = months.reduce((a,b)=>b.score<a.score?b:a);
+    const bi = months.indexOf(best), wi = months.indexOf(worst);
+    let dots='', lbs='';
+    months.forEach((m,i)=>{
+      const hi = i===bi, lo = i===wi;
+      dots += '<circle cx="'+x(i).toFixed(1)+'" cy="'+y(m.score).toFixed(1)+'" r="'+(hi||lo?5.4:3)+'" fill="'+
+        (hi?'#fdf3d4':lo?'#d4506a':'#c9a253')+'" stroke="rgba(9,6,20,.85)" stroke-width="1"/>';
+      if (hi || lo){
+        const col = hi?'#fdf3d4':'#d4506a', yy = y(m.score) + (hi ? -16 : 24);
+        dots += '<rect x="'+(x(i)-19).toFixed(1)+'" y="'+(yy-13)+'" width="38" height="18" rx="9" fill="rgba(9,6,20,.9)" stroke="'+col+'" stroke-opacity=".6"/>' +
+          '<text x="'+x(i).toFixed(1)+'" y="'+(yy+1)+'" text-anchor="middle" font-size="12" fill="'+col+'" font-family="Cormorant Garamond,serif">'+m.score+'</text>';
+      }
+      lbs += '<text x="'+x(i).toFixed(1)+'" y="'+(H-26)+'" text-anchor="middle" font-size="10.5" fill="'+
+        (hi?'#fdf3d4':lo?'#d4506a':'#8d8474')+'" font-family="Shippori Mincho B1,serif">'+m.label+'</text>';
+      if (hi) lbs += '<text x="'+x(i).toFixed(1)+'" y="'+(H-10)+'" text-anchor="middle" font-size="9" fill="#fdf3d4">最良</text>';
+      if (lo) lbs += '<text x="'+x(i).toFixed(1)+'" y="'+(H-10)+'" text-anchor="middle" font-size="9" fill="#d4506a">要注意</text>';
+    });
+    return '<div style="overflow-x:auto"><svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="十二ヶ月の運勢曲線" style="min-width:620px">' +
       '<defs><linearGradient id="lg" x1="0" y1="0" x2="0" y2="1">' +
-      '<stop offset="0%" stop-color="#c9a253" stop-opacity=".4"/><stop offset="100%" stop-color="#c9a253" stop-opacity="0"/></linearGradient></defs>' +
-      g+'<path d="'+area+'" fill="url(#lg)"/><path d="'+d+'" fill="none" stroke="#f2debb" stroke-width="1.8" stroke-linecap="round"/>'+dots+lbs+
-      '<line x1="'+x(bi).toFixed(1)+'" y1="'+PT+'" x2="'+x(bi).toFixed(1)+'" y2="'+(PT+ih)+'" stroke="#fdf3d4" stroke-width=".7" stroke-dasharray="3 4" opacity=".6"/></svg></div>';
+      '<stop offset="0%" stop-color="#c9a253" stop-opacity=".45"/><stop offset="100%" stop-color="#c9a253" stop-opacity="0"/></linearGradient></defs>' +
+      g+'<path d="'+area+'" fill="url(#lg)"/><path d="'+d+'" fill="none" stroke="#f2debb" stroke-width="2" stroke-linecap="round"/>'+dots+lbs+
+      '<line x1="'+x(bi).toFixed(1)+'" y1="'+PT+'" x2="'+x(bi).toFixed(1)+'" y2="'+(PT+ih)+'" stroke="#fdf3d4" stroke-width=".8" stroke-dasharray="3 4" opacity=".55"/>' +
+      '<line x1="'+x(wi).toFixed(1)+'" y1="'+PT+'" x2="'+x(wi).toFixed(1)+'" y2="'+(PT+ih)+'" stroke="#d4506a" stroke-width=".8" stroke-dasharray="3 4" opacity=".45"/></svg></div>';
   }
   function cardsHTML(draw, pos){
     return '<div class="drawn'+(draw.length===5?' five':'')+'">' + draw.map((x,i)=>{
       const side = x.rev ? x.card.rv : x.card.up;
-      return '<div><button class="dcard" aria-label="'+pos[i]+'の札">' +
-        '<div class="dcard-in"><div class="dcard-f dcard-b">'+PICK_ART.replace('currentColor','#c9a253')+'</div>' +
+      return '<div><button class="dcard" aria-label="'+pos[i]+'の札：'+x.card.jp+'">' +
+        '<div class="dcard-in"><div class="dcard-f dcard-b">'+CARD_BACK+'</div>' +
         '<div class="dcard-f dcard-fr"><span class="pos">'+pos[i]+'</span>' +
-        '<span class="rn">'+x.card.rn+'</span><span class="nm">'+x.card.jp+'</span>' +
+        '<span class="rn">'+x.card.rn+'</span>' +
+        '<span class="dcard-art"'+(x.rev?' style="transform:rotate(180deg)"':'')+'>'+cardArt(x.card,'')+'</span>' +
+        '<span class="nm">'+x.card.jp+'</span>' +
         '<span class="en">'+x.card.en+'</span>' +
         '<span class="rv'+(x.rev?' r':'')+'">'+(x.rev?'逆位置':'正位置')+'</span></div></div></button>' +
         '<p class="dcard-note">'+side.kw+'</p></div>';
     }).join('') + '</div>';
   }
+  function heroCardHTML(x, label){
+    const side = x.rev ? x.card.rv : x.card.up;
+    return '<div class="hero-card-art"><div class="frame"'+(x.rev?' style="transform:rotate(180deg)"':'')+'>'+cardArt(x.card,'')+'</div>' +
+      '<div class="meta"><p class="rn">'+(label||'結論の札')+'　'+x.card.rn+'</p>' +
+      '<p class="nm">'+x.card.jp+'<span style="font-size:.62em;color:'+(x.rev?'#d4506a':'#8fd6bb')+';margin-left:.6em">'+
+      (x.rev?'逆位置':'正位置')+'</span></p>' +
+      '<p class="en">'+x.card.en+'</p><p class="kw">'+side.kw+'</p></div></div>';
+  }
   function chartHTML(ch){
     if (!ch) return '';
     if (ch.type === 'radar'){
-      const bars = Object.entries(ch.data).sort((a,b)=>b[1]-a[1]).map(([k,v]) =>
-        '<div class="bar-r"><span>'+k+'（'+D.ELEMENTS[k].en+'）</span><span class="bar-tr"><i class="bar-fl" data-w="'+v+'"></i></span><span class="v">'+v+'</span></div>').join('');
-      return '<div class="chart-box"><div class="chart-t">五行バランス<span>木火土金水の配分</span></div>'+radarSVG(ch.data)+bars+'</div>';
+      const sorted = Object.entries(ch.data).sort((a,b)=>b[1]-a[1]);
+      const bars = sorted.map(([k,v],idx) => {
+        const top = idx===0, low = idx===sorted.length-1;
+        return '<div class="bar-r"><span>'+k+'（'+D.ELEMENTS[k].en+'）</span>' +
+          '<span class="bar-tr"><i class="bar-fl'+(top?' top':low?' low':'')+'" data-w="'+v+'"></i></span>' +
+          '<span class="v"><b>'+v+'</b>'+(top?'<span class="tag hi">最強</span>':low?'<span class="tag lo">最弱</span>':'')+'</span></div>';
+      }).join('');
+      return '<div class="chart-box"><div class="chart-t">五行バランス<span>木・火・土・金・水の配分</span></div>' +
+        radarSVG(ch.data) + bars +
+        '<div class="chart-legend"><span><i style="background:linear-gradient(90deg,#a37c33,#fdf3d4)"></i>強い気（活かす）</span>' +
+        '<span><i style="background:linear-gradient(90deg,#7a2c40,#d4506a)"></i>薄い気（補う）</span></div>' +
+        '<p class="chart-note">最大値を100とした相対値です。<b>'+sorted[0][0]+'</b>に偏り、<b>'+sorted[4][0]+'</b>が不足しています。</p></div>';
     }
-    if (ch.type === 'line')
-      return '<div class="chart-box"><div class="chart-t">十二ヶ月の運勢曲線<span>身体23日・感情28日・知性33日の周期</span></div>'+lineSVG(ch.data)+'</div>';
+    if (ch.type === 'line'){
+      const best = ch.data.reduce((a,b)=>b.score>a.score?b:a), worst = ch.data.reduce((a,b)=>b.score<a.score?b:a);
+      return '<div class="chart-box"><div class="chart-t">十二ヶ月の運勢曲線<span>身体23日・感情28日・知性33日の周期＋個人月数</span></div>' +
+        lineSVG(ch.data) +
+        '<div class="chart-legend"><span><i style="background:#fdf3d4"></i>最良月　'+best.year+'年'+best.label+'（'+best.score+'）</span>' +
+        '<span><i style="background:#d4506a"></i>要注意月　'+worst.year+'年'+worst.label+'（'+worst.score+'）</span>' +
+        '<span><i style="background:rgba(201,162,83,.35)"></i>70以上＝追い風帯</span></div>' +
+        '<p class="chart-note">指数70以上は<b>通してよい月</b>、40未満は<b>守りに徹する月</b>です。</p></div>';
+    }
     if (ch.type === 'cards') return cardsHTML(ch.data, ch.pos);
+    if (ch.type === 'heroCard') return heroCardHTML(ch.data, ch.label);
+    if (ch.type === 'elcycle') return elCycleSVG(ch.dom, ch.weak);
+    if (ch.type === 'pyring') return pyRingSVG(ch.py);
+    if (ch.type === 'kaku') return kakuDiagram(ch.data);
+    if (ch.type === 'relation') return relationSVG(ch.a, ch.b, ch.x);
     return '';
+  }
+  const UPTOP = '<button class="uptop" data-uptop>' +
+    '<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M6 10V2M2 6l4-4 4 4"/></svg>' +
+    '上にもどる</button>';
+  function charts(s){
+    const list = s.charts || (s.chart ? [s.chart] : []);
+    return list.map(chartHTML).join('');
   }
   const secHTML = s => '<section class="res-sec"><div class="res-h"><span class="n">'+s.no+'</span><h3>'+s.title+'</h3>' +
     '<span class="ln"></span><span class="n" style="font-family:Cormorant Garamond,serif;font-style:italic">'+(s.en||'')+'</span></div>' +
-    '<div class="res-body">'+s.html+chartHTML(s.chart)+'</div></section>';
+    '<div class="res-body">'+ (s.pre ? charts(s) + s.html : s.html + charts(s)) +'</div></section>';
 
   function renderResult(){
     const { menu, doc } = CUR;
-    const open = isUnlocked(menu.id);
+    const open = isUnlocked(menu.id) || !!menu.free;
     let h = '<div class="wrap-narrow"><div class="res">';
 
     h += '<div class="res-hero">'+SEAL+'<p class="kind">'+doc.head.kind+'</p><h2>'+esc(doc.head.title)+'</h2>' +
@@ -514,10 +737,13 @@
       h += '<div class="pillars">' + doc.head.pillars.map(([g,k,v,s]) =>
         '<div class="pil"><div class="g">'+g+'︎</div><p class="k">'+k+'</p><p class="v">'+v+'</p><p class="s">'+s+'</p></div>').join('') + '</div>';
 
-    h += doc.free.map(secHTML).join('');
+    h += doc.free.map((x,i) => secHTML(x) + (i === doc.free.length - 1 ? '' : '')).join('');
+    h += UPTOP;
 
     if (open){
-      h += doc.paid.map(secHTML).join('');
+      h += doc.paid.map((x,i) => secHTML(x) + ((i+1) % 2 === 0 && i < doc.paid.length-1 ? UPTOP : '')).join('');
+      if (menu.free) h += '<div class="freebar">✦　<b>この鑑定は全文無料</b>です。登録も課金もありません。' +
+        '気に入っていただけたら、他の鑑定もどうぞ。</div>';
       h += '<div class="res-end">' + nextUpHTML(menu) +
         '<div class="res-actions">' +
         '<button class="btn btn-ghost btn-sm" id="resPrint">印刷 / PDF保存</button>' +
@@ -527,7 +753,7 @@
       const first = doc.paid[0];
       h += '<div class="fadeout"><div class="clip">'+secHTML(first)+'</div><div class="veil"></div></div>';
       h += gateHTML(doc);
-      h += '<div class="res-end">' + nextUpHTML(menu) + '</div>';
+      h += '<div class="res-end">' + nextUpHTML(menu) + UPTOP + '</div>';
     }
     h += '</div></div>';
     rBody.innerHTML = h;
@@ -577,7 +803,21 @@
       if (CUR.menu.e === 'tarot') renderPick(CUR.menu); else renderAsk(CUR.menu);
     };
     const cl = $('#resClose'); if (cl) cl.onclick = closeReader;
+    $$('[data-uptop]', rBody).forEach(b => b.addEventListener('click', () => {
+      rBody.scrollTo({ top:0, behavior: REDUCED ? 'auto' : 'smooth' });
+    }));
   }
+
+  /* ---------- 上にもどるボタン ---------- */
+  (function toTop(){
+    const pageBtn = $('#pageTop'), readBtn = $('#readerTop');
+    const onPage = () => pageBtn.classList.toggle('on', scrollY > innerHeight * .6);
+    onPage(); addEventListener('scroll', onPage, { passive:true });
+    pageBtn.addEventListener('click', () => scrollTo({ top:0, behavior: REDUCED ? 'auto' : 'smooth' }));
+    const onRead = () => readBtn.classList.toggle('on', rBody.scrollTop > 480);
+    rBody.addEventListener('scroll', onRead, { passive:true });
+    readBtn.addEventListener('click', () => rBody.scrollTo({ top:0, behavior: REDUCED ? 'auto' : 'smooth' }));
+  })();
 
   function doUnlock(kind){
     const u = unlocked();
