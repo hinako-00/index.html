@@ -129,6 +129,18 @@ assets/
 - 見出しは `text-wrap: balance`、本文は `text-wrap: pretty` で行末を整えます
 - 本文の行間は 2.6。強調語は `box-decoration-break: clone` で行またぎでも崩れません
 
+## 1ファイル版
+
+配布やドラッグ＆ドロップでの公開用に、CSSとJSをすべて埋め込んだ1枚のHTMLを生成できます。
+
+```sh
+sh fortune/build-single.sh   # → uranai-1file.html
+```
+
+分割版は `index.html` と `assets/` を必ず同じ階層に置く必要があります。
+**ZIPを展開せずに index.html を直接開くとCSSとJSが読まれず、素の状態で表示されます。**
+1ファイル版はその心配がありません。
+
 ## デモとして未実装
 
 - **決済**：`app.js` の `doUnlock()` が localStorage を書き換えるだけです。
