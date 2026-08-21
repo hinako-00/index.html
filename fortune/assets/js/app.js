@@ -152,7 +152,7 @@
       const prof = { y:+y.value, m:+m.value, d:+dd.value };
       LS.set('profile', Object.assign(LS.get('profile', {}), prof));
       renderDaily(prof);
-      toast('あなた個人の今日の運勢に切り替えました');
+      toast('あなたの相に、切り替えました');
     };
     $('#dGo').onclick = apply;
     const p = LS.get('profile', null);
@@ -167,10 +167,12 @@
 
   function menuCard(m){
     const tags = (m.tags||[]).map(t =>
-      '<span class="badge '+(t==='全文無料'?'allfree':t==='人気'?'hot':t==='入力なし'||t==='10秒'?'easy':'')+'">'+t+'</span>').join('');
+      '<span class="badge '+(t==='全部無料'?'allfree':t==='人気'?'hot':t==='手ぶら'||t==='10秒'?'easy':'')+'">'+t+'</span>').join('');
+    const hakke = ['☰','☱','☲','☳','☴','☵','☶','☷'][Math.abs(E.hash32(m.id)) % 8];
     return '<button class="mcard rv" data-menu="'+m.id+'">' +
+      '<i class="tome" aria-hidden="true"></i><span class="kado" aria-hidden="true">'+hakke+'</span>' +
       '<div class="mcard-top"><span class="mcard-ic">'+m.ic+'</span>' +
-      '<div class="mcard-badges">'+(m.free?'':'<span class="badge free">無料で読める</span>')+tags+'</div></div>' +
+      '<div class="mcard-badges">'+(m.free?'':'<span class="badge free">無料で試す</span>')+tags+'</div></div>' +
       '<h3>'+esc(m.t)+'</h3>' +
       '<p class="catch">'+esc(m.c)+'</p>' +
       '<p class="desc">'+esc(m.d)+'</p>' +
@@ -248,7 +250,7 @@
   function openReader(menu){
     CUR = { menu, ctx:null, doc:null };
     rTtl.textContent = menu.t;
-    rKind.textContent = (D.TELLERS.find(t => t.id === menu.teller) || {}).name + '　監修';
+    rKind.textContent = (D.TELLERS.find(t => t.id === menu.teller) || {}).name + '　視';
     reader.classList.add('on');
     document.body.classList.add('locked');
     rBody.scrollTop = 0;
@@ -296,37 +298,37 @@
   }
   const LOCKNOTE = '<p class="ask-note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">' +
     '<rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>' +
-    '入力はこの端末の中だけで処理されます</p>';
+    '入力は、この端末の中だけ</p>';
 
   function renderAsk(menu){
     const prof = LS.get('profile', {});
     let fields = '';
     if (menu.e === 'natal'){
       fields = '<div class="fset">' +
-        '<div><p class="flabel">お名前・ニックネーム <span class="sub">任意</span></p>' +
+        '<div><p class="flabel">お名前 <span class="sub">任意</span></p>' +
         '<input class="inp" id="aName" maxlength="16" placeholder="例：ゆき" value="'+esc(prof.name||'')+'"></div>' +
         dateSelects('a', '生年月日', true) + '</div>';
     } else if (menu.e === 'compat'){
-      fields = '<div class="fset"><p class="flabel">あなたのこと</p>' +
+      fields = '<div class="fset"><p class="flabel">あなた</p>' +
         dateSelects('a', '生年月日', true) + '</div>' +
-        '<div class="fset"><p class="flabel">お相手のこと</p>' +
-        '<div><p class="flabel">お相手のお名前 <span class="sub">任意</span></p>' +
+        '<div class="fset"><p class="flabel">お相手</p>' +
+        '<div><p class="flabel">お相手の名 <span class="sub">任意</span></p>' +
         '<input class="inp" id="bName" maxlength="16" placeholder="例：しゅん"></div>' +
         dateSelects('b', 'お相手の生年月日', true) + '</div>';
     } else {
       const pair = !!menu.pair;
-      fields = '<div class="fset"><p class="flabel">お名前を<span class="sub">ひらがな</span>で</p>' +
+      fields = '<div class="fset"><p class="flabel">名を<span class="sub">ひらがな</span>で</p>' +
         '<div class="f2"><input class="inp" id="sSei" maxlength="10" placeholder="せい（例：やまだ）">' +
         '<input class="inp" id="sMei" maxlength="10" placeholder="めい（例：はなこ）"></div>' +
-        '<p class="fhint">かなの画数で鑑定します。濁点・半濁点もそのまま入れてください。</p></div>' +
-        (pair ? '<div class="fset"><p class="flabel">お相手のお名前を<span class="sub">ひらがな</span>で</p>' +
+        '<p class="fhint">かなの画数で視ます。濁点・半濁点もそのまま。</p></div>' +
+        (pair ? '<div class="fset"><p class="flabel">お相手の名を<span class="sub">ひらがな</span>で</p>' +
         '<div class="f2"><input class="inp" id="tSei" maxlength="10" placeholder="せい">' +
         '<input class="inp" id="tMei" maxlength="10" placeholder="めい"></div></div>' : '');
     }
     rBody.innerHTML = '<div class="wrap-narrow">' + askHead(menu) +
       '<div class="ask-box">' + fields +
       '<p class="ferr" id="askErr"></p>' +
-      '<div class="ask-foot"><button class="btn btn-gold btn-block btn-lg" id="askGo">鑑定をはじめる</button>' +
+      '<div class="ask-foot"><button class="btn btn-gold btn-block btn-lg" id="askGo">視てもらう</button>' +
       LOCKNOTE + '</div></div></div>';
 
     if (menu.e === 'natal' || menu.e === 'compat'){
@@ -343,25 +345,25 @@
     const ctx = { now:NOW };
     if (menu.e === 'natal' || menu.e === 'compat'){
       const y = +$('#aY').value, m = +$('#aM').value, d = +$('#aD').value;
-      if (!y || !m || !d){ err.textContent = '生年月日をお選びください。'; return; }
+      if (!y || !m || !d){ err.textContent = '生年月日をお選びください'; return; }
       const name = ($('#aName') ? $('#aName').value.trim().slice(0,16) : '');
       LS.set('profile', { name, y, m, d });
       ctx.chart = E.buildChart({ name, y, m, d, hour:null }, NOW);
       if (menu.e === 'compat'){
         const y2 = +$('#bY').value, m2 = +$('#bM').value, d2 = +$('#bD').value;
-        if (!y2 || !m2 || !d2){ err.textContent = 'お相手の生年月日をお選びください。'; return; }
+        if (!y2 || !m2 || !d2){ err.textContent = 'お相手の生年月日をお選びください'; return; }
         ctx.chart2 = E.buildChart({ name:$('#bName').value.trim().slice(0,16), y:y2, m:m2, d:d2, hour:null }, NOW);
         ctx.compat = E.compatibility(ctx.chart, ctx.chart2);
       }
     } else {
       const sei = $('#sSei').value.trim(), mei = $('#sMei').value.trim();
-      if (!sei || !mei){ err.textContent = '姓と名の両方をひらがなでご入力ください。'; return; }
+      if (!sei || !mei){ err.textContent = '姓と名を、ひらがなで'; return; }
       const s = E.seimeiChart(sei, mei);
-      if (!s){ err.textContent = 'ひらがなで入力してください（漢字・英数は読み取れません）。'; return; }
+      if (!s){ err.textContent = 'ひらがなでご入力ください（漢字・英数は読めません）'; return; }
       ctx.seimei = s;
       if (menu.pair){
         const s2 = E.seimeiChart($('#tSei').value.trim(), $('#tMei').value.trim());
-        if (!s2){ err.textContent = 'お相手のお名前も、ひらがなでご入力ください。'; return; }
+        if (!s2){ err.textContent = 'お相手の名も、ひらがなで'; return; }
         ctx.seimei2 = s2;
       }
     }
@@ -377,7 +379,7 @@
   function renderPick(menu){
     const n = menu.n || 1, total = 9;
     rBody.innerHTML = '<div class="wrap-narrow">' + askHead(menu) +
-      '<p class="pick-msg">心を静めて、<em class="hl">'+n+'枚</em>お選びください。<br>考えず、目に留まったものを。</p>' +
+      '<p class="pick-msg">心を静めて、<em class="hl">'+n+'枚</em>。<br>考えず、目に留まったものを。</p>' +
       '<div class="pick-row" id="pickRow">' +
       Array.from({length:total},(_,i)=>'<button class="pick" data-i="'+i+'" aria-label="'+(i+1)+'枚目の札">'+
         CARD_BACK+'<span class="pick-n">'+(i+1)+'</span></button>').join('') +
@@ -386,7 +388,7 @@
     $('#pickRow').addEventListener('click', e => {
       const b = e.target.closest('.pick'); if (!b || b.classList.contains('chosen')) return;
       b.classList.add('chosen'); chosen.push(+b.dataset.i);
-      $('#pickCount').textContent = chosen.length >= n ? '札を読みます…' : 'あと ' + (n - chosen.length) + ' 枚';
+      $('#pickCount').textContent = chosen.length >= n ? '札を、読む' : 'あと ' + (n - chosen.length) + ' 枚';
       if (chosen.length >= n){
         $$('.pick').forEach(x => { if (!x.classList.contains('chosen')) x.disabled = true; });
         const seedStr = menu.id + '|' + E.ymdKey(NOW) + '|' + chosen.join(',') + '|' + (LS.get('dev','') || '');
@@ -399,10 +401,10 @@
 
   /* ---------- 鑑定中 ---------- */
   const CAST = {
-    natal:['星の位置を確かめています…','運命数を還元しています…','干支と五行の配分を測っています…','月齢を計算しています…','言葉を選んでいます…'],
-    compat:['おふたりの命式を並べています…','気の流れを読んでいます…','星の距離を測っています…','縁の糸をたどっています…','言葉を選んでいます…'],
-    tarot:['札を切っています…','選ばれた札を開いています…','配置の意味を読んでいます…','言葉を選んでいます…'],
-    seimei:['画数を数えています…','五格を立てています…','三才の配置を見ています…','言葉を選んでいます…']
+    natal:['星の位置を、確かめる','運命数を、還元する','干支と五行を、測る','月齢を、算する','言葉を、選ぶ'],
+    compat:['ふたつの命式を、並べる','気の流れを、読む','星の距離を、測る','縁の糸を、たどる','言葉を、選ぶ'],
+    tarot:['札を、切る','選ばれた札を、開く','配置の意味を、読む','言葉を、選ぶ'],
+    seimei:['画数を、数える','五格を、立てる','三才を、視る','言葉を、選ぶ']
   };
   function runCasting(menu, ctx){
     const msgs = CAST[menu.e] || CAST.natal;
@@ -727,7 +729,8 @@
     const open = isUnlocked(menu.id) || !!menu.free;
     let h = '<div class="wrap-narrow"><div class="res">';
 
-    h += '<div class="res-hero">'+SEAL+'<p class="kind">'+doc.head.kind+'</p><h2>'+esc(doc.head.title)+'</h2>' +
+    h += '<div class="res-hero"><span class="inkan" aria-hidden="true">星<i>詠</i></span>' +
+      SEAL+'<p class="kind">'+doc.head.kind+'</p><h2>'+esc(doc.head.title)+'</h2>' +
       '<p class="for">'+esc(doc.head.forWhom)+'</p>' +
       (doc.head.code ? '<span class="code">'+esc(doc.head.code)+'</span>' : '') + '</div>';
     if (doc.head.pillars && doc.head.pillars.length)
@@ -738,12 +741,11 @@
 
     if (open){
       h += doc.paid.map(secHTML).join('');
-      if (menu.free) h += '<div class="freebar">✦　<b>この鑑定は全文無料</b>です。登録も課金もありません。' +
-        '気に入っていただけたら、他の鑑定もどうぞ。</div>';
+      if (menu.free) h += '<div class="freebar">✦　<b>ここまで、すべて無料</b>。登録も課金もありません。</div>';
       h += '<div class="res-end">' + nextUpHTML(menu) +
         '<div class="res-actions">' +
-        '<button class="btn btn-ghost btn-sm" id="resPrint">印刷 / PDF保存</button>' +
-        '<button class="btn btn-ghost btn-sm" id="resAgain">条件を変えて視る</button>' +
+        '<button class="btn btn-ghost btn-sm" id="resPrint">保存</button>' +
+        '<button class="btn btn-ghost btn-sm" id="resAgain">条件を変える</button>' +
         '<button class="btn btn-ghost btn-sm" id="resClose">閉じる</button></div></div>';
     } else {
       const first = doc.paid[0];
@@ -768,12 +770,12 @@
       '<p class="gate-why">'+g.why+'</p>' +
       '<ul class="gate-list">'+g.list.map(x=>'<li>'+x+'</li>').join('')+'</ul>' +
       '<div class="gate-buy">' +
-      '<button class="buy-main" data-buy="single"><span>この鑑定を最後まで読む</span><span class="p">¥'+p.single+'<small>（税込）</small></span></button>' +
-      '<button class="buy-sub" data-buy="pass">すべての鑑定が読み放題　<b>月額 ¥'+p.pass.toLocaleString('ja-JP')+'</b>　いつでも解約できます</button>' +
+      '<button class="buy-main" data-buy="single"><span>最後まで読む</span><span class="p">¥'+p.single+'<small>税込</small></span></button>' +
+      '<button class="buy-sub" data-buy="pass">全鑑定 読み放題　<b>月 ¥'+p.pass.toLocaleString('ja-JP')+'</b></button>' +
       '</div>' +
-      '<p class="gate-fine">※ 単品は買い切りです。一度お読みいただいた鑑定は、この端末でいつでも読み返せます。</p>' +
-      '<div class="gate-demo"><b>これはデモサイトです。</b>決済は実装されておらず、課金は発生しません。' +
-      'ボタンを押すと、購入後にお読みいただける内容がそのまま表示されます。</div>' +
+      '<p class="gate-fine">※ 単品は買い切り。読み放題はいつでも解約できます。<br>一度ひらいた鑑定は、この端末でいつでも読み返せます。</p>' +
+      '<div class="gate-demo"><b>これはデモです。</b>決済は未実装で、課金は発生しません。' +
+      'ボタンを押すと、購入後の内容がそのまま開きます。</div>' +
       '</div>';
   }
 
@@ -781,7 +783,7 @@
     const pool = D.MENUS.filter(m => m.id !== menu.id);
     const same = pool.filter(m => m.g === menu.g), other = pool.filter(m => m.g !== menu.g);
     const pick = same.slice(0,2).concat(other.filter(m => (m.tags||[]).includes('人気')).slice(0,2)).slice(0,4);
-    return '<div class="nextup"><h4>この鑑定を受けた方は、次にこちらも視ています</h4><div class="row">' +
+    return '<div class="nextup"><h4>次に、視られているもの</h4><div class="row">' +
       pick.map(m => '<button data-menu="'+m.id+'">'+esc(m.t)+'<span>'+esc(m.c)+'</span></button>').join('') +
       '</div></div>';
   }
@@ -817,7 +819,7 @@
     else u[CUR.menu.id] = true;
     LS.set('unlocked', u);
     renderResult();
-    toast(kind === 'pass' ? 'すべての鑑定が開きました（デモ表示）' : 'この鑑定の続きが開きました（デモ表示）');
+    toast(kind === 'pass' ? '全鑑定、ひらきました（デモ）' : '続きが、ひらきました（デモ）');
     setTimeout(() => {
       const secs = $$('.res-sec', rBody);
       const t = secs[CUR.doc.free.length] || rBody;
@@ -839,7 +841,7 @@
     box.classList.remove('hide');
     $('#histRow').innerHTML = h.map(x =>
       '<button data-menu="'+x.id+'">'+esc(x.t)+'<span>'+x.at.slice(0,10).replace(/-/g,'.')+
-      (isUnlocked(x.id) ? '　/　購入済み' : '　/　続きは未読')+'</span></button>').join('');
+      (isUnlocked(x.id) ? '　/　開封済' : '　/　途中まで')+'</span></button>').join('');
   }
   renderHistory();
 

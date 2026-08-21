@@ -869,37 +869,36 @@
   const PRICE_SINGLE = 550, PRICE_PASS = 1980;
   function buildGate(menu, ctx){
     const c = ctx.chart, teaser = [];
-    let lead = 'この続きに、答えがあります。', h = '';
+    let lead = 'ここから、核心。', h = '';
     if (menu.e === 'natal') {
-      h = (c ? san(c) : 'あなた') + 'に起きることは、この先に出ています。';
-      teaser.push('<b>結論</b>：いま出かかった答えの、その先。',
-        '<b>時期</b>：あなたの転機となる一日を、<em class="hl">月日まで</em>お伝えします',
-        '<b>行動</b>：明日からできる、あなただけの一手',
-        '<b>護符</b>：色・数・方位・曜日・持ちもの');
+      h = (c ? san(c) : 'あなた') + 'に、何が起きるか。';
+      teaser.push('<b>結論</b>　いま出かかった答えの、その先',
+        '<b>刻</b>　転機となる一日を、<em class="hl">月日まで</em>',
+        '<b>手</b>　明日から効く、あなただけの一手',
+        '<b>護符</b>　色・数・方位・曜日・持ちもの');
     } else if (menu.e === 'compat') {
-      h = 'おふたりの結末は、この先に出ています。';
-      teaser.push('<b>相手の本音</b>：命式が語る、言われていない気持ち',
-        '<b>時期</b>：関係が動く月と、その決定的な日',
-        '<b>言葉</b>：かけるべき一言と、絶対に言ってはいけない一言',
-        '<b>結末</b>：このまま進んだ場合に起きること');
+      h = 'この縁の、行き着く先。';
+      teaser.push('<b>本音</b>　命式が語る、言われていない心',
+        '<b>刻</b>　関係が動く月と、決定的な一日',
+        '<b>言</b>　かけるべき一言と、禁句',
+        '<b>結末</b>　このまま進んだ先に起きること');
     } else if (menu.e === 'tarot') {
-      lead = '札は、まだ半分しか語っていません。';
-      h = '伏せられたままの意味が、この先にあります。';
-      teaser.push('<b>札の答え</b>：いま出た札が、本当に示していること',
-        '<b>裏の意味</b>：あなたが見落としている一枚',
-        '<b>時期</b>：札が示す、動くべきタイミング',
-        '<b>行動</b>：今日から変えるべき、たった一つ');
+      lead = '札は、まだ半分しか語らぬ。';
+      h = '伏せられた、もう半分。';
+      teaser.push('<b>答</b>　その札が、本当に示すもの',
+        '<b>裏</b>　見落としている一枚',
+        '<b>刻</b>　札が指す、動くべき時',
+        '<b>手</b>　今日から変える、たった一つ');
     } else {
-      lead = 'その名前が背負っているものは、まだ半分です。';
-      h = '総格と外格が示す、人生後半の設計図。';
-      teaser.push('<b>総運</b>：人生全体を貫く一本の線',
-        '<b>影の格</b>：気づかないまま繰り返してきた癖',
-        '<b>開運</b>：呼び名・印鑑・署名の使い分け',
-        '<b>時期</b>：名前の力が最も強く出る年');
+      lead = 'その名が背負うもの、まだ半分。';
+      h = '名が定める、後半生。';
+      teaser.push('<b>総運</b>　生涯を貫く、一本の線',
+        '<b>影</b>　気づかず繰り返してきた癖',
+        '<b>開運</b>　呼び名・印・署名の使い分け',
+        '<b>刻</b>　名の力が最も強く出る年');
     }
-    return { lead, h, why:'鑑定はここからが本題です。' +
-      '当館では、無料でお読みいただける範囲を「あなたがどんな人か」までと決めています。' +
-      'その先——<strong>いつ、何をすべきか</strong>という具体は、覚悟のある方だけにお渡ししています。', list:teaser };
+    return { lead, h, why:'無料で明かすのは「あなたが何者か」まで。' +
+      'その先——<strong>いつ、何をすべきか</strong>は、覚悟のある方にだけ。', list:teaser };
   }
 
   /* =======================================================
@@ -1082,13 +1081,13 @@
           ['気', '主たる気', c.domEl, '薄いのは' + c.weakEl],
           ['月', '今日の月', c.moon.jp, c.moon.theme]
         ] };
-      free.push(S(0, 'あなたという人', 'Who You Are', seeBlock(c) + T.core(c)));
-      free.push(S(1, '気がかりなこと', 'The Warning', T.risk(c)));
-      const nsec = S(2, 'その答え', 'The Answer', T.answer(c));
+      free.push(S(0, '素性', 'Who You Are', seeBlock(c) + T.core(c)));
+      free.push(S(1, '兆し', 'The Warning', T.risk(c)));
+      const nsec = S(2, '答え', 'The Answer', T.answer(c));
       if (T.charts) nsec.charts = T.charts(c);
       else if (T.chart) nsec.charts = [T.chart(c)];
       paid.push(nsec);
-      paid.push(S(3, '開運の実務', 'Charms', charms(c)));
+      paid.push(S(3, '処方', 'Charms', charms(c)));
       paid.push(S(4, '結び', 'Closing', closing(c, menu)));
 
     } else if (menu.e === 'compat') {
@@ -1102,11 +1101,11 @@
           ['彼', 'お相手', b.sign.jp, '運命数' + b.lp],
           ['気', '気の関係', a.domEl + '×' + b.domEl, x.elGood ? '相生' : x.elBad ? '相剋' : '並立']
         ] };
-      const csec = S(0, 'ふたりの相性', 'Affinity', T.core(a, b, x));
+      const csec = S(0, '縁', 'Affinity', T.core(a, b, x));
       if (T.coreCharts) { csec.charts = T.coreCharts(a, b, x); csec.pre = true; }
       free.push(csec);
-      free.push(S(1, 'ひとつの弱点', 'The Crack', T.risk(a, b, x)));
-      paid.push(S(2, 'この先に起きること', 'What Comes', T.answer(a, b, x)));
+      free.push(S(1, '綻び', 'The Crack', T.risk(a, b, x)));
+      paid.push(S(2, '答え', 'What Comes', T.answer(a, b, x)));
       paid.push(S(3, '結び', 'Closing', P(
         CALM('相性は、生まれた瞬間に決まった点数ではありません。'),
         '数値は「いまの噛み合い方」です。扱い方を変えれば動きます。' +
@@ -1117,9 +1116,9 @@
       const t = TAROT_T[menu.theme];
       head = { kind:t.kind, title:menu.t, forWhom:'あなたが選んだ ' + ctx.draw.length + ' 枚', code:ctx.code,
         pillars:ctx.draw.map((x, i) => ['札', t.pos[i], x.card.jp, x.rev ? '逆位置' : '正位置']) };
-      free.push(S(0, '引かれた札', 'The Cards', tarotCore(ctx, menu), { type:'cards', data:ctx.draw, pos:t.pos }));
-      free.push(S(1, '札が告げていること', 'The Warning', tarotRisk(ctx, menu)));
-      const tsec = S(2, '札の答え', 'The Answer', tarotAnswer(ctx, menu));
+      free.push(S(0, '札', 'The Cards', tarotCore(ctx, menu), { type:'cards', data:ctx.draw, pos:t.pos }));
+      free.push(S(1, '兆し', 'The Warning', tarotRisk(ctx, menu)));
+      const tsec = S(2, '答え', 'The Answer', tarotAnswer(ctx, menu));
       tsec.charts = [{ type:'heroCard', data:ctx.draw[ctx.draw.length - 1],
         label: ctx.draw.length > 1 ? '結論の札' : 'あなたの札' }];
       tsec.pre = true;
@@ -1139,7 +1138,7 @@
                    ['己','あなたの人格',String(s.jin),s.m.jin.t],
                    ['彼','お相手の人格',String(s2.jin),s2.m.jin.t],
                    ['差','総格の差',String(pr.tot),pr.tot <= 8 ? '近い' : '離れている']] };
-        const psec = S(0, 'ふたつの名前', 'Two Names',
+        const psec = S(0, '二つの名', 'Two Names',
           meterHTML(pr.score, compatLabel(pr.score)) + seimeiTable(s) + seimeiTable(s2) + P(
             'あなたの人格は' + HL(String(s.jin)) + '（' + s.m.jin.t + '）、お相手は' + HL(String(s2.jin)) + '（' + s2.m.jin.t + '）。',
             pr.diff <= 4 ? '数が近く、' + CALM('感覚が似ています') + '。言わなくても伝わる場面が多いはずです。'
@@ -1152,14 +1151,14 @@
           ]));
         psec.charts = [{ type:'kaku', data:s }, { type:'kaku', data:s2 }];
         free.push(psec);
-        free.push(S(1, '名前の影', 'The Shadow', P(
+        free.push(S(1, '影', 'The Shadow', P(
           '<strong>ただ、この組み合わせには気がかりがあります。</strong>' +
           '総格の差が' + WARN(String(pr.tot)) + '。' +
           (pr.tot <= 8 ? 'これは' + WARN('近すぎる') + '配置です。似た弱点を同時に抱えるため、片方が崩れるともう片方も倒れます。'
                        : 'これは' + WARN('人生の速度が違う') + '配置です。片方が進みたいときに、もう片方が休みたくなります。'),
           'この差が表に出るのは、決まった時期です。それは——'
         )));
-        paid.push(S(2, 'ふたりの結末', 'The Answer', P(
+        paid.push(S(2, '答え', 'The Answer', P(
           '——' + HLL('関係が三年を越えたとき') + '、あるいは' + HLL('どちらかの環境が変わったとき') + 'です。',
           '<strong>続けるための条件</strong>：' + MK(pr.tot <= 8 ? '別々の予定を意図的に持つこと。同化しすぎると、二人とも逃げ場がなくなります。'
             : '相手の速度を変えようとしないこと。追いつかせようとした瞬間から、関係は消耗戦になります。'),
@@ -1176,12 +1175,12 @@
           pillars:[['天','天格',String(s.ten),s.m.ten.k],['人','人格',String(s.jin),s.m.jin.k],
                    ['地','地格',String(s.chi),s.m.chi.k],['外','外格',String(s.soto),s.m.soto.k],
                    ['総','総格',String(s.sou),s.m.sou.k]] };
-        const ssec = S(0, '五格が示すもの', 'Five Numbers', seimeiCore(s, menu));
+        const ssec = S(0, '五格', 'Five Numbers', seimeiCore(s, menu));
         ssec.charts = [{ type:'kaku', data:s }];
         ssec.pre = true;
         free.push(ssec);
-        free.push(S(1, '名前の影', 'The Shadow', seimeiRisk(s, menu)));
-        paid.push(S(2, '総格が示す人生', 'The Answer', seimeiAnswer(s, menu)));
+        free.push(S(1, '影', 'The Shadow', seimeiRisk(s, menu)));
+        paid.push(S(2, '答え', 'The Answer', seimeiAnswer(s, menu)));
         paid.push(S(3, '結び', 'Closing', P(
           CALM('その名前は、誰かがあなたのために選んだものです。'),
           '画数の吉凶より大切なのは、あなたがその名前を好きでいられるかどうかです。' +
