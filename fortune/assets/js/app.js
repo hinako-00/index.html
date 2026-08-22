@@ -431,7 +431,6 @@
       '<circle cx="100" cy="22" r="3.4" fill="#fdf3d4"/></g>' +
       '<g class="sp-r"><circle cx="100" cy="100" r="56" stroke="#8a5fb8" stroke-width="1" stroke-dasharray="30 14" opacity=".75"/>' +
       '<circle cx="156" cy="100" r="2.6" fill="#e2c27f"/></g>' +
-      '<path d="M100 58l7.4 21.6L129 87l-21.6 7.4L100 116l-7.4-21.6L71 87l21.6-7.4z" fill="#cfa css" opacity=".9"/>' +
       '<path d="M100 58l7.4 21.6L129 87l-21.6 7.4L100 116l-7.4-21.6L71 87l21.6-7.4z" fill="#e2c27f" opacity=".9"/>' +
       '</svg><p class="cast-msg" id="castMsg">'+msgs[0]+'</p>' +
       '<div class="cast-bar"><i id="castBar"></i></div></div></div>';
