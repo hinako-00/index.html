@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>星詠堂 — 視る。</title>
-<meta name="description" content="生年月日だけ。名だけ。札を選ぶだけ。登録不要、その場でひらく本式の鑑定。恋・縁・札・名・財・命——全29種。">
+<meta name="description" content="生年月日だけ。名だけ。札を選ぶだけ。登録不要、その場でひらく本式の鑑定。恋・縁・札・名・財・命——全41種。">
 <meta name="theme-color" content="#07050f">
 <meta property="og:title" content="星詠堂 — 視る。">
 <meta property="og:description" content="登録不要。生年月日ひとつで、宿命が言葉になる。">
@@ -97,6 +97,9 @@ h1,h2,h3,h4,.hero-title,.h-sec,.gate-h,.gate-lead,.lead,.hero-copy,
 /* 切ってはいけない語のかたまり */
 .nb{white-space:nowrap;}
 body.locked{overflow:hidden;}
+/* ハンバーガーメニューが開いているあいだ、背景を完全に固定する
+   （overflow:hiddenだけではiOS Safariのタッチスクロールを止められない） */
+body.nav-open{position:fixed;left:0;right:0;overflow:hidden;}
 img,svg{max-width:100%;height:auto;display:block;}
 button,input,select,textarea{font:inherit;color:inherit;}
 button{background:none;border:0;cursor:pointer;}
@@ -244,7 +247,15 @@ section[id]{scroll-margin-top:74px;}
   position:fixed;top:0;left:0;right:0;z-index:60;padding-block:14px;
   border-bottom:1px solid transparent;transition:background .5s var(--ease),border-color .5s,padding .5s;
 }
-.hdr.stuck{background:rgba(7,5,15,.9);backdrop-filter:blur(16px) saturate(150%);border-bottom-color:var(--veil);padding-block:9px;}
+.hdr.stuck{background:rgba(7,5,15,.95);border-bottom-color:var(--veil);padding-block:9px;}
+/* backdrop-filter on an ancestor creates a new containing block for
+   position:fixed descendants — that would squash the mobile nav drawer
+   (#nav) into the header's own short box instead of the full viewport.
+   Keep the frosted-glass header effect on desktop only, where the nav
+   is an inline row, not a fixed off-canvas panel. */
+@media (min-width:941px){
+  .hdr.stuck{background:rgba(7,5,15,.82);backdrop-filter:blur(16px) saturate(150%);}
+}
 .hdr-in{display:flex;align-items:center;justify-content:space-between;gap:16px;}
 .brand{display:flex;align-items:center;gap:11px;color:var(--paper);}
 .brand-mark{width:36px;height:36px;flex:none;}
@@ -263,18 +274,40 @@ section[id]{scroll-margin-top:74px;}
 .nav-open .nav-tg span{background:transparent;}
 .nav-open .nav-tg span::before{top:0;transform:rotate(45deg);}
 .nav-open .nav-tg span::after{top:0;transform:rotate(-45deg);}
+.nav-scrim{
+  position:fixed;inset:0;z-index:55;background:rgba(4,3,9,.6);
+  opacity:0;visibility:hidden;transition:opacity .45s var(--ease),visibility .45s;
+}
+.nav-open .nav-scrim{opacity:1;visibility:visible;}
 @media (max-width:940px){
   .nav-tg{display:flex;}
   .nav{
-    position:fixed;inset:0 0 0 auto;width:min(84vw,320px);flex-direction:column;
+    position:fixed;inset:0 0 0 auto;z-index:56;width:min(84vw,320px);flex-direction:column;
     align-items:flex-start;justify-content:center;gap:4px;padding:76px 30px;
     background:linear-gradient(160deg,rgba(42,22,64,.98),rgba(7,5,15,.99));
     backdrop-filter:blur(18px);border-left:1px solid var(--veil);
     transform:translateX(102%);transition:transform .55s var(--ease-out);box-shadow:var(--sh-deep);
   }
   .nav-open .nav{transform:none;}
-  .nav a{font-size:1rem;padding:.85em 0;width:100%;border-bottom:1px solid rgba(242,222,187,.07);}
-  .hdr-cta{margin-top:20px;width:100%;}
+  .nav a{
+    font-size:1rem;padding:.85em 0;width:100%;border-bottom:1px solid rgba(242,222,187,.07);
+    opacity:0;transform:translateX(14px);transition:opacity .4s var(--ease-out),transform .4s var(--ease-out);
+  }
+  .nav-open .nav a{opacity:1;transform:none;}
+  .nav-open .nav a:nth-child(1){transition-delay:.08s;}
+  .nav-open .nav a:nth-child(2){transition-delay:.13s;}
+  .nav-open .nav a:nth-child(3){transition-delay:.18s;}
+  .nav-open .nav a:nth-child(4){transition-delay:.23s;}
+  .nav-open .nav a:nth-child(5){transition-delay:.28s;}
+  .hdr-cta{
+    margin-top:20px;width:100%;
+    opacity:0;transform:translateX(14px);
+    transition:opacity .4s var(--ease-out),transform .4s var(--ease-out);
+  }
+  .nav-open .hdr-cta{opacity:1;transform:none;transition-delay:.33s;}
+}
+@media (prefers-reduced-motion:reduce){
+  .nav a,.hdr-cta{transition:none !important;opacity:1 !important;transform:none !important;}
 }
 
 /* ---------- 10. ヒーロー ---------- */
@@ -606,7 +639,10 @@ select.inp{
 .res-hero .code{
   display:inline-block;margin-top:14px;font-family:var(--f-en);font-size:.68rem;letter-spacing:.2em;
   color:var(--gold-200);border:1px solid rgba(201,162,83,.34);padding:.4em .95em;border-radius:3px;background:rgba(7,5,15,.6);
+  cursor:pointer;transition:color .3s,border-color .3s,transform .15s;
 }
+.res-hero .code:hover{border-color:rgba(201,162,83,.6);}
+.res-hero .code:active{transform:scale(.96);}
 .pillars{display:grid;gap:1px;background:var(--veil);border:1px solid var(--veil);margin-top:20px;
   grid-template-columns:repeat(auto-fit,minmax(126px,1fr));}
 .pil{background:rgba(10,7,20,.93);padding:18px 12px;text-align:center;}
@@ -651,9 +687,13 @@ select.inp{
 .meter-n small{font-size:.28em;letter-spacing:.14em;margin-left:6px;color:var(--gold-300);font-family:var(--f-min);}
 .meter-lb{font-size:1rem;letter-spacing:.2em;color:var(--gold-200);margin-top:8px;}
 
-/* 引いた札 */
-.drawn{display:grid;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));gap:14px;margin-top:20px;}
-@media (min-width:760px){.drawn.five{grid-template-columns:repeat(5,1fr);}}
+/* 引いた札
+   grid の auto-fit だと、あぶれた最後の1枚が空欄を埋めるように
+   引き伸ばされて不揃いに見える（例：3枚中2枚+1枚の行）。
+   flex + 固定幅 + 中央寄せにして、枚数に関わらず隙間なく並べる。 */
+.drawn{display:flex;flex-wrap:wrap;justify-content:center;gap:14px;margin-top:20px;}
+.drawn > div{flex:0 0 auto;width:132px;}
+@media (min-width:520px){.drawn > div{width:140px;}}
 .dcard{perspective:1200px;display:block;width:100%;padding:0;background:none;cursor:pointer;}
 .dcard-in{position:relative;width:100%;aspect-ratio:5/8;transform-style:preserve-3d;transition:transform 1s var(--ease-out);}
 .dcard.flip .dcard-in{transform:rotateY(180deg);}
@@ -672,6 +712,15 @@ select.inp{
 .dcard-fr .rv{font-size:.6rem;letter-spacing:.1em;padding:.2em .6em;border:1px solid var(--veil-2);color:var(--text-dim);border-radius:100px;}
 .dcard-fr .rv.r{color:var(--crimson);border-color:rgba(212,80,106,.45);}
 .dcard-note{font-size:.76rem;line-height:1.85;color:var(--gold-200);margin-top:9px;text-align:center;}
+/* 正位置／逆位置を一目で示す小さな印（文字ラベルより先に目に入る） */
+.ori-chip{
+  position:absolute;top:7px;right:7px;width:19px;height:19px;border-radius:50%;
+  display:grid;place-items:center;font-size:.58rem;line-height:1;
+  border:1px solid rgba(201,162,83,.55);background:rgba(9,6,20,.75);color:var(--gold-200);
+}
+.ori-chip.r{border-color:rgba(212,80,106,.6);color:var(--crimson);background:rgba(212,80,106,.1);}
+.ori-inline{color:var(--gold-200);}
+.ori-inline.r{color:var(--crimson);}
 
 /* =========================================================
    20. 課金ゲート（結果の途中）
@@ -866,8 +915,9 @@ select.inp{
   padding:clamp(18px,2.6vw,26px);border:1px solid rgba(201,162,83,.34);border-radius:5px;
   background:linear-gradient(150deg,rgba(61,33,89,.5),rgba(9,6,20,.9));flex-wrap:wrap;
 }
+.hero-card-art .frame-wrap{position:relative;flex:none;width:clamp(104px,26vw,132px);}
 .hero-card-art .frame{
-  width:clamp(104px,26vw,132px);aspect-ratio:5/8;flex:none;border-radius:6px;
+  width:100%;aspect-ratio:5/8;border-radius:6px;
   border:1px solid rgba(201,162,83,.5);display:grid;place-items:center;
   background:linear-gradient(165deg,#1c1436,#0a0716);color:var(--gold-200);
   box-shadow:var(--sh-gold);
@@ -1053,6 +1103,74 @@ select.inp{
   .meter-n{font-size:3rem;}
 }
 
+/* =========================================================
+   27. インタラクションの反応（タップ・クリックのたびに触感を返す）
+   ========================================================= */
+/* 押した瞬間に沈む——ホバーの効かないスマホでも「押した」とわかるように */
+.btn,.mcard,.tab,.rank-item,.pick,.dcard,.step-n,.totop,.hdr-cta,
+.unlock-card .btn,.nextup button,.faq-q,.dform button{
+  -webkit-tap-highlight-color:transparent;
+}
+.btn:active{transform:translateY(0) scale(.96);transition-duration:.12s;}
+.btn-gold:active{box-shadow:0 8px 18px -10px rgba(201,162,83,.9),inset 0 0 0 1px rgba(255,255,255,.35);}
+.mcard:active{transform:translateY(-1px) scale(.985);transition-duration:.12s;}
+.tab:active{transform:scale(.95);transition-duration:.12s;}
+.rank-item:active{transform:translateX(2px) scale(.98);transition-duration:.12s;}
+.nextup button:active{transform:scale(.97);}
+
+/* ゴールドボタン：クリック位置から広がる余韻 */
+.btn-gold{position:relative;overflow:hidden;}
+.ripple{
+  position:absolute;border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle,rgba(255,255,255,.55),rgba(255,255,255,0) 70%);
+  transform:scale(0);opacity:.9;animation:rippleOut .6s var(--ease-out) forwards;
+}
+@keyframes rippleOut{to{transform:scale(2.6);opacity:0;}}
+
+/* 札を選ぶ瞬間の余韻 */
+.pick.chosen{animation:pickPulse .55s var(--ease-out);}
+@keyframes pickPulse{
+  0%{box-shadow:0 0 0 0 rgba(226,194,127,.75);}
+  100%{box-shadow:0 0 40px -6px rgba(226,194,127,.9);}
+}
+
+/* めくれた瞬間、金の光が一度だけ差す */
+.dcard-fr::after{
+  content:"";position:absolute;inset:0;pointer-events:none;border-radius:5px;
+  background:radial-gradient(circle at 50% 40%,rgba(253,243,212,.55),transparent 65%);
+  opacity:0;
+}
+.dcard.flip .dcard-fr::after{animation:cardGlow 1s var(--ease-out) .55s both;}
+@keyframes cardGlow{0%{opacity:0;}35%{opacity:1;}100%{opacity:0;}}
+
+/* 鑑定書がひらいた瞬間、ふわっと光が満ちる */
+@keyframes revealFlash{0%{box-shadow:0 0 0 0 rgba(226,194,127,0);}
+  30%{box-shadow:0 0 90px 6px rgba(226,194,127,.35);}
+  100%{box-shadow:0 0 0 0 rgba(226,194,127,0);}}
+.res-hero.flash{animation:revealFlash 1.4s var(--ease-out);}
+
+/* フォームの入力漏れ：軽く揺れて知らせる */
+@keyframes shakeErr{
+  0%,100%{transform:translateX(0);}
+  20%{transform:translateX(-7px);}40%{transform:translateX(6px);}
+  60%{transform:translateX(-4px);}80%{transform:translateX(3px);}
+}
+.ask-box.shake{animation:shakeErr .45s var(--ease);}
+.ask-box.shake .inp{border-color:rgba(212,80,106,.6);}
+
+/* ジャンルを切り替えたとき、一覧がふわっと入れ替わる */
+.mgrid.swap{animation:gridSwap .35s var(--ease-out);}
+@keyframes gridSwap{from{opacity:.35;transform:translateY(6px);}to{opacity:1;transform:none;}}
+
+/* 鑑定番号タップでコピー：反応を示す */
+.code.copied{color:var(--gold-100);border-color:rgba(201,162,83,.7);}
+
+@media (prefers-reduced-motion:reduce){
+  .pick.chosen,.dcard.flip .dcard-fr::after,.res-hero.flash,.ask-box.shake,.mgrid.swap,.ripple{
+    animation:none !important;
+  }
+}
+
 </style>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%2307050f'/><path d='M16 4l3 8.8L28 16l-9 3.2L16 28l-3-8.8L4 16l9-3.2z' fill='%23e2c27f'/></svg>">
 </head>
@@ -1087,6 +1205,7 @@ select.inp{
     <button class="nav-tg" id="navTg" aria-label="メニュー" aria-expanded="false" aria-controls="nav"><span></span></button>
   </div>
 </header>
+<div class="nav-scrim" id="navScrim" aria-hidden="true"></div>
 
 <main id="top">
 
@@ -1109,15 +1228,16 @@ select.inp{
 
   <div class="wrap hero-in">
     <div>
-      <span class="hero-badge">✦　登録不要　/　<b>全29種、無料でひらく</b></span>
+      <span class="hero-badge">✦　登録不要　/　<b>全41種、無料でひらく</b></span>
       <h1 class="hero-title">
-        <span class="ln"><span>その痛みには、</span></span>
-        <span class="ln"><span>名がある。</span></span>
-        <span class="ln"><span><em class="gold">星が、それを明かす。</em></span></span>
+        <span class="ln"><span>誰にも見せていない、</span></span>
+        <span class="ln"><span>その顔を知っている。</span></span>
+        <span class="ln"><span><em class="gold">星は、もう視ている。</em></span></span>
       </h1>
       <p class="hero-copy">
         生年月日だけ。名だけ。札を選ぶだけ。<br>
-        十秒で、<span class="mark">言葉にできなかったもの</span>が、文字になって現れる。
+        十秒で、<span class="mark">言葉にできなかったもの</span>が、文字になって現れる。<br>
+        本当は、もう気づいているはずのことが。
       </p>
       <div class="hero-act">
         <button class="btn btn-gold btn-lg" data-open-first="f-shukumei">無料で視る<span aria-hidden="true">→</span></button>
@@ -1167,7 +1287,7 @@ select.inp{
     <div class="sec-head c rv">
       <p class="eyebrow c">Divination</p>
       <h2 class="h-sec">何を、<em class="gold">視る</em>。</h2>
-      <p class="lead mt-s">全29種。どれも<span class="mark">無料でひらける</span>。<br>札一枚から、宿命の底まで。</p>
+      <p class="lead mt-s">全41種。どれも<span class="mark">無料でひらける</span>。<br>札一枚から、宿命の底まで。</p>
     </div>
     <div class="tabs" id="tabs" role="tablist" aria-label="ジャンル"></div>
     <div class="mgrid" id="mgrid"></div>
@@ -1197,7 +1317,7 @@ select.inp{
     <div class="sec-head c rv">
       <p class="eyebrow c">Daily</p>
       <h2 class="h-sec">今日の<em class="gold">相</em></h2>
-      <p class="lead mt-s">月の位相と、あなたの周期から。<span class="mark">明日は、また違う</span>。</p>
+      <p class="lead mt-s">月の位相と、あなたの周期から。<span class="mark">今日という日は、二度と来ない</span>。</p>
     </div>
     <div class="daily rv d1">
       <div>
@@ -1259,7 +1379,7 @@ select.inp{
   <div class="wrap-narrow rv">
     <p class="eyebrow c">Begin</p>
     <h2 class="h-sec">迷う時間もまた、<br><em class="gold">巡りのうち。</em></h2>
-    <p class="lead mt-m">生年月日をひとつ。<span class="mark">十秒後、言葉が届く。</span></p>
+    <p class="lead mt-m">生年月日をひとつ。<span class="mark">言葉は、もう用意されている。</span></p>
     <div class="hero-act" style="justify-content:center">
       <button class="btn btn-gold btn-lg" data-open-first="f-shukumei">無料で視る<span aria-hidden="true">→</span></button>
       <button class="btn btn-ghost" data-open-first="t-today">札を引く</button>
@@ -1885,6 +2005,18 @@ select.inp{
     { id:'t-love', g:'tarot', e:'tarot', theme:'love', n:3, ic:'札', teller:'yoi',
       t:'恋の行方', c:'この恋は、どこへ向かうか。',
       d:'三ヶ月先までを、三枚で。', tags:['手ぶら'] },
+    { id:'t-soul', g:'tarot', e:'tarot', theme:'soulflow', n:3, ic:'札', teller:'yoi',
+      t:'魂の伴侶', c:'その人は、もう近くにいる。',
+      d:'出会いの気配・本質・深まる条件を三枚で。', tags:['手ぶら','人気'] },
+    { id:'t-career', g:'tarot', e:'tarot', theme:'career', n:3, ic:'札', teller:'yoi',
+      t:'仕事の流れ', c:'いま、何が動いているか。',
+      d:'現状・壁・展望を三枚で。', tags:['手ぶら'] },
+    { id:'t-week', g:'tarot', e:'tarot', theme:'week', n:3, ic:'札', teller:'yoi',
+      t:'週の流れ', c:'この一週間、何が起こるか。',
+      d:'前半・後半・鍵の日を三枚で。', tags:['手ぶら'] },
+    { id:'t-money', free:true, g:'tarot', e:'tarot', theme:'money', n:1, ic:'札', teller:'yoi',
+      t:'金運の兆し', c:'財は、もう動き出している。',
+      d:'一枚で、今日の金運を。', tags:['全部無料','手ぶら','10秒'] },
 
     /* --- 姓名判断 --- */
     { id:'s-basic', g:'seimei', e:'seimei', theme:'basic', ic:'名', teller:'kotone',
@@ -1899,6 +2031,15 @@ select.inp{
     { id:'s-pair', g:'seimei', e:'seimei', theme:'pair', pair:true, ic:'名', teller:'kotone',
       t:'名の相性', c:'ふたつの名は、響き合うか。',
       d:'おふたりの姓名から、縁の質を。', tags:['名前だけ','人気'] },
+    { id:'s-fortune', g:'seimei', e:'seimei', theme:'fortune', ic:'名', teller:'kotone',
+      t:'開運の糸口', c:'足りないのは、運ではない。',
+      d:'名前から、いま整えるべき一点を。', tags:['名前だけ'] },
+    { id:'s-guardian', g:'seimei', e:'seimei', theme:'guardian', ic:'名', teller:'kotone',
+      t:'名と守護', c:'その名は、独りでは選ばれなかった。',
+      d:'名前に宿る守りの気を視ます。', tags:['名前だけ','深部'] },
+    { id:'s-child', g:'seimei', e:'seimei', theme:'child', ic:'名', teller:'kotone',
+      t:'子の名前運', c:'贈った名が、その子を導く。',
+      d:'お子さまのお名前で、資質と運を。', tags:['名前だけ'] },
 
     /* --- 相性 --- */
     { id:'a-love', g:'aisho', e:'compat', theme:'love', ic:'縁', teller:'kotone',
@@ -1916,11 +2057,17 @@ select.inp{
     { id:'a-friend', free:true, g:'aisho', e:'compat', theme:'friend', ic:'縁', teller:'kotone',
       t:'組む縁', c:'この人と、組んでよいか。',
       d:'友・同僚・取引先の相性。', tags:['全部無料'] },
+    { id:'a-twin', g:'aisho', e:'compat', theme:'twin', ic:'縁', teller:'kotone',
+      t:'ツインレイ', c:'魂は、二つに分かれて生まれた。',
+      d:'前世からの絆を、生年月日で視ます。', tags:['人気','深部'] },
 
     /* --- 恋愛 --- */
     { id:'l-honshitsu', g:'love', e:'natal', theme:'love', ic:'恋', teller:'akari',
       t:'恋の宿業', c:'なぜ、同じ場所で躓くのか。',
       d:'繰り返してきた恋の型を、暴きます。', tags:['人気','本式'] },
+    { id:'l-akaito', g:'love', e:'natal', theme:'redstring', ic:'恋', teller:'akari',
+      t:'赤い糸', c:'見えないだけで、繋がっている。',
+      d:'宿縁の相手の気配を視ます。', tags:['人気'] },
     { id:'l-deai', g:'love', e:'natal', theme:'meet', ic:'恋', teller:'akari',
       t:'出逢いの刻', c:'その日は、決まっている。',
       d:'出会いの時期を、年月まで。', tags:['人気'] },
@@ -1947,6 +2094,9 @@ select.inp{
     { id:'w-ningen', g:'work', e:'natal', theme:'social', ic:'財', teller:'akari',
       t:'厄介な人', c:'その疲れは、あなたのせいではない。',
       d:'離れるべき相手と、境界の引き方。', tags:['深部'] },
+    { id:'w-kaiun', g:'work', e:'natal', theme:'ritual', ic:'財', teller:'akari',
+      t:'金運の作法', c:'呼び込むには、作法がある。',
+      d:'あなたの気に合う、開運習慣を。', tags:['人気'] },
 
     /* --- 人生・宿命 --- */
     { id:'f-shukumei', g:'life', e:'natal', theme:'destiny', ic:'命', teller:'akari',
@@ -1966,7 +2116,13 @@ select.inp{
       d:'十二ヶ月を、月ごとに。', tags:['本式'] },
     { id:'f-kenko', free:true, g:'life', e:'natal', theme:'health', ic:'命', teller:'akari',
       t:'気の巡り', c:'その不調は、性格ではない。',
-      d:'五行の過不足から、体質と養生を。', tags:['全部無料'] }
+      d:'五行の過不足から、体質と養生を。', tags:['全部無料'] },
+    { id:'f-shugorei', g:'life', e:'natal', theme:'guardian', ic:'命', teller:'akari',
+      t:'守護の声', c:'いつも、傍らに在る。',
+      d:'守護霊があなたに伝えたいことを。', tags:['深部'] },
+    { id:'f-innen', g:'life', e:'natal', theme:'karma', ic:'命', teller:'akari',
+      t:'因縁', c:'今生に持ち越した、約束がある。',
+      d:'カルマの正体と、その解き方を。', tags:['深部'] }
   ];
 
   global.HOSHI_DATA = { SIGNS, NUMBERS, ELEMENTS, BRANCHES, STEMS, MOONS, TAROT, TAROT_ART, COLORS, KANA, KAKU, GENRES, MENUS, TELLERS };
@@ -2280,32 +2436,41 @@ select.inp{
   /* =======================================================
      共通の素材
      ======================================================= */
-  const SEE = [   /* 納得感：いきなり言い当てる一文 */
+  const SEE = [   /* 納得感：いきなり言い当てる一文（バーナム効果・投影しやすい言い回し） */
     'あなたは、人前では平気な顔をしていられる人ですね。',
     'あなたは、頼まれると断れないほうですね。',
     'あなたは、いちばん近い人にほど本音を言えずにいますね。',
     'あなたは、自分より先に相手の事情を考えてしまう人ですね。',
     'あなたは、期待に応えることで自分の居場所を作ってきた人ですね。',
     'あなたは、決めるまでが長く、決めたあとは早い人ですね。',
-    'あなたは、去られることに人一倍敏感な人ですね。'
+    'あなたは、去られることに人一倍敏感な人ですね。',
+    'あなたには、うまく言葉にできない予感を、当ててきた経験がありますね。',
+    'あなたは、誰かに大丈夫と言いながら、自分にはまだ言えていませんね。',
+    'あなたの中には、まだ誰にも見せていない顔が、ひとつあります。',
+    'あなたは、過去に置いてきたはずのことを、ふとした瞬間に思い出す人ですね。'
   ];
   const SEE2 = [
     'そしてそれを、誰にも「しんどい」と言えないまま来たはずです。',
     'それを性格だと言われ続けて、もう疑うこともやめてしまった。',
     '周りからは「しっかりしている」と言われるのに、内側ではずっと心細い。',
     '本当は、一度でいいから誰かに全部預けてしまいたいと思っている。',
-    'なのに、いざ差し出されると受け取れない。そういう不器用さがあります。'
+    'なのに、いざ差し出されると受け取れない。そういう不器用さがあります。',
+    'その予感は、たいてい当たってきた。けれど自分では信じきれずにいる。',
+    '誰かに気づいてほしくて、けれど気づかれるのが怖い。そんな矛盾を抱えています。'
   ];
   const RISK_OPEN = [
     'ここからは、少し言いにくいことを書きます。',
     'ただ、ひとつだけ、どうしても伝えておかなければならないことがあります。',
     '命式を見ていて、手が止まった箇所がありました。',
-    'ここまでは、あなたも薄々わかっていたことでしょう。問題はこの先です。'
+    'ここまでは、あなたも薄々わかっていたことでしょう。問題はこの先です。',
+    '見えているものと、見えていないものの境目に、気になる配置がありました。',
+    'ここから先は、虫の知らせのようなものだと思って読んでください。'
   ];
   const ASSURE = [
     'まず安心してください。これはあなたの落ち度ではありません。',
     '断っておきますが、あなたが弱いからこうなっているのではありません。',
-    'ここまで読んで胸が痛んだ方へ。それは、あなたがちゃんと生きてきた証拠です。'
+    'ここまで読んで胸が痛んだ方へ。それは、あなたがちゃんと生きてきた証拠です。',
+    'それは弱さではなく、人一倍まわりを感じ取れる人にだけ起きることです。'
   ];
 
   /* =======================================================
@@ -2424,6 +2589,26 @@ select.inp{
         HL('あなたがこの想いを後悔しない形で終えられる') + 'ことは、はっきり出ています。'
       )
     },
+    redstring:{
+      kind:'赤い糸鑑定',
+      core:c => P(
+        '昔の人は、生まれる前から左手の小指に赤い糸が結ばれていると考えました。' +
+        HL('その糸は、見えないだけで切れたことは一度もありません') + '。',
+        c.sign.jp + '生まれのあなたの糸は、' + c.domEl + 'の気を帯びて伸びています。' + c.sign.love
+      ),
+      risk:c => P(
+        'ただ、糸は伸びるほど' + WARN('絡まって見えなくなる') + 'ことがあります。' +
+        'いま「縁がない」と感じているなら、それは糸が切れたのではなく——'
+      ),
+      answer:c => P(
+        '——絡まりをほどく合図が、すでに出ているのに見過ごしているだけです。',
+        '<strong>糸の色</strong>：' + HL(c.color.jp) + '。この色を身近に置くと、絡まりがゆるみます。',
+        '<strong>結び目がゆるむ時期</strong>：' + HL(jm(c.best.date)) + '。この頃、忘れていた誰かの名前をふと思い出す、' +
+        '同じ数字を続けて見る、といった小さな合図が起きやすくなります。' + MK('それが糸のたぐり寄せです') + '。',
+        '<strong>糸の先にいる人の気配</strong>：' + NEEDERS[c.domEl],
+        CALM('赤い糸は、探すものではなく、ゆるめて感じ取るものです。') + '力を抜いた場所に、糸はいちばんよく見えます。'
+      )
+    },
     work:{
       kind:'天職鑑定',
       core:c => P(
@@ -2529,6 +2714,27 @@ select.inp{
         ['育てる人', ({'木':'火','火':'土','土':'金','金':'水','水':'木'})[c.domEl] + 'の気を持つ人',
          'あなたが与える側になる', {v:PILL('量を決める')}]
       ])
+    },
+    ritual:{
+      kind:'金運の作法',
+      core:c => P(
+        '金運は、待っているだけでは近づいてきません。' + HL('気の合う作法') + 'をこなす人にだけ、静かに寄っていきます。',
+        c.domEl + 'の気が強いあなたに合うのは、' + MONEY_STYLE[c.domEl] + 'という動き方。' +
+        '一般的な節約術より、' + MK('あなたの気質に沿った作法') + 'のほうが、はるかによく効きます。'
+      ),
+      risk:c => P(
+        'ただし、作法は正しくても' + WARN('場所と曜日を間違えると効きません') + '。' +
+        c.weakEl + 'の気が薄いあなたは、特にこの点で損をしがちです。それは——'
+      ),
+      answer:c => P(
+        '——' + HLL('タイミングを合わせずに、思いついた時にやってしまう') + 'ことです。作法は儀式なので、型を守るほど効きます。',
+        '<strong>財布を整える曜日</strong>：' + HL(c.sign.day) + '。この曜日に中身を整理すると、金運の巡りが良くなります。',
+        '<strong>財を呼ぶ色</strong>：' + HL(c.color.jp) + '。財布・通帳・印鑑入れなど、金にまつわる物にこの色を一点。',
+        '<strong>置き場所</strong>：' + c.sign.place + 'に近い方角（吉方' + HL(c.dir) + '）へ、貴重品を寄せてください。',
+        '<strong>浄化の作法</strong>：' + c.moon.jp + 'の日（月に一度巡ります）に、財布の中を空にして一晩休ませること。' +
+        D.ELEMENTS[c.weakEl].care,
+        CALM('作法は信じるためではなく、思い出すためにあります。') + '財を大切に扱う自分を、月に一度は取り戻してください。'
+      )
     },
     destiny:{
       kind:'宿命鑑定',
@@ -2681,6 +2887,52 @@ select.inp{
         {v: k === c.domEl || k === c.weakEl ? HEALTH[k].adv.slice(0, 34) + '…' : '—'}
       ])),
       charts:c => [{ type:'radar', data:c.balance }, { type:'elcycle', dom:c.domEl, weak:c.weakEl }]
+    },
+    guardian:{
+      kind:'守護霊鑑定',
+      core:c => P(
+        'あなたには生まれたときから、' + HL('傍らを離れない存在') + 'がついています。' +
+        'その姿は、あなたの干支——' + HL(c.branch.jp + '（' + c.branch.animal + '）') + 'に重なって現れることが多いようです。',
+        c.branch.animal + 'の守りは、' + c.branch.trait + 'これは、あなたが生まれ持った性質そのものでもあり、' +
+        MK('守護の気があなたに溶け込んでいる証拠') + 'でもあります。'
+      ),
+      risk:c => P(
+        pickBy(ASSURE, c.seed) + 'ただ、その声は' + WARN('日々の忙しさにかき消されやすい') + 'ものです。',
+        'ふと理由もなく胸騒ぎがした、避けたはずの道で助かった、そんな覚えのある方は多いはずです。声が届いていないのではなく——'
+      ),
+      answer:c => P(
+        '——' + HLL('あなたが、直感を信じる許可を自分に出していないだけ') + 'です。',
+        '<strong>伝えたいこと</strong>：' + MK(c.num.gift + 'を、遠慮せずに使ってよいということ。それはあなたが独力で得た力ではなく、守りに支えられた力です。'),
+        '<strong>声が届きやすい時間</strong>：' + c.moon.jp + 'の夜と、目覚めた直後の数分間。' +
+        'この時間に浮かんだ思いつきは、いつもより信頼してよいものです。',
+        '<strong>守りが強まる場所</strong>：' + c.sign.place + '。<strong>捧げる色</strong>：' + HL(c.color.jp),
+        CALM('守護霊は、あなたの代わりに選んではくれません。') + 'ただ、あなたが選ぼうとするとき、そっと背中に手を添えています。'
+      ) + TBL(['合図','意味'], [
+        ['理由のない胸騒ぎ', '近づかないほうがよいという知らせ'],
+        ['同じ数字を続けて見る', '見守られているという合図'],
+        ['疲れているのに妙に落ち着く瞬間', '守りが強く働いている時間'],
+        [c.branch.animal + 'に縁のあるものが目に留まる', 'あなたの守護そのものからの合図']
+      ])
+    },
+    karma:{
+      kind:'因縁鑑定',
+      core:c => P(
+        '同じ失敗、同じ別れ方、同じ壁——' + HL('繰り返す形') + 'には、たいてい理由があります。それを因縁と呼びます。',
+        'あなたの天干' + HL(c.stem.jp) + 'は' + c.stem.note + 'この性質そのものが、今生に持ち越された' + MK('刻印') + 'です。'
+      ),
+      risk:c => P(
+        'あなたが繰り返している型は、' + WARN(c.num.trap) + '。',
+        'これは今生で覚えた癖ではなく、' + WARN('何代も前から、形を変えて渡されてきたもの') + 'かもしれません。' +
+        '断ち切る方法はありますが、一つだけ条件があります。それは——'
+      ),
+      answer:c => P(
+        '——' + HLL('相手や状況のせいにするのをやめ、型そのものを自分の手で見ること') + 'です。',
+        '<strong>因縁の性質</strong>：' + c.domEl + 'の気に根ざしています。' + D.ELEMENTS[c.domEl].core,
+        '<strong>解く作法</strong>：' + D.ELEMENTS[c.weakEl].care + 'これは慰めではなく、気の偏りを実際に均す作業です。',
+        '<strong>断ち切れる時期</strong>：' + HL(jm(c.best.date)) + '。この時期に、同じ場面がもう一度訪れます。' +
+        'そこで型と違う選択を一つできれば、鎖は緩みます。',
+        CALM('因縁は罰ではありません。') + '同じ課題を、今度こそ終わらせるために、あなたが自分で選んで持ってきたものです。'
+      )
     }
   };
 
@@ -2797,6 +3049,33 @@ select.inp{
         ['お金が絡む', {v: PILL('書面にする')}, '口約束はどの相性でも縁を削ります'],
         ['相談する', {v: PILL('向いている','g')}, friendGain(a, b, x)]
       ])
+    },
+    twin:{
+      kind:'ツインレイ鑑定',
+      coreCharts:(a,b,x) => [{ type:'relation', a, b, x }],
+      core:(a,b,x) => {
+        const mirror = x.signDist === 6 || a.domEl === b.domEl;
+        return meterHTML(x.score, mirror ? '鏡の兆し — 強い' : compatLabel(x.score)) + P(
+          'ツインレイとは、ひとつの魂が二つに分かれて生まれたとされる関係です。' +
+          HL('穏やかな相性の良さとは、測る場所が違います') + '。',
+          mirror
+            ? '星座では' + HL(a.sign.jp + 'と' + b.sign.jp) + '。' + signRel(a, b, x) + MK('この距離感は、鏡合わせに近い配置です') + '。'
+            : 'おふたりの気は' + HL(a.domEl + 'と' + b.domEl) + '。' + relLine(a, b, x)
+        ) + axesHTML(x.axes);
+      },
+      risk:(a,b,x) => P(
+        pickBy(RISK_OPEN, a.seed) + 'ツインレイの関係には、通常の相性にはない' + WARN('振れ幅') + 'があります。' +
+        '強く惹かれるのと同じ強さで、ぶつかることもある配置です。',
+        '一番低い軸は' + WARN(lowAxis(x.axes)) + '。ここを整えないまま距離だけ縮めると——'
+      ),
+      answer:(a,b,x) => P(
+        '——' + HLL('お互いの輪郭が溶けて、自分を見失う') + 'ところまで行きます。それはこの関係が失敗した印ではなく、' +
+        MK('鏡が近すぎるときに誰にでも起きること') + 'です。',
+        '<strong>いま必要なこと</strong>：' + axisFix(lowAxis(x.axes)),
+        '<strong>この関係の目的</strong>：' + CALM('永遠に一緒にいることではなく、お互いを通して自分の未解決な部分に気づくこと') + '。' +
+        '形が変わっても、魂の学びとしての意味は消えません。',
+        '<strong>再び強く引き合う時期</strong>：' + HL(jm(a.best.date)) + '。離れていても、この時期は思考によく上るはずです。'
+      )
     }
   };
 
@@ -2818,7 +3097,19 @@ select.inp{
       risk:'注目すべきは二枚目「障害」です。これが動かないかぎり、結論の札は形になりません。障害の正体は——' },
     love:{ kind:'恋の三枚展開', pos:['いまの関係','相手の気持ち','三ヶ月後'],
       lead:'この恋のいまと、これからを三枚が示しました。',
-      risk:'三枚目、三ヶ月後の札を見てください。ここに、あなたが見落としているものが出ています。それは——' }
+      risk:'三枚目、三ヶ月後の札を見てください。ここに、あなたが見落としているものが出ています。それは——' },
+    soulflow:{ kind:'魂の伴侶展開', pos:['出会いの気配','相手の本質','深まる条件'],
+      lead:'あなたの魂が呼び寄せている相手の輪郭が、三枚に現れました。',
+      risk:'この配置には、条件がひとつ付いています。それを満たさないかぎり、出会いは像を結びません。その条件とは——' },
+    career:{ kind:'仕事の流れ展開', pos:['いまの現状','立ちはだかる壁','この先の展望'],
+      lead:'あなたのいる場所と、これから開ける道が、三枚に映りました。',
+      risk:'二枚目「壁」を見てください。これを避けて通ると、同じ壁に何度でも当たります。壁の正体は——' },
+    week:{ kind:'週間展開', pos:['週の前半','週の後半','鍵となる日'],
+      lead:'この七日間の流れが、三枚に分かれて現れました。',
+      risk:'三枚目「鍵となる日」に、注意が必要です。この日の選択が、翌週まで尾を引きます。それは——' },
+    money:{ kind:'金運一枚引き', pos:['今日の金運'],
+      lead:'あなたの財の流れに、札はこう応えています。',
+      risk:'ただし、この札の力には賞味期限があります。今日中に確かめておくべきことがあります。それは——' }
   };
 
   /* =======================================================
@@ -2828,7 +3119,10 @@ select.inp{
     basic:{ kind:'姓名判断', title:'名前が示すあなたの本質' },
     love:{ kind:'姓名判断（恋愛）', title:'名前で視る恋愛運' },
     work:{ kind:'姓名判断（仕事・金運）', title:'名前で視る仕事運・金運' },
-    pair:{ kind:'姓名判断（相性）', title:'名前どうしの相性' }
+    pair:{ kind:'姓名判断（相性）', title:'名前どうしの相性' },
+    fortune:{ kind:'姓名判断（開運）', title:'名前が示す開運の糸口' },
+    guardian:{ kind:'姓名判断（守護）', title:'名前に宿る守りの気' },
+    child:{ kind:'姓名判断（お子さま）', title:'お子さまの名前が示す資質' }
   };
 
   /* =======================================================
@@ -3237,7 +3531,11 @@ select.inp{
   function seimeiCore(s, menu){
     const jin = s.m.jin, chi = s.m.chi;
     const head = menu.theme === 'love' ? '恋愛でのあなたは、人格の数に強く支配されます。'
-      : menu.theme === 'work' ? '仕事と財は、総格と外格が握っています。' : '五格すべてを開きます。';
+      : menu.theme === 'work' ? '仕事と財は、総格と外格が握っています。'
+      : menu.theme === 'fortune' ? '運が足りないのではありません。整っていない格が、ひとつあるだけです。'
+      : menu.theme === 'guardian' ? 'その名を選んだ人の願いが、いまもあなたの五格の奥に生きています。'
+      : menu.theme === 'child' ? 'この名は、その子が自分で選んだものではありません。だからこそ、贈った側の祈りが色濃く出ます。'
+      : '五格すべてを開きます。';
     return kakuNote(s) + seimeiTable(s) + P(
       head,
       '中心となるのは' + HL('人格 ' + s.jin) + '（' + jin.t + '・' + jin.k + '）。' + jin.m,
@@ -3462,6 +3760,22 @@ select.inp{
     clearTimeout(toast._t); toast._t = setTimeout(() => t.classList.remove('on'), 3400);
   }
 
+  /* ---------- 触感（対応端末のみ・失敗しても無害） ---------- */
+  function buzz(ms){ try { navigator.vibrate && navigator.vibrate(ms); } catch(e){} }
+
+  /* ---------- クリック位置から広がる余韻（金のボタン） ---------- */
+  if (!REDUCED) document.addEventListener('click', e => {
+    const btn = e.target.closest('.btn-gold'); if (!btn) return;
+    const r = btn.getBoundingClientRect(), d = Math.max(r.width, r.height) * 1.5;
+    const x = (e.clientX || r.left + r.width / 2) - r.left - d / 2;
+    const y = (e.clientY || r.top + r.height / 2) - r.top - d / 2;
+    const s = document.createElement('span');
+    s.className = 'ripple'; s.style.width = s.style.height = d + 'px';
+    s.style.left = x + 'px'; s.style.top = y + 'px';
+    btn.appendChild(s);
+    setTimeout(() => s.remove(), 650);
+  });
+
   /* ================= 星空 ================= */
   (function starfield(){
     const cv = $('#starfield'); if (!cv) return;
@@ -3500,12 +3814,28 @@ select.inp{
     const hdr = $('#hdr'), tg = $('#navTg'), nav = $('#nav');
     const on = () => hdr.classList.toggle('stuck', scrollY > 36);
     on(); addEventListener('scroll', on, { passive:true });
+
+    // iOS Safari は overflow:hidden だけでは背景タッチスクロールを止めない。
+    // スクロール位置を固定して body ごと止め、閉じたら復元する。
+    let savedY = 0;
+    function openNav(){
+      savedY = scrollY;
+      document.body.style.top = -savedY + 'px';
+      document.body.classList.add('nav-open');
+      tg.setAttribute('aria-expanded', 'true');
+    }
+    function closeNav(){
+      document.body.classList.remove('nav-open');
+      document.body.style.top = '';
+      scrollTo(0, savedY);
+      tg.setAttribute('aria-expanded', 'false');
+    }
     tg.addEventListener('click', () => {
-      const o = document.body.classList.toggle('nav-open');
-      tg.setAttribute('aria-expanded', String(o));
+      document.body.classList.contains('nav-open') ? closeNav() : openNav();
     });
-    nav.addEventListener('click', e => { if (e.target.closest('a')) document.body.classList.remove('nav-open'); });
-    addEventListener('keydown', e => { if (e.key === 'Escape') document.body.classList.remove('nav-open'); });
+    nav.addEventListener('click', e => { if (e.target.closest('a')) closeNav(); });
+    $('#navScrim').addEventListener('click', closeNav);
+    addEventListener('keydown', e => { if (e.key === 'Escape' && document.body.classList.contains('nav-open')) closeNav(); });
   })();
 
   /* ================= 表出 ================= */
@@ -3620,12 +3950,15 @@ select.inp{
       '<div class="foot"><span>'+EASE_LABEL[m.e]+'</span><span class="go">視てもらう</span></div></button>';
   }
   let curGenre = 'all';
-  function renderMenus(){
+  function renderMenus(swap){
     const list = curGenre === 'all' ? D.MENUS : D.MENUS.filter(m => m.g === curGenre);
     const g = $('#mgrid');
     g.innerHTML = list.map(menuCard).join('');
     watch(g);
     requestAnimationFrame(() => $$('.mcard', g).forEach(el => el.classList.add('in')));
+    if (swap){
+      g.classList.remove('swap'); void g.offsetWidth; g.classList.add('swap');
+    }
   }
   (function tabs(){
     const t = $('#tabs');
@@ -3635,8 +3968,10 @@ select.inp{
     }).join('');
     t.addEventListener('click', e => {
       const b = e.target.closest('.tab'); if (!b) return;
+      if (b.dataset.g === curGenre) return;
       $$('.tab', t).forEach(x => x.classList.toggle('on', x === b));
-      curGenre = b.dataset.g; renderMenus();
+      buzz(8);
+      curGenre = b.dataset.g; renderMenus(true);
     });
     renderMenus();
   })();
@@ -3783,28 +4118,33 @@ select.inp{
 
   function submitAsk(menu){
     const err = $('#askErr'); err.textContent = '';
+    const box = $('.ask-box');
+    const fail = msg => {
+      err.textContent = msg; buzz([12, 40, 12]);
+      if (box) { box.classList.remove('shake'); void box.offsetWidth; box.classList.add('shake'); }
+    };
     const ctx = { now:NOW };
     if (menu.e === 'natal' || menu.e === 'compat'){
       const y = +$('#aY').value, m = +$('#aM').value, d = +$('#aD').value;
-      if (!y || !m || !d){ err.textContent = '生年月日をお選びください'; return; }
+      if (!y || !m || !d){ fail('生年月日をお選びください'); return; }
       const name = ($('#aName') ? $('#aName').value.trim().slice(0,16) : '');
       LS.set('profile', { name, y, m, d });
       ctx.chart = E.buildChart({ name, y, m, d, hour:null }, NOW);
       if (menu.e === 'compat'){
         const y2 = +$('#bY').value, m2 = +$('#bM').value, d2 = +$('#bD').value;
-        if (!y2 || !m2 || !d2){ err.textContent = 'お相手の生年月日をお選びください'; return; }
+        if (!y2 || !m2 || !d2){ fail('お相手の生年月日をお選びください'); return; }
         ctx.chart2 = E.buildChart({ name:$('#bName').value.trim().slice(0,16), y:y2, m:m2, d:d2, hour:null }, NOW);
         ctx.compat = E.compatibility(ctx.chart, ctx.chart2);
       }
     } else {
       const sei = $('#sSei').value.trim(), mei = $('#sMei').value.trim();
-      if (!sei || !mei){ err.textContent = '姓と名を、ひらがなで'; return; }
+      if (!sei || !mei){ fail('姓と名を、ひらがなで'); return; }
       const s = E.seimeiChart(sei, mei);
-      if (!s){ err.textContent = 'ひらがなでご入力ください（漢字・英数は読めません）'; return; }
+      if (!s){ fail('ひらがなでご入力ください（漢字・英数は読めません）'); return; }
       ctx.seimei = s;
       if (menu.pair){
         const s2 = E.seimeiChart($('#tSei').value.trim(), $('#tMei').value.trim());
-        if (!s2){ err.textContent = 'お相手の名も、ひらがなで'; return; }
+        if (!s2){ fail('お相手の名も、ひらがなで'); return; }
         ctx.seimei2 = s2;
       }
     }
@@ -3828,7 +4168,7 @@ select.inp{
     const chosen = [];
     $('#pickRow').addEventListener('click', e => {
       const b = e.target.closest('.pick'); if (!b || b.classList.contains('chosen')) return;
-      b.classList.add('chosen'); chosen.push(+b.dataset.i);
+      b.classList.add('chosen'); chosen.push(+b.dataset.i); buzz(12);
       $('#pickCount').textContent = chosen.length >= n ? '札を、読む' : 'あと ' + (n - chosen.length) + ' 枚';
       if (chosen.length >= n){
         $$('.pick').forEach(x => { if (!x.classList.contains('chosen')) x.disabled = true; });
@@ -3856,7 +4196,6 @@ select.inp{
       '<circle cx="100" cy="22" r="3.4" fill="#fdf3d4"/></g>' +
       '<g class="sp-r"><circle cx="100" cy="100" r="56" stroke="#8a5fb8" stroke-width="1" stroke-dasharray="30 14" opacity=".75"/>' +
       '<circle cx="156" cy="100" r="2.6" fill="#e2c27f"/></g>' +
-      '<path d="M100 58l7.4 21.6L129 87l-21.6 7.4L100 116l-7.4-21.6L71 87l21.6-7.4z" fill="#cfa css" opacity=".9"/>' +
       '<path d="M100 58l7.4 21.6L129 87l-21.6 7.4L100 116l-7.4-21.6L71 87l21.6-7.4z" fill="#e2c27f" opacity=".9"/>' +
       '</svg><p class="cast-msg" id="castMsg">'+msgs[0]+'</p>' +
       '<div class="cast-bar"><i id="castBar"></i></div></div></div>';
@@ -4103,11 +4442,13 @@ select.inp{
       '<line x1="'+x(wi).toFixed(1)+'" y1="'+PT+'" x2="'+x(wi).toFixed(1)+'" y2="'+(PT+ih)+'" stroke="#d4506a" stroke-width=".8" stroke-dasharray="3 4" opacity=".45"/></svg></div>';
   }
   function cardsHTML(draw, pos){
-    return '<div class="drawn'+(draw.length===5?' five':'')+'">' + draw.map((x,i)=>{
+    return '<div class="drawn">' + draw.map((x,i)=>{
       const side = x.rev ? x.card.rv : x.card.up;
-      return '<div><button class="dcard" aria-label="'+pos[i]+'の札：'+x.card.jp+'">' +
+      return '<div><button class="dcard" aria-label="'+pos[i]+'の札：'+x.card.jp+'（'+(x.rev?'逆位置':'正位置')+'）">' +
         '<div class="dcard-in"><div class="dcard-f dcard-b">'+CARD_BACK+'</div>' +
-        '<div class="dcard-f dcard-fr"><span class="pos">'+pos[i]+'</span>' +
+        '<div class="dcard-f dcard-fr">' +
+        '<span class="ori-chip'+(x.rev?' r':'')+'" aria-hidden="true">'+(x.rev?'▽':'△')+'</span>' +
+        '<span class="pos">'+pos[i]+'</span>' +
         '<span class="rn">'+x.card.rn+'</span>' +
         '<span class="dcard-art"'+(x.rev?' style="transform:rotate(180deg)"':'')+'>'+cardArt(x.card,'')+'</span>' +
         '<span class="nm">'+x.card.jp+'</span>' +
@@ -4118,7 +4459,9 @@ select.inp{
   }
   function heroCardHTML(x, label){
     const side = x.rev ? x.card.rv : x.card.up;
-    return '<div class="hero-card-art"><div class="frame"'+(x.rev?' style="transform:rotate(180deg)"':'')+'>'+cardArt(x.card,'')+'</div>' +
+    return '<div class="hero-card-art"><div class="frame-wrap">' +
+      '<div class="frame"'+(x.rev?' style="transform:rotate(180deg)"':'')+'>'+cardArt(x.card,'')+'</div>' +
+      '<span class="ori-chip'+(x.rev?' r':'')+'" aria-hidden="true">'+(x.rev?'▽':'△')+'</span></div>' +
       '<div class="meta"><p class="rn">'+(label||'結論の札')+'　'+x.card.rn+'</p>' +
       '<p class="nm">'+x.card.jp+'<span style="font-size:.62em;color:'+(x.rev?'#d4506a':'#8fd6bb')+';margin-left:.6em">'+
       (x.rev?'逆位置':'正位置')+'</span></p>' +
@@ -4173,10 +4516,13 @@ select.inp{
     h += '<div class="res-hero"><span class="inkan" aria-hidden="true">星<i>詠</i></span>' +
       SEAL+'<p class="kind">'+doc.head.kind+'</p><h2>'+esc(doc.head.title)+'</h2>' +
       '<p class="for">'+esc(doc.head.forWhom)+'</p>' +
-      (doc.head.code ? '<span class="code">'+esc(doc.head.code)+'</span>' : '') + '</div>';
+      (doc.head.code ? '<span class="code" id="repCode" title="タップして番号をコピー" role="button" tabindex="0">'+esc(doc.head.code)+'</span>' : '') + '</div>';
     if (doc.head.pillars && doc.head.pillars.length)
-      h += '<div class="pillars">' + doc.head.pillars.map(([g,k,v,s]) =>
-        '<div class="pil"><div class="g">'+g+'︎</div><p class="k">'+k+'</p><p class="v">'+v+'</p><p class="s">'+s+'</p></div>').join('') + '</div>';
+      h += '<div class="pillars">' + doc.head.pillars.map(([g,k,v,s]) => {
+        const rev = s === '逆位置', up = s === '正位置';
+        const sHtml = (rev || up) ? '<span class="ori-inline'+(rev?' r':'')+'">'+(rev?'▽':'△')+' '+s+'</span>' : s;
+        return '<div class="pil"><div class="g">'+g+'︎</div><p class="k">'+k+'</p><p class="v">'+v+'</p><p class="s">'+sHtml+'</p></div>';
+      }).join('') + '</div>';
 
     h += doc.free.map(secHTML).join('');
 
@@ -4232,10 +4578,24 @@ select.inp{
   function afterResult(){
     requestAnimationFrame(() => $$('.bar-fl', rBody).forEach(b => { b.style.width = b.dataset.w + '%'; }));
     $$('.dcard', rBody).forEach((btn,i) => {
-      btn.addEventListener('click', () => btn.classList.toggle('flip'));
+      btn.addEventListener('click', () => { btn.classList.toggle('flip'); buzz(10); });
       if (REDUCED) btn.classList.add('flip');
-      else setTimeout(() => btn.classList.add('flip'), 420 + i*230);
+      else setTimeout(() => { btn.classList.add('flip'); buzz(14); }, 420 + i*230);
     });
+    const heroEl = $('.res-hero', rBody);
+    if (heroEl && !REDUCED) { heroEl.classList.add('flash'); setTimeout(() => heroEl.classList.remove('flash'), 1500); }
+    const codeEl = $('#repCode', rBody);
+    if (codeEl) {
+      const copyCode = () => {
+        const txt = codeEl.textContent;
+        (navigator.clipboard ? navigator.clipboard.writeText(txt) : Promise.reject()).catch(() => {});
+        codeEl.classList.add('copied'); buzz(10);
+        toast('鑑定番号をコピーしました');
+        setTimeout(() => codeEl.classList.remove('copied'), 1200);
+      };
+      codeEl.addEventListener('click', copyCode);
+      codeEl.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); copyCode(); } });
+    }
     $$('[data-buy]', rBody).forEach(b => b.addEventListener('click', () => doUnlock(b.dataset.buy)));
     const pr = $('#resPrint'); if (pr) pr.onclick = () => print();
     const ag = $('#resAgain'); if (ag) ag.onclick = () => {
@@ -4247,10 +4607,12 @@ select.inp{
   /* ---------- 上にもどる（ホームのみ） ---------- */
   (function toTop(){
     const btn = $('#pageTop');
-    // 鑑定オーバーレイを開いているあいだは隠す
-    const on = () => btn.classList.toggle('on', scrollY > innerHeight * .6 && !reader.classList.contains('on'));
+    // 鑑定オーバーレイ／ハンバーガーメニューを開いているあいだは隠す
+    const on = () => btn.classList.toggle('on',
+      scrollY > innerHeight * .6 && !reader.classList.contains('on') && !document.body.classList.contains('nav-open'));
     on(); addEventListener('scroll', on, { passive:true });
     new MutationObserver(on).observe(reader, { attributes:true, attributeFilter:['class'] });
+    new MutationObserver(on).observe(document.body, { attributes:true, attributeFilter:['class'] });
     btn.addEventListener('click', () => scrollTo({ top:0, behavior: REDUCED ? 'auto' : 'smooth' }));
   })();
 
@@ -4259,6 +4621,7 @@ select.inp{
     if (kind === 'pass') D.MENUS.forEach(m => u[m.id] = true);
     else u[CUR.menu.id] = true;
     LS.set('unlocked', u);
+    buzz([10,30,10]);
     renderResult();
     toast(kind === 'pass' ? '全鑑定、ひらきました（デモ）' : '続きが、ひらきました（デモ）');
     setTimeout(() => {
