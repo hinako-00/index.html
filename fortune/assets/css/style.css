@@ -670,9 +670,13 @@ select.inp{
 .meter-n small{font-size:.28em;letter-spacing:.14em;margin-left:6px;color:var(--gold-300);font-family:var(--f-min);}
 .meter-lb{font-size:1rem;letter-spacing:.2em;color:var(--gold-200);margin-top:8px;}
 
-/* 引いた札 */
-.drawn{display:grid;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));gap:14px;margin-top:20px;}
-@media (min-width:760px){.drawn.five{grid-template-columns:repeat(5,1fr);}}
+/* 引いた札
+   grid の auto-fit だと、あぶれた最後の1枚が空欄を埋めるように
+   引き伸ばされて不揃いに見える（例：3枚中2枚+1枚の行）。
+   flex + 固定幅 + 中央寄せにして、枚数に関わらず隙間なく並べる。 */
+.drawn{display:flex;flex-wrap:wrap;justify-content:center;gap:14px;margin-top:20px;}
+.drawn > div{flex:0 0 auto;width:132px;}
+@media (min-width:520px){.drawn > div{width:140px;}}
 .dcard{perspective:1200px;display:block;width:100%;padding:0;background:none;cursor:pointer;}
 .dcard-in{position:relative;width:100%;aspect-ratio:5/8;transform-style:preserve-3d;transition:transform 1s var(--ease-out);}
 .dcard.flip .dcard-in{transform:rotateY(180deg);}
@@ -691,6 +695,15 @@ select.inp{
 .dcard-fr .rv{font-size:.6rem;letter-spacing:.1em;padding:.2em .6em;border:1px solid var(--veil-2);color:var(--text-dim);border-radius:100px;}
 .dcard-fr .rv.r{color:var(--crimson);border-color:rgba(212,80,106,.45);}
 .dcard-note{font-size:.76rem;line-height:1.85;color:var(--gold-200);margin-top:9px;text-align:center;}
+/* 正位置／逆位置を一目で示す小さな印（文字ラベルより先に目に入る） */
+.ori-chip{
+  position:absolute;top:7px;right:7px;width:19px;height:19px;border-radius:50%;
+  display:grid;place-items:center;font-size:.58rem;line-height:1;
+  border:1px solid rgba(201,162,83,.55);background:rgba(9,6,20,.75);color:var(--gold-200);
+}
+.ori-chip.r{border-color:rgba(212,80,106,.6);color:var(--crimson);background:rgba(212,80,106,.1);}
+.ori-inline{color:var(--gold-200);}
+.ori-inline.r{color:var(--crimson);}
 
 /* =========================================================
    20. 課金ゲート（結果の途中）
@@ -885,8 +898,9 @@ select.inp{
   padding:clamp(18px,2.6vw,26px);border:1px solid rgba(201,162,83,.34);border-radius:5px;
   background:linear-gradient(150deg,rgba(61,33,89,.5),rgba(9,6,20,.9));flex-wrap:wrap;
 }
+.hero-card-art .frame-wrap{position:relative;flex:none;width:clamp(104px,26vw,132px);}
 .hero-card-art .frame{
-  width:clamp(104px,26vw,132px);aspect-ratio:5/8;flex:none;border-radius:6px;
+  width:100%;aspect-ratio:5/8;border-radius:6px;
   border:1px solid rgba(201,162,83,.5);display:grid;place-items:center;
   background:linear-gradient(165deg,#1c1436,#0a0716);color:var(--gold-200);
   box-shadow:var(--sh-gold);

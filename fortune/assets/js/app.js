@@ -678,11 +678,13 @@
       '<line x1="'+x(wi).toFixed(1)+'" y1="'+PT+'" x2="'+x(wi).toFixed(1)+'" y2="'+(PT+ih)+'" stroke="#d4506a" stroke-width=".8" stroke-dasharray="3 4" opacity=".45"/></svg></div>';
   }
   function cardsHTML(draw, pos){
-    return '<div class="drawn'+(draw.length===5?' five':'')+'">' + draw.map((x,i)=>{
+    return '<div class="drawn">' + draw.map((x,i)=>{
       const side = x.rev ? x.card.rv : x.card.up;
-      return '<div><button class="dcard" aria-label="'+pos[i]+'の札：'+x.card.jp+'">' +
+      return '<div><button class="dcard" aria-label="'+pos[i]+'の札：'+x.card.jp+'（'+(x.rev?'逆位置':'正位置')+'）">' +
         '<div class="dcard-in"><div class="dcard-f dcard-b">'+CARD_BACK+'</div>' +
-        '<div class="dcard-f dcard-fr"><span class="pos">'+pos[i]+'</span>' +
+        '<div class="dcard-f dcard-fr">' +
+        '<span class="ori-chip'+(x.rev?' r':'')+'" aria-hidden="true">'+(x.rev?'▽':'△')+'</span>' +
+        '<span class="pos">'+pos[i]+'</span>' +
         '<span class="rn">'+x.card.rn+'</span>' +
         '<span class="dcard-art"'+(x.rev?' style="transform:rotate(180deg)"':'')+'>'+cardArt(x.card,'')+'</span>' +
         '<span class="nm">'+x.card.jp+'</span>' +
@@ -693,7 +695,9 @@
   }
   function heroCardHTML(x, label){
     const side = x.rev ? x.card.rv : x.card.up;
-    return '<div class="hero-card-art"><div class="frame"'+(x.rev?' style="transform:rotate(180deg)"':'')+'>'+cardArt(x.card,'')+'</div>' +
+    return '<div class="hero-card-art"><div class="frame-wrap">' +
+      '<div class="frame"'+(x.rev?' style="transform:rotate(180deg)"':'')+'>'+cardArt(x.card,'')+'</div>' +
+      '<span class="ori-chip'+(x.rev?' r':'')+'" aria-hidden="true">'+(x.rev?'▽':'△')+'</span></div>' +
       '<div class="meta"><p class="rn">'+(label||'結論の札')+'　'+x.card.rn+'</p>' +
       '<p class="nm">'+x.card.jp+'<span style="font-size:.62em;color:'+(x.rev?'#d4506a':'#8fd6bb')+';margin-left:.6em">'+
       (x.rev?'逆位置':'正位置')+'</span></p>' +
@@ -750,8 +754,11 @@
       '<p class="for">'+esc(doc.head.forWhom)+'</p>' +
       (doc.head.code ? '<span class="code">'+esc(doc.head.code)+'</span>' : '') + '</div>';
     if (doc.head.pillars && doc.head.pillars.length)
-      h += '<div class="pillars">' + doc.head.pillars.map(([g,k,v,s]) =>
-        '<div class="pil"><div class="g">'+g+'︎</div><p class="k">'+k+'</p><p class="v">'+v+'</p><p class="s">'+s+'</p></div>').join('') + '</div>';
+      h += '<div class="pillars">' + doc.head.pillars.map(([g,k,v,s]) => {
+        const rev = s === '逆位置', up = s === '正位置';
+        const sHtml = (rev || up) ? '<span class="ori-inline'+(rev?' r':'')+'">'+(rev?'▽':'△')+' '+s+'</span>' : s;
+        return '<div class="pil"><div class="g">'+g+'︎</div><p class="k">'+k+'</p><p class="v">'+v+'</p><p class="s">'+sHtml+'</p></div>';
+      }).join('') + '</div>';
 
     h += doc.free.map(secHTML).join('');
 
