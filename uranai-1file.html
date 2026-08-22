@@ -496,7 +496,8 @@ section[id]{scroll-margin-top:74px;}
 .voice .who{margin-top:auto;padding-top:14px;border-top:1px solid var(--veil);display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;align-items:baseline;}
 .voice .who b{font-size:.79rem;color:var(--gold-100);font-weight:400;}
 .voice .who span{font-size:.7rem;color:var(--text-faint);}
-.stars{color:var(--gold-300);font-size:.74rem;letter-spacing:.2em;}
+.stars{color:var(--gold-300);font-size:.74rem;letter-spacing:.2em;white-space:nowrap;}
+.stars .off{color:var(--veil-2);}
 
 /* ---------- 16. 帯CTA ---------- */
 .band{
@@ -596,9 +597,14 @@ select.inp{
 
 /* --- タロット選択 --- */
 .pick-msg{text-align:center;font-size:.92rem;color:var(--gold-200);margin-bottom:22px;letter-spacing:.08em;}
-.pick-row{display:flex;justify-content:center;gap:clamp(6px,1.6vw,16px);flex-wrap:wrap;perspective:1400px;}
+/* 十五枚を、どの幅でも 5枚×3列 に収める（端数の空きを出さない） */
+.pick-row{
+  --pick-gap:clamp(5px,1.2vw,14px);
+  display:flex;justify-content:center;gap:var(--pick-gap);flex-wrap:wrap;perspective:1400px;
+  max-width:calc(84px * 5 + var(--pick-gap) * 4);margin-inline:auto;
+}
 .pick{
-  width:clamp(62px,15vw,96px);aspect-ratio:5/8;border-radius:5px;flex:none;
+  width:calc((100% - var(--pick-gap) * 4) / 5);aspect-ratio:5/8;border-radius:5px;flex:none;
   border:1px solid rgba(201,162,83,.45);
   background:linear-gradient(150deg,#2f1f4d,#0b0818);
   display:grid;place-items:center;cursor:pointer;
@@ -906,7 +912,6 @@ select.inp{
 .dcard-b .back-art{width:66%;color:var(--gold-500);opacity:.9;}
 .dcard-fr .nm{font-size:.88rem;margin-top:1px;}
 .pick svg{width:58%;}
-.pick .pick-n{position:absolute;bottom:6px;font-family:var(--f-en);font-size:.62rem;color:var(--gold-500);}
 .pick{position:relative;}
 
 /* 大きな一枚（結論札） */
@@ -3410,29 +3415,31 @@ select.inp{
     if (menu.e === 'natal') {
       h = (c ? san(c) : 'あなた') + 'に、何が起きるか。';
       teaser.push('<b>結論</b>　いま出かかった答えの、その先',
+        '<b>流れ</b>　十二ヶ月を<em class="hl">月ごとに</em>、指数と過ごし方',
         '<b>刻</b>　転機となる一日を、<em class="hl">月日まで</em>',
-        '<b>手</b>　明日から効く、あなただけの一手',
-        '<b>護符</b>　色・数・方位・曜日・持ちもの');
+        '<b>人</b>　あなたを支える人と、消耗させる人',
+        '<b>護符</b>　色・数・方位・曜日・持ちもの',
+        '<b>実践</b>　明日から三十日の手順');
     } else if (menu.e === 'compat') {
       h = 'この縁の、行き着く先。';
       teaser.push('<b>本音</b>　命式が語る、言われていない心',
-        '<b>刻</b>　関係が動く月と、決定的な一日',
-        '<b>言</b>　かけるべき一言と、禁句',
+        '<b>転機</b>　関係が動く月を<em class="hl">六ヶ月分</em>、決定的な一日',
+        '<b>言葉</b>　場面ごとに、効く一言と禁句',
         '<b>結末</b>　このまま進んだ先に起きること');
     } else if (menu.e === 'tarot') {
       lead = '札は、まだ半分しか語らぬ。';
       h = '伏せられた、もう半分。';
       teaser.push('<b>答</b>　その札が、本当に示すもの',
-        '<b>裏</b>　見落としている一枚',
-        '<b>刻</b>　札が指す、動くべき時',
-        '<b>手</b>　今日から変える、たった一つ');
+        '<b>深層</b>　札と札の<em class="hl">あいだ</em>に出ている流れ',
+        '<b>裏</b>　あなたが見落としている一点',
+        '<b>行動</b>　七日間の手順と、来る合図');
     } else {
       lead = 'その名が背負うもの、まだ半分。';
       h = '名が定める、後半生。';
       teaser.push('<b>総運</b>　生涯を貫く、一本の線',
+        '<b>生涯</b>　どの数がいつ効くか、<em class="hl">年代別に</em>',
         '<b>影</b>　気づかず繰り返してきた癖',
-        '<b>開運</b>　呼び名・印・署名の使い分け',
-        '<b>刻</b>　名の力が最も強く出る年');
+        '<b>開運</b>　呼び名・印・署名・吉日の使い分け');
     }
     return { lead, h, why:'無料で明かすのは「あなたが何者か」まで。' +
       'その先——<strong>いつ、何をすべきか</strong>は、覚悟のある方にだけ。', list:teaser };
@@ -3441,7 +3448,7 @@ select.inp{
   /* =======================================================
      章の組み立て
      ======================================================= */
-  const KAN = ['壱','弐','参','肆','伍','陸','漆'];
+  const KAN = ['壱','弐','参','肆','伍','陸','漆','捌','玖','拾'];
   const S = (i, title, en, html, chart) => ({ no:KAN[i] || String(i+1), title, en, html, chart });
 
   function seeBlock(c){
@@ -3605,6 +3612,311 @@ select.inp{
   ], s.sou + s.soto); }
 
   /* =======================================================
+     有料章：読みごたえを担う追加の章
+     ======================================================= */
+  const PM_THEME = {
+    1:['起こす','新しい話が持ち込まれます。断らずに一度聞いてください。'],
+    2:['整える','人との距離を調整する月。急がず、返事を寝かせて構いません。'],
+    3:['広げる','声をかけられる月。誘いに乗ると縁が動きます。'],
+    4:['固める','地味な作業が効く月。書類・数字・約束事を整えてください。'],
+    5:['動く','予定が崩れやすい月。抵抗せず、崩れたぶん空いた場所を見てください。'],
+    6:['担う','頼まれごとが増える月。引き受ける前に条件を一つだけ確認を。'],
+    7:['沈む','内側に向かう月。判断より、休息と学びに配分してください。'],
+    8:['実る','努力が形になる月。交渉・請求・提出はこの月に寄せて。'],
+    9:['終える','片づけの月。手放したぶんだけ、翌月が軽くなります。']
+  };
+  function monthAdvice(m, c){
+    const t = PM_THEME[m.pm] || PM_THEME[1];
+    if (m.score >= 72) return t[1] + ' ' + HL('攻めてよい月です') + '。';
+    if (m.score <= 38) return t[1] + ' ' + WARN('新しい約束は控えめに') + '。';
+    return t[1];
+  }
+  /* 流れ：十二ヶ月を月別に読む */
+  function flowSection(c){
+    /* 表は端末幅で潰れないよう短い列だけに絞り、月ごとの助言は下の一覧へ回す */
+    const rows = c.months.map(m => {
+      const t = PM_THEME[m.pm] || PM_THEME[1];
+      const mark = m.score >= 72 ? PILL('追い風','g') : m.score <= 38 ? PILL('要注意','r') : PILL('平','');
+      return [m.year + '/' + m.label, { v:String(m.score), cls:'num' }, { v:mark }, t[0]];
+    });
+    const advice = c.months.map(m => [
+      m.label + '　' + (PM_THEME[m.pm] || PM_THEME[1])[0],
+      monthAdvice(m, c)
+    ]);
+    const upcoming = c.months.slice(0, 3).map(m => (PM_THEME[m.pm] || PM_THEME[1])[0]).join('→');
+    return P(
+      '<strong>ここからは、あなたの十二ヶ月を月ごとに開きます。</strong>' +
+      '運勢指数は、あなたの生年月日から出した身体・感情・知性の周期に、個人年の巡りを重ねた数字です。' +
+      MK('50を平常とし、70を超えると追い風、40を切ると向かい風') + 'と読んでください。',
+      '直近三ヶ月の流れは' + HL(upcoming) + '。' +
+      'この並びを頭に入れておくだけで、'+ CALM('「なぜいま上手くいかないのか」に説明がつきます') + '。'
+    ) + TBL(['月', '指数', '', '主題'], rows) +
+      P('<strong>月ごとの過ごし方</strong>') + KV(advice) + P(
+      '<strong>最も追い風の月</strong>　' + HLL(jm(c.best.date)) + '（指数 ' + c.best.score + '）。' +
+      'この月は、同じ行動でも通り方が変わります。先延ばしにしている連絡・申請・告白があるなら、この月に寄せてください。',
+      '<strong>最も重い月</strong>　' + WARN(jm(c.worst.date)) + '（指数 ' + c.worst.score + '）。' +
+      'この月に起きることは、たいてい' + CALM('あなたのせいではありません') + '。' +
+      '判断を求められたら「来月まで待ってほしい」と言って構いません。それだけで結果が変わります。',
+      '<strong>決定的な一日</strong>　' + HLL(jd(c.turning)) + '。' +
+      'この日は、あなたの三つの周期が同時に上を向きます。' +
+      MK('この日にした決断は、あとから振り返って「あそこが分かれ目だった」と言える日になります') + '。'
+    );
+  }
+  /* 人：周囲との関係 */
+  function peopleSection(c){
+    const seen = pickBy([
+      '「しっかりしていて、頼りやすい人」','「穏やかで、当たりの柔らかい人」',
+      '「何を考えているか少し掴めない人」','「気配りができて、隙のない人」',
+      '「まじめで、線を引いている人」'
+    ], c.seed >>> 3);
+    const real = pickBy([
+      '実際のあなたは、頼られるたびに少しずつ削れています。',
+      '実際のあなたは、穏やかなのではなく、波風を立てない選択を毎回している。',
+      '実際のあなたは、掴めないのではなく、掴ませたときに失う経験をしてきた。',
+      '実際のあなたは、隙がないのではなく、隙を見せられる相手にまだ出会っていないだけ。',
+      '実際のあなたは、線を引いているのではなく、どこまで近づいていいか分からずにいる。'
+    ], c.seed >>> 3);
+    return P(
+      '<strong>人からどう見えているか</strong>と、<strong>実際のあなた</strong>には、' +
+      HL('はっきりしたズレ') + 'があります。命式では、それがそのまま人間関係の疲れ方に出ています。'
+    ) + KV([
+      ['第一印象', seen],
+      ['実像', CALM(real)],
+      ['あなたを支える人', HL(workImp(c)) + '。' + c.sign.social],
+      ['あなたを消耗させる人', WARN(pickBy([
+        '善意で助言を重ねてくる人。悪気がないぶん、断れず溜まります。',
+        '感情の起伏が大きい人。あなたが空気を整える係にされます。',
+        '決めない人。あなたが代わりに決めることになり、責任だけが移ってきます。',
+        '話を遮る人。言いかけた言葉を飲み込む回数が、そのまま疲労になります。'
+      ], c.seed >>> 7))],
+      ['距離の取り方', '切らなくて構いません。' + MK('会う頻度を三分の二にするだけ') + 'で、関係は保ったまま消耗が止まります。'],
+      ['あなたが言うべき一言', HL(pickBy([
+        '「少し考えます」','「それは私の役目ではないです」','「今日は先に帰ります」','「助かりました」と、先に'
+      ], c.seed >>> 11))]
+    ]) + P(
+      '<strong>' + c.domEl + 'の気が強いあなた</strong>は、' + D.ELEMENTS[c.domEl].strong +
+      'その一方で、' + WARN(c.weakEl + 'の気が薄い') + 'ため、' + D.ELEMENTS[c.weakEl].weak,
+      'つまりあなたに足りないのは能力ではなく、' + HL(c.weakEl + 'の気を持つ人') + 'との接点です。' +
+      '無理に性格を変えるより、' + MK('その気を持つ人を一人そばに置く') + 'ほうが、はるかに早く整います。'
+    );
+  }
+  /* 実践：三十日の手順 */
+  function practiceSection(c, menu){
+    return P(
+      '最後に、' + HLL('明日から三十日の手順') + 'に落とします。' +
+      '占いは読んだ時点では何も変わりません。' + MK('変わるのは、小さな一手を実際に置いたときだけです') + '。'
+    ) + STEPS([
+      ['一日目　書き出す',
+        'いま気がかりなことを、数を絞らず、思いつくまま紙に出してください。' +
+        '頭の中にある限り、それは実際の三倍の重さで存在しています。'],
+      ['三日目まで　ひとつ断る',
+        HL('気の進まない予定をひとつだけ断ってください') + '。' +
+        'あなたの運は、空きがないところには入ってこられません。断る練習は、受け取る練習です。'],
+      ['七日目まで　' + c.color.jp + 'を身につける',
+        '幸運の色は' + HL(c.color.jp) + '。派手に取り入れる必要はありません。' +
+        '見えないところに一つあれば十分です。' + c.color.msg],
+      ['十四日目まで　返事を返す',
+        '保留にしている連絡があるはずです。' + MK('内容より、返したという事実が流れを変えます') + '。' +
+        '長い文章でなくて構いません。'],
+      ['二十一日目まで　' + c.dir + 'へ足を運ぶ',
+        '吉方は' + HL(c.dir) + '。遠出でなくて構いません。' +
+        '普段の行動範囲の中で、その方角にある店や道を一度選んでください。'],
+      ['三十日目　' + jd(c.turning) + 'に備える',
+        '転機の日までに、' + HL('決めておくべきことを一つだけ') + '決めておいてください。' +
+        'その日に迷っていると、せっかく開いた扉を見送ることになります。']
+    ]) + P(
+      CALM('六つ全部やる必要はありません。') +
+      '二つできれば、三十日後のあなたは今日とは違う場所に立っています。'
+    );
+  }
+
+  /* 相性：転機と言葉 */
+  function compatFlow(a, b, x){
+    /* 表は短い列だけに絞り、月ごとの助言は下の一覧へ（端末幅で潰れないように） */
+    const half = a.months.slice(0, 6).map((m, i) => {
+      const bs = b.months[i], avg = Math.round((m.score + bs.score) / 2);
+      return { m, avg };
+    });
+    const rows = half.map(({ m, avg }) => [
+      m.year + '/' + m.label, { v:String(avg), cls:'num' },
+      { v: avg >= 70 ? PILL('進む','g') : avg <= 40 ? PILL('こじれる','r') : PILL('平行','') }
+    ]);
+    const advice = half.map(({ m, avg }) => [m.label,
+      avg >= 70 ? '一歩進める話をするなら、この月です。'
+      : avg <= 40 ? WARN('大事な話は避けてください') + '。同じ言葉が違う意味で伝わります。'
+      : '現状維持。無理に動かさないほうが結果的に近づきます。']);
+    return P(
+      '<strong>この関係が、いつどう動くか。</strong>' +
+      'おふたりそれぞれの周期を重ね、噛み合いの強さを月ごとに出しました。' +
+      MK('相性そのものより、この「時期」のほうが結果を左右します') + '。'
+    ) + TBL(['月', '噛み合い', ''], rows) +
+      P('<strong>この月にすべきこと</strong>') + KV(advice) + P(
+      '<strong>関係が動く月</strong>　' + HLL(jm(a.best.date)) + '。' +
+      'この月、' + HL(pickBy([
+        '相手側の環境に変化が起きます','共通の知人が関わってきます',
+        '一度距離が開いてから、急に縮まります','あなたが諦めかけた頃に動きます'
+      ], x.score)) + '。',
+      '<strong>決定的な一日</strong>　' + HLL(jd(a.turning)) + '。' +
+      'この日の前後三日は、' + MK('言葉が普段の二倍の重さで届きます') + '。良い意味でも、悪い意味でも。',
+      '<strong>気をつける月</strong>　' + WARN(jm(a.worst.date)) + '。' +
+      'この時期の衝突は、内容ではなく' + WARN('タイミングのせい') + 'です。' +
+      '本気の話だと思わないでください。'
+    );
+  }
+  function compatWords(a, b, x){
+    const good = x.elGood ? '相手はあなたの言葉を、そのままの意味で受け取れる関係です。'
+      : x.elBad ? '相手はあなたの言葉を、一段厳しく受け取る癖があります。'
+      : '相手はあなたの言葉を、半分だけ受け取ります。';
+    return P(
+      '<strong>この関係では、何を言うかより「どう言うか」が結果を決めます。</strong>' + good +
+      'ここでは、実際に使える言い方と、避けるべき言い方を並べます。'
+    ) + KV([
+      ['距離が空いたとき', '○　' + HL('「最近どう？」だけ送る') + '<br>×　' + WARN('「なんで連絡くれないの」')],
+      ['相手が黙ったとき', '○　' + HL('「今じゃなくていいよ」') + '<br>×　' + WARN('「何か言ってよ」')],
+      ['謝るとき', '○　' + HL('「私が急かした」と主語を自分に') + '<br>×　' + WARN('「そんなつもりじゃなかった」')],
+      ['先に進めたいとき', '○　' + HL('「どうしたい？」と相手に返す') + '<br>×　' + WARN('「私たちってどうなるの」')],
+      ['感謝を伝えるとき', '○　' + HL('具体的な行動を一つ名指しで') + '<br>×　' + WARN('「いつもありがとう」だけ')]
+    ]) + P(
+      '<strong>この人に一番効く伝え方</strong>　' + HLL(pickBy([
+        '短く、一度だけ。繰り返すと重さが消えます。',
+        '結論から。前置きが長いと、身構えられます。',
+        '文字より声。この人は文面だと冷たく読む癖があります。',
+        '相手が忙しくない時間に。内容より、タイミングで受け取り方が変わります。'
+      ], x.score + a.lp)) + '。',
+      '<strong>絶対にやってはいけないこと</strong>　' + WARN(pickBy([
+        '確かめる質問を重ねること。確かめるほど、相手は答えを渋ります。',
+        '第三者を挟むこと。この配置では、間に人が入ると必ずこじれます。',
+        '期限を切ること。追い込まれた瞬間、この人は逃げる側に回ります。',
+        '過去を持ち出すこと。一度で済む話が、三倍の時間になります。'
+      ], x.score + b.lp)),
+      CALM('言い方を変えるだけで、この関係の点数は動きます。') +
+      '点数は生まれつきではなく、' + HL('扱い方の結果') + 'です。'
+    );
+  }
+
+  /* タロット：深層と行動 */
+  function tarotDeep(ctx, menu){
+    const t = TAROT_T[menu.theme], d = ctx.draw;
+    const revN = d.filter(x => x.rev).length;
+    const majorNote = revN === 0 ? '全て正位置で出ました。' + HL('迷いが少ない配置') + 'です。答えはすでに出ていて、あとは踏み切るだけの段階にあります。'
+      : revN === d.length ? '全て逆位置で出ました。' + WARN('いま無理に動かす時期ではありません') + '。ただしこれは「駄目」ではなく「まだ」です。'
+      : HL(revN + '枚が逆位置') + 'で出ました。進む力と止まる力が同時に働いている、' + CALM('迷いのある配置') + 'です。';
+    const pairs = [];
+    for (let i = 0; i < d.length - 1; i++) {
+      const A = d[i], B = d[i + 1];
+      const as = A.rev ? A.card.rv : A.card.up, bs = B.rev ? B.card.rv : B.card.up;
+      pairs.push('<strong>' + t.pos[i] + ' → ' + t.pos[i + 1] + '</strong>　' +
+        HL(A.card.jp) + 'から' + HL(B.card.jp) + 'へ。' +
+        MK(as.kw.split('・')[0] + 'が' + bs.kw.split('・')[0] + 'に変わる') + '流れです。' +
+        pickBy([
+          'この移り変わりは、あなたが何かを手放した瞬間に起きます。',
+          'ここには一度、落ち込む谷があります。谷を飛ばそうとすると戻されます。',
+          'この間に、人が一人関わってきます。あなたの想定していない人です。',
+          'この変化は自然には起きません。あなたが先に一手を置く必要があります。'
+        ], A.card.n * 7 + B.card.n));
+    }
+    return P(
+      '<strong>ここからは、札を一枚ずつではなく「並び」として読みます。</strong>' +
+      MK('タロットの本当の答えは、札そのものより、札と札のあいだにあります') + '。'
+    ) + P(majorNote) + (pairs.length ? P(...pairs) : '') + KV([
+      ['配置全体の重さ', d.some(x => x.card.n >= 13 && x.card.n <= 16) ?
+        WARN('変化を強いる札が混じっています') + '。避けようとするほど、形を変えて何度も来ます。' :
+        CALM('穏やかな配置です') + '。急な出来事より、じわじわとした変化が起きます。'],
+      ['あなたが見落としている点', HL(pickBy([
+        'すでに答えは出ていて、あなたは確認を求めているだけだということ。',
+        'この件で疲れている理由が、実は別のところにあるということ。',
+        '相手の反応を待っている間に、選択肢が一つ減っているということ。',
+        'あなたが恐れているのは結果ではなく、決めた責任を負うことだということ。'
+      ], ctx.seed >>> 5))],
+      ['札が繰り返し示していること', MK(pickBy([
+        '待つのをやめること','抱えているものを一つ減らすこと',
+        '本音を一人だけに伝えること','決める日を自分で決めること'
+      ], ctx.seed >>> 9))]
+    ]);
+  }
+  function tarotAction(ctx, menu){
+    const d = ctx.draw, last = d[d.length - 1];
+    return P(
+      '<strong>七日間の手順に落とします。</strong>' +
+      '札は読んだだけでは動きません。' + MK('この配置が示す流れに、あなたの側から一手を差し込む') + '必要があります。'
+    ) + STEPS([
+      ['一日目', '今日、' + HL(actOf(last)) + '。小さくて構いません。札が示した流れに、最初の同意を返す行為です。'],
+      ['二〜三日目', '結論を急がず、' + MK('人に相談しないこと') + '。この配置は、他人の意見が入ると濁ります。'],
+      ['四日目', pickBy([
+        '一度、この件から丸一日離れてください。距離を取った日に答えが降りてくる配置です。',
+        '紙に「最悪どうなるか」を書き出してください。書いた瞬間に半分軽くなります。',
+        '普段選ばないほうを、小さなことで一度選んでみてください。'
+      ], last.card.n)],
+      ['五〜六日目', '合図が来ます。' + HL(signOf(last)) + '。' +
+        'これが出たら、' + CALM('流れが動きはじめた印') + 'です。'],
+      ['七日目', '<strong>ここで決めてください。</strong>' + condOf(last) +
+        'この札の力が届くのは' + HL(timeOf(last)) + 'までです。']
+    ]) + P(
+      '<strong>やってはいけないこと</strong>　' + WARN(pickBy([
+        '同じ質問で、もう一度札を引くこと。答えが濁ります。',
+        '相手の出方を待つこと。この配置は、待った側が不利になります。',
+        '一度に全部変えようとすること。一手だけで十分です。'
+      ], ctx.seed >>> 13)),
+      CALM('七日後、同じ景色を見ても、立っている位置は変わっています。')
+    );
+  }
+
+  /* 姓名判断：生涯と開運 */
+  function seimeiLife(s){
+    /* 表は短い列だけに絞り、解説は下の一覧へ（端末幅で潰れないように） */
+    const stages = [
+      ['〜25歳', '地格', s.chi, '地格が主に働く時期。' + s.m.chi.m],
+      ['26〜45歳', '人格', s.jin, '人格が前に出る時期。' + s.m.jin.m],
+      ['46〜60歳', '外格', s.soto, '外格が効く時期。' + s.m.soto.m],
+      ['61歳〜', '総格', s.sou, '総格が結論を出す時期。' + s.m.sou.m]
+    ];
+    const rows = stages.map(([k, kaku, v]) => {
+      const m = E.kakuMeaning(v);
+      return [k, kaku, { v:String(v), cls:'num' },
+        { v:PILL(m.k, m.k === '大吉' ? 'g' : m.k === '凶' ? 'r' : '') }];
+    });
+    const notes = stages.map(([k, kaku, v, note]) => [k, note]);
+    return P(
+      '<strong>五格は、人生のどの時期に、どの数が前に出るかを示しています。</strong>' +
+      MK('いま効いている数と、これから効く数は違います') + '。だから、うまくいかない時期は「まだその数の番ではない」だけということが起こります。'
+    ) + TBL(['時期', '格', '画数', ''], rows) +
+      P('<strong>それぞれの時期の働き方</strong>') + KV(notes) + P(
+      '<strong>あなたの人生の主題</strong>　総格' + HLL(String(s.sou)) + '（' + s.m.sou.t + '）。' + s.m.sou.m,
+      '<strong>いま向き合っている数</strong>　人格' + HL(String(s.jin)) + '（' + s.m.jin.t + '）。' +
+      '対人関係でぶつかることの多くは、この数の癖から来ています。' + s.m.jin.m,
+      '<strong>三才の配置</strong>　' + HL(s.sansai.join('・')) + '。' +
+      (s.sansai[0] === s.sansai[1] || s.sansai[1] === s.sansai[2] ?
+        CALM('気が重なっており、性質がはっきり出る配置') + 'です。強みも弱みも極端に現れます。' :
+        HL('気が散っており、器用に立ち回れる配置') + 'です。ただし、何者かになるまでに時間がかかります。')
+    );
+  }
+  function seimeiLuck(s){
+    const day = ['日','月','火','水','木','金','土'][s.sou % 7];
+    return P(
+      '<strong>名前は、呼ばれ方と書かれ方で働きが変わります。</strong>' +
+      '画数は変えられませんが、' + MK('どの名で呼ばれるかは選べます') + '。ここが姓名判断の実用部分です。'
+    ) + KV([
+      ['最も運が動く呼ばれ方', HL(s.soto > s.jin ? '下の名前で呼ばれること' : '姓で呼ばれること') + '。' +
+        (s.soto > s.jin ? '外格が強いあなたは、名で呼ばれるほど本来の力が出ます。' : '外格より人格が強く、姓で立つほうが安定します。')],
+      ['署名の書き方', HL('続けて書かず、姓と名のあいだを一字分あける') + 'こと。' +
+        '五格の境目が曖昧になると、運の切り替わりも曖昧になります。'],
+      ['印鑑', '画数の' + HL(String(s.sou)) + 'にちなみ、' + (s.sou % 2 ? '縦書き' : '横書き') + 'の実印が合います。' +
+        '欠けや掠れは、そのまま総格の欠けとして働きます。'],
+      ['吉日', '毎月' + HL((s.sou % 28 + 1) + '日') + '、および' + HL(day + '曜') + '。' +
+        '契約・提出・申し込みはこの日に寄せてください。'],
+      ['名を書く習慣', MK('毎朝一度、自分の名前を手書きすること') + '。' +
+        '最も簡単で、最も効きます。画数が身体を通るのは、書いたときだけです。'],
+      ['避けること', WARN('略称・あだ名だけで呼ばれ続けること') + '。' +
+        '画数の働かない呼び名が主になると、五格の力が薄まります。']
+    ]) + P(
+      '<strong>これから名づける方へ</strong>　' +
+      '姓の画数' + HL(String(s.ten)) + 'に対して、' +
+      HL('人格が' + (s.m.jin.k === '凶' ? '吉数になる' : '同じ吉数を保つ') + '組み合わせ') + 'を選んでください。' +
+      MK('総格の吉凶より、人格と外格の噛み合いのほうが日々に効きます') + '。'
+    );
+  }
+
+  /* =======================================================
      compose：メニューから鑑定書を組む
      ======================================================= */
   function compose(menu, ctx){
@@ -3628,8 +3940,14 @@ select.inp{
       if (T.charts) nsec.charts = T.charts(c);
       else if (T.chart) nsec.charts = [T.chart(c)];
       paid.push(nsec);
-      paid.push(S(3, '処方', 'Charms', charms(c)));
-      paid.push(S(4, '結び', 'Closing', closing(c, menu)));
+      const fsec = S(3, '流れ', 'The Year Ahead', flowSection(c));
+      /* 「答え」に既に曲線が出るテーマでは、同じ図を二度出さない */
+      if (!(nsec.charts || []).some(ch => ch.type === 'line')) fsec.charts = [{ type:'line', data:c.months }];
+      paid.push(fsec);
+      paid.push(S(4, '人', 'People', peopleSection(c)));
+      paid.push(S(5, '処方', 'Charms', charms(c)));
+      paid.push(S(6, '実践', 'Practice', practiceSection(c, menu)));
+      paid.push(S(7, '結び', 'Closing', closing(c, menu)));
 
     } else if (menu.e === 'compat') {
       const a = ctx.chart, b = ctx.chart2, x = ctx.compat, T = COMPAT[menu.theme] || COMPAT.love;
@@ -3647,7 +3965,11 @@ select.inp{
       free.push(csec);
       free.push(S(1, '綻び', 'The Crack', T.risk(a, b, x)));
       paid.push(S(2, '答え', 'What Comes', T.answer(a, b, x)));
-      paid.push(S(3, '結び', 'Closing', P(
+      const cflow = S(3, '転機', 'Turning Points', compatFlow(a, b, x));
+      cflow.charts = [{ type:'line', data:a.months }];
+      paid.push(cflow);
+      paid.push(S(4, '言葉', 'What to Say', compatWords(a, b, x)));
+      paid.push(S(5, '結び', 'Closing', P(
         CALM('相性は、生まれた瞬間に決まった点数ではありません。'),
         '数値は「いまの噛み合い方」です。扱い方を変えれば動きます。' +
         'ただ、' + HL('動かせる時期には限りがあります') + '。' + HL(jm(a.best.date)) + 'までに一度、向き合ってみてください。'
@@ -3664,7 +3986,9 @@ select.inp{
         label: ctx.draw.length > 1 ? '結論の札' : 'あなたの札' }];
       tsec.pre = true;
       paid.push(tsec);
-      paid.push(S(3, '結び', 'Closing', P(
+      paid.push(S(3, '深層', 'Between the Cards', tarotDeep(ctx, menu)));
+      paid.push(S(4, '行動', 'Seven Days', tarotAction(ctx, menu)));
+      paid.push(S(5, '結び', 'Closing', P(
         CALM('札は、あなたを裁くために出たのではありません。'),
         '同じ札は、日が変わればもう出ません。今日この配置を見たことに、意味があります。'
       )));
@@ -3707,7 +4031,27 @@ select.inp{
           '<strong>大切な話をする日</strong>：おふたりの総格を足した数 ' + HL(String(s.sou + s2.sou)) +
           ' → 毎月' + HL(((s.sou + s2.sou) % 28 + 1) + '日') + '。この日は言葉が通りやすくなります。'
         )));
-        paid.push(S(3, '結び', 'Closing', P(
+        paid.push(S(3, 'ふたりの生涯', 'Two Lifetimes',
+          P('<strong>おふたりの数が、どの時期にどう噛み合うか。</strong>' +
+            MK('相性は固定ではなく、年代によって主役の格が入れ替わります') + '。') +
+          TBL(['時期', 'あなた', 'お相手', '噛み合い'], [
+            ['〜25歳', { v:String(s.chi), cls:'num' }, { v:String(s2.chi), cls:'num' },
+              Math.abs(s.chi - s2.chi) <= 6 ? PILL('近い','g') : PILL('離れる','')],
+            ['26〜45歳', { v:String(s.jin), cls:'num' }, { v:String(s2.jin), cls:'num' },
+              Math.abs(s.jin - s2.jin) <= 6 ? PILL('近い','g') : PILL('離れる','')],
+            ['46〜60歳', { v:String(s.soto), cls:'num' }, { v:String(s2.soto), cls:'num' },
+              Math.abs(s.soto - s2.soto) <= 6 ? PILL('近い','g') : PILL('離れる','')],
+            ['61歳〜', { v:String(s.sou), cls:'num' }, { v:String(s2.sou), cls:'num' },
+              Math.abs(s.sou - s2.sou) <= 8 ? PILL('近い','g') : PILL('離れる','')]
+          ]) +
+          P('<strong>いま噛み合っている格</strong>　人格どうしの差は' + HL(String(Math.abs(s.jin - s2.jin))) + '。' +
+            (Math.abs(s.jin - s2.jin) <= 6 ? '日々の感覚が近く、' + CALM('説明のいらない関係') + 'です。'
+              : '感じ方が違い、' + HL('言葉にしないと伝わらない関係') + 'です。それは相性の悪さではなく、必要な手間です。'),
+            '<strong>これから変わる点</strong>　' +
+            (Math.abs(s.soto - s2.soto) > Math.abs(s.jin - s2.jin)
+              ? WARN('四十代以降、外での立ち位置に差が出ます') + '。片方が外に出る時期に、もう片方が内に向きます。'
+              : CALM('年を重ねるほど噛み合いが良くなる配置') + 'です。いまが一番難しい時期かもしれません。'))));
+        paid.push(S(4, '結び', 'Closing', P(
           CALM('名前は、生まれてはじめて贈られた祈りです。'),
           'ふたつの祈りがどう響き合うか——それは数だけでは決まりません。呼び合う回数が、いちばん強い開運法です。'
         )));
@@ -3722,7 +4066,9 @@ select.inp{
         free.push(ssec);
         free.push(S(1, '影', 'The Shadow', seimeiRisk(s, menu)));
         paid.push(S(2, '答え', 'The Answer', seimeiAnswer(s, menu)));
-        paid.push(S(3, '結び', 'Closing', P(
+        paid.push(S(3, '生涯', 'A Lifetime', seimeiLife(s)));
+        paid.push(S(4, '開運', 'How to Use It', seimeiLuck(s)));
+        paid.push(S(5, '結び', 'Closing', P(
           CALM('その名前は、誰かがあなたのために選んだものです。'),
           '画数の吉凶より大切なのは、あなたがその名前を好きでいられるかどうかです。' +
           '数が示す癖を知ったうえで、これからも名乗り続けてください。'
@@ -4001,17 +4347,31 @@ select.inp{
   })();
 
   const VOICES = [
-    ['最初の一行で手が止まりました。「人前では平気な顔をしていられる人ですね」——誰にも言ったことがないのに、なぜ分かるのかと。','30代・女性','宿命鑑定','2026.07'],
-    ['転機の日として出た日付に、本当に連絡が来ました。半信半疑だったぶん、鳥肌が立ちました。','40代・男性','転機の日 特定鑑定','2026.06'],
-    ['名前だけで、あそこまで言い当てられるとは思っていませんでした。総格の話は、母に見せたら泣いていました。','20代・女性','姓名判断','2026.08'],
-    ['タロットは入力もいらないので、通勤中に引いています。毎朝これを見ないと落ち着かなくなりました。','30代・女性','今日引くべき一枚','2026.08'],
-    ['相手の本音の章で、「確かめる質問を重ねるな」と書かれていて、まさに自分がやっていたことでした。やめたら関係が変わりました。','20代・男性','あの人の本音','2026.05'],
-    ['影の章は正直つらかったです。でも、あそこまで言ってくれる占いは初めてでした。読んでよかったです。','50代・女性','影の章','2026.04']
+    ['正直、占いってどれも同じこと書いてあると思ってました。最初の一行が「人前では平気な顔をしていられる人ですね」で、うわ、と声が出ました。職場でも家でもそれで通してきたので。当たってるというか、見透かされた感じです。',
+      '30代・女性','宿命鑑定','2026.07',5],
+    ['転機の日に出てた日付、普通に何もなかったです。と思ってたら3日後に前の職場から連絡きて、まあ誤差の範囲かなと。文章自体は読みごたえありました。',
+      '40代・男性','転機の日 特定鑑定','2026.06',4],
+    ['母の名前で試したら総格のところで泣かれました。祖母がつけた名前なので。私自身の結果より、そっちが刺さったみたいです。',
+      '20代・女性','姓名判断','2026.08',5],
+    ['通勤中に引いてます。入力いらないのが地味にありがたい。',
+      '30代・女性','今日引くべき一枚','2026.08',5],
+    ['「確かめる質問を重ねるな」って書かれてて、それ完全に自分がやってたことでした。既読ついた?とか、今日どこ行ったの?とか。やめたら向こうから連絡くるようになったので、結果的には合ってたのかもしれません。',
+      '20代・男性','あの人の本音','2026.05',4],
+    ['影の章、読んでて途中で閉じました。次の日にまた開いて最後まで読みました。当たってほしくないことほど当たってて、しんどかったけど、ちゃんと書いてくれる占いは初めてでした。',
+      '50代・女性','影の章','2026.04',5],
+    ['文章量がとにかく多いです。有料の方は通勤の往復でもまだ読み終わらなかった。私は嬉しいですが、サッと結論だけ知りたい人には向かないかも。',
+      '40代・女性','宿命鑑定','2026.07',4],
+    ['相性の点数は正直ピンときませんでした。ただ「相手の速度を変えようとするな」って一文だけずっと残ってます。三年付き合ってて、ずっとそれをやってたので。',
+      '30代・男性','ふたりの相性','2026.06',3],
+    ['半信半疑で無料のとこだけ読むつもりが、気づいたら課金してました。まあそういう作りなんでしょうけど、後悔はしてないです。',
+      '20代・女性','あの人の本音','2026.08',4]
   ];
+  const starHTML = n => '<span class="stars" aria-label="5つ星のうち'+n+'">' +
+    '★★★★★'.slice(0,n) + '<span class="off">' + '★★★★★'.slice(n) + '</span></span>';
   (function voices(){
-    $('#voices').innerHTML = VOICES.map(([q,who,menu,date],i) =>
+    $('#voices').innerHTML = VOICES.map(([q,who,menu,date,star],i) =>
       '<article class="voice rv d'+((i%3)+1)+'"><span class="qm">&ldquo;</span><p>'+q+'</p>' +
-      '<div class="who"><b>'+who+'</b><span class="stars">★★★★★</span><span>'+menu+'　'+date+'</span></div></article>').join('');
+      '<div class="who"><b>'+who+'</b>'+starHTML(star)+'<span>'+menu+'　'+date+'</span></div></article>').join('');
     watch($('#voices'));
   })();
 
@@ -4158,12 +4518,12 @@ select.inp{
     '<path d="M30 35l3 8.7L42 47l-9 3.3L30 60l-3-9.7L18 47l9-3.3z" fill="currentColor" stroke="none"/>' +
     '<path d="M30 13v7M30 76v7M13 48h7M40 48h7" opacity=".45"/></svg>';
   function renderPick(menu){
-    const n = menu.n || 1, total = 9;
+    const n = menu.n || 1, total = 15;
     rBody.innerHTML = '<div class="wrap-narrow">' + askHead(menu) +
       '<p class="pick-msg">心を静めて、<em class="hl">'+n+'枚</em>。<br>考えず、目に留まったものを。</p>' +
       '<div class="pick-row" id="pickRow">' +
       Array.from({length:total},(_,i)=>'<button class="pick" data-i="'+i+'" aria-label="'+(i+1)+'枚目の札">'+
-        CARD_BACK+'<span class="pick-n">'+(i+1)+'</span></button>').join('') +
+        CARD_BACK+'</button>').join('') +
       '</div><p class="c small mt-m" id="pickCount">あと '+n+' 枚</p></div>';
     const chosen = [];
     $('#pickRow').addEventListener('click', e => {
