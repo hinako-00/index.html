@@ -21,6 +21,22 @@
     clearTimeout(toast._t); toast._t = setTimeout(() => t.classList.remove('on'), 3400);
   }
 
+  /* ---------- 触感（対応端末のみ・失敗しても無害） ---------- */
+  function buzz(ms){ try { navigator.vibrate && navigator.vibrate(ms); } catch(e){} }
+
+  /* ---------- クリック位置から広がる余韻（金のボタン） ---------- */
+  if (!REDUCED) document.addEventListener('click', e => {
+    const btn = e.target.closest('.btn-gold'); if (!btn) return;
+    const r = btn.getBoundingClientRect(), d = Math.max(r.width, r.height) * 1.5;
+    const x = (e.clientX || r.left + r.width / 2) - r.left - d / 2;
+    const y = (e.clientY || r.top + r.height / 2) - r.top - d / 2;
+    const s = document.createElement('span');
+    s.className = 'ripple'; s.style.width = s.style.height = d + 'px';
+    s.style.left = x + 'px'; s.style.top = y + 'px';
+    btn.appendChild(s);
+    setTimeout(() => s.remove(), 650);
+  });
+
   /* ================= 星空 ================= */
   (function starfield(){
     const cv = $('#starfield'); if (!cv) return;
@@ -195,12 +211,15 @@
       '<div class="foot"><span>'+EASE_LABEL[m.e]+'</span><span class="go">視てもらう</span></div></button>';
   }
   let curGenre = 'all';
-  function renderMenus(){
+  function renderMenus(swap){
     const list = curGenre === 'all' ? D.MENUS : D.MENUS.filter(m => m.g === curGenre);
     const g = $('#mgrid');
     g.innerHTML = list.map(menuCard).join('');
     watch(g);
     requestAnimationFrame(() => $$('.mcard', g).forEach(el => el.classList.add('in')));
+    if (swap){
+      g.classList.remove('swap'); void g.offsetWidth; g.classList.add('swap');
+    }
   }
   (function tabs(){
     const t = $('#tabs');
@@ -210,8 +229,10 @@
     }).join('');
     t.addEventListener('click', e => {
       const b = e.target.closest('.tab'); if (!b) return;
+      if (b.dataset.g === curGenre) return;
       $$('.tab', t).forEach(x => x.classList.toggle('on', x === b));
-      curGenre = b.dataset.g; renderMenus();
+      buzz(8);
+      curGenre = b.dataset.g; renderMenus(true);
     });
     renderMenus();
   })();
@@ -358,28 +379,33 @@
 
   function submitAsk(menu){
     const err = $('#askErr'); err.textContent = '';
+    const box = $('.ask-box');
+    const fail = msg => {
+      err.textContent = msg; buzz([12, 40, 12]);
+      if (box) { box.classList.remove('shake'); void box.offsetWidth; box.classList.add('shake'); }
+    };
     const ctx = { now:NOW };
     if (menu.e === 'natal' || menu.e === 'compat'){
       const y = +$('#aY').value, m = +$('#aM').value, d = +$('#aD').value;
-      if (!y || !m || !d){ err.textContent = '生年月日をお選びください'; return; }
+      if (!y || !m || !d){ fail('生年月日をお選びください'); return; }
       const name = ($('#aName') ? $('#aName').value.trim().slice(0,16) : '');
       LS.set('profile', { name, y, m, d });
       ctx.chart = E.buildChart({ name, y, m, d, hour:null }, NOW);
       if (menu.e === 'compat'){
         const y2 = +$('#bY').value, m2 = +$('#bM').value, d2 = +$('#bD').value;
-        if (!y2 || !m2 || !d2){ err.textContent = 'お相手の生年月日をお選びください'; return; }
+        if (!y2 || !m2 || !d2){ fail('お相手の生年月日をお選びください'); return; }
         ctx.chart2 = E.buildChart({ name:$('#bName').value.trim().slice(0,16), y:y2, m:m2, d:d2, hour:null }, NOW);
         ctx.compat = E.compatibility(ctx.chart, ctx.chart2);
       }
     } else {
       const sei = $('#sSei').value.trim(), mei = $('#sMei').value.trim();
-      if (!sei || !mei){ err.textContent = '姓と名を、ひらがなで'; return; }
+      if (!sei || !mei){ fail('姓と名を、ひらがなで'); return; }
       const s = E.seimeiChart(sei, mei);
-      if (!s){ err.textContent = 'ひらがなでご入力ください（漢字・英数は読めません）'; return; }
+      if (!s){ fail('ひらがなでご入力ください（漢字・英数は読めません）'); return; }
       ctx.seimei = s;
       if (menu.pair){
         const s2 = E.seimeiChart($('#tSei').value.trim(), $('#tMei').value.trim());
-        if (!s2){ err.textContent = 'お相手の名も、ひらがなで'; return; }
+        if (!s2){ fail('お相手の名も、ひらがなで'); return; }
         ctx.seimei2 = s2;
       }
     }
@@ -403,7 +429,7 @@
     const chosen = [];
     $('#pickRow').addEventListener('click', e => {
       const b = e.target.closest('.pick'); if (!b || b.classList.contains('chosen')) return;
-      b.classList.add('chosen'); chosen.push(+b.dataset.i);
+      b.classList.add('chosen'); chosen.push(+b.dataset.i); buzz(12);
       $('#pickCount').textContent = chosen.length >= n ? '札を、読む' : 'あと ' + (n - chosen.length) + ' 枚';
       if (chosen.length >= n){
         $$('.pick').forEach(x => { if (!x.classList.contains('chosen')) x.disabled = true; });
@@ -751,7 +777,7 @@
     h += '<div class="res-hero"><span class="inkan" aria-hidden="true">星<i>詠</i></span>' +
       SEAL+'<p class="kind">'+doc.head.kind+'</p><h2>'+esc(doc.head.title)+'</h2>' +
       '<p class="for">'+esc(doc.head.forWhom)+'</p>' +
-      (doc.head.code ? '<span class="code">'+esc(doc.head.code)+'</span>' : '') + '</div>';
+      (doc.head.code ? '<span class="code" id="repCode" title="タップして番号をコピー" role="button" tabindex="0">'+esc(doc.head.code)+'</span>' : '') + '</div>';
     if (doc.head.pillars && doc.head.pillars.length)
       h += '<div class="pillars">' + doc.head.pillars.map(([g,k,v,s]) => {
         const rev = s === '逆位置', up = s === '正位置';
@@ -813,10 +839,24 @@
   function afterResult(){
     requestAnimationFrame(() => $$('.bar-fl', rBody).forEach(b => { b.style.width = b.dataset.w + '%'; }));
     $$('.dcard', rBody).forEach((btn,i) => {
-      btn.addEventListener('click', () => btn.classList.toggle('flip'));
+      btn.addEventListener('click', () => { btn.classList.toggle('flip'); buzz(10); });
       if (REDUCED) btn.classList.add('flip');
-      else setTimeout(() => btn.classList.add('flip'), 420 + i*230);
+      else setTimeout(() => { btn.classList.add('flip'); buzz(14); }, 420 + i*230);
     });
+    const heroEl = $('.res-hero', rBody);
+    if (heroEl && !REDUCED) { heroEl.classList.add('flash'); setTimeout(() => heroEl.classList.remove('flash'), 1500); }
+    const codeEl = $('#repCode', rBody);
+    if (codeEl) {
+      const copyCode = () => {
+        const txt = codeEl.textContent;
+        (navigator.clipboard ? navigator.clipboard.writeText(txt) : Promise.reject()).catch(() => {});
+        codeEl.classList.add('copied'); buzz(10);
+        toast('鑑定番号をコピーしました');
+        setTimeout(() => codeEl.classList.remove('copied'), 1200);
+      };
+      codeEl.addEventListener('click', copyCode);
+      codeEl.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); copyCode(); } });
+    }
     $$('[data-buy]', rBody).forEach(b => b.addEventListener('click', () => doUnlock(b.dataset.buy)));
     const pr = $('#resPrint'); if (pr) pr.onclick = () => print();
     const ag = $('#resAgain'); if (ag) ag.onclick = () => {
@@ -842,6 +882,7 @@
     if (kind === 'pass') D.MENUS.forEach(m => u[m.id] = true);
     else u[CUR.menu.id] = true;
     LS.set('unlocked', u);
+    buzz([10,30,10]);
     renderResult();
     toast(kind === 'pass' ? '全鑑定、ひらきました（デモ）' : '続きが、ひらきました（デモ）');
     setTimeout(() => {

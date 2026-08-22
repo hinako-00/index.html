@@ -625,7 +625,10 @@ select.inp{
 .res-hero .code{
   display:inline-block;margin-top:14px;font-family:var(--f-en);font-size:.68rem;letter-spacing:.2em;
   color:var(--gold-200);border:1px solid rgba(201,162,83,.34);padding:.4em .95em;border-radius:3px;background:rgba(7,5,15,.6);
+  cursor:pointer;transition:color .3s,border-color .3s,transform .15s;
 }
+.res-hero .code:hover{border-color:rgba(201,162,83,.6);}
+.res-hero .code:active{transform:scale(.96);}
 .pillars{display:grid;gap:1px;background:var(--veil);border:1px solid var(--veil);margin-top:20px;
   grid-template-columns:repeat(auto-fit,minmax(126px,1fr));}
 .pil{background:rgba(10,7,20,.93);padding:18px 12px;text-align:center;}
@@ -1084,4 +1087,72 @@ select.inp{
   .pillars{grid-template-columns:repeat(2,1fr);}
   .hero-badge{font-size:.68rem;padding:.45em .9em;}
   .meter-n{font-size:3rem;}
+}
+
+/* =========================================================
+   27. インタラクションの反応（タップ・クリックのたびに触感を返す）
+   ========================================================= */
+/* 押した瞬間に沈む——ホバーの効かないスマホでも「押した」とわかるように */
+.btn,.mcard,.tab,.rank-item,.pick,.dcard,.step-n,.totop,.hdr-cta,
+.unlock-card .btn,.nextup button,.faq-q,.dform button{
+  -webkit-tap-highlight-color:transparent;
+}
+.btn:active{transform:translateY(0) scale(.96);transition-duration:.12s;}
+.btn-gold:active{box-shadow:0 8px 18px -10px rgba(201,162,83,.9),inset 0 0 0 1px rgba(255,255,255,.35);}
+.mcard:active{transform:translateY(-1px) scale(.985);transition-duration:.12s;}
+.tab:active{transform:scale(.95);transition-duration:.12s;}
+.rank-item:active{transform:translateX(2px) scale(.98);transition-duration:.12s;}
+.nextup button:active{transform:scale(.97);}
+
+/* ゴールドボタン：クリック位置から広がる余韻 */
+.btn-gold{position:relative;overflow:hidden;}
+.ripple{
+  position:absolute;border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle,rgba(255,255,255,.55),rgba(255,255,255,0) 70%);
+  transform:scale(0);opacity:.9;animation:rippleOut .6s var(--ease-out) forwards;
+}
+@keyframes rippleOut{to{transform:scale(2.6);opacity:0;}}
+
+/* 札を選ぶ瞬間の余韻 */
+.pick.chosen{animation:pickPulse .55s var(--ease-out);}
+@keyframes pickPulse{
+  0%{box-shadow:0 0 0 0 rgba(226,194,127,.75);}
+  100%{box-shadow:0 0 40px -6px rgba(226,194,127,.9);}
+}
+
+/* めくれた瞬間、金の光が一度だけ差す */
+.dcard-fr::after{
+  content:"";position:absolute;inset:0;pointer-events:none;border-radius:5px;
+  background:radial-gradient(circle at 50% 40%,rgba(253,243,212,.55),transparent 65%);
+  opacity:0;
+}
+.dcard.flip .dcard-fr::after{animation:cardGlow 1s var(--ease-out) .55s both;}
+@keyframes cardGlow{0%{opacity:0;}35%{opacity:1;}100%{opacity:0;}}
+
+/* 鑑定書がひらいた瞬間、ふわっと光が満ちる */
+@keyframes revealFlash{0%{box-shadow:0 0 0 0 rgba(226,194,127,0);}
+  30%{box-shadow:0 0 90px 6px rgba(226,194,127,.35);}
+  100%{box-shadow:0 0 0 0 rgba(226,194,127,0);}}
+.res-hero.flash{animation:revealFlash 1.4s var(--ease-out);}
+
+/* フォームの入力漏れ：軽く揺れて知らせる */
+@keyframes shakeErr{
+  0%,100%{transform:translateX(0);}
+  20%{transform:translateX(-7px);}40%{transform:translateX(6px);}
+  60%{transform:translateX(-4px);}80%{transform:translateX(3px);}
+}
+.ask-box.shake{animation:shakeErr .45s var(--ease);}
+.ask-box.shake .inp{border-color:rgba(212,80,106,.6);}
+
+/* ジャンルを切り替えたとき、一覧がふわっと入れ替わる */
+.mgrid.swap{animation:gridSwap .35s var(--ease-out);}
+@keyframes gridSwap{from{opacity:.35;transform:translateY(6px);}to{opacity:1;transform:none;}}
+
+/* 鑑定番号タップでコピー：反応を示す */
+.code.copied{color:var(--gold-100);border-color:rgba(201,162,83,.7);}
+
+@media (prefers-reduced-motion:reduce){
+  .pick.chosen,.dcard.flip .dcard-fr::after,.res-hero.flash,.ask-box.shake,.mgrid.swap,.ripple{
+    animation:none !important;
+  }
 }
