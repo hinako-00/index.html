@@ -148,6 +148,16 @@ ul,ol{margin:0;padding:0;list-style:none;}
   display:block;font-size:clamp(1.15rem,2.9vw,1.6rem);line-height:1.75;
   letter-spacing:.1em;color:var(--paper);margin:.9em 0;
 }
+.lens{                     /* 同じ札を、そのジャンルの眼で読み替えた一行 */
+  display:block;margin-top:.55em;padding:.5em .85em;
+  border-left:2px solid rgba(201,162,83,.5);
+  background:rgba(201,162,83,.06);
+  font-size:.93em;color:var(--text-dim);
+}
+.lens b{
+  display:inline-block;margin-right:.6em;font-weight:400;
+  font-size:.8em;letter-spacing:.12em;color:var(--gold-300);
+}
 .eyebrow{
   display:inline-flex;align-items:center;gap:.7em;
   font-family:var(--f-en);font-size:.72rem;letter-spacing:.4em;

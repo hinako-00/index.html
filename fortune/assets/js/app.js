@@ -204,11 +204,11 @@
     return '<button class="mcard rv" data-menu="'+m.id+'">' +
       '<i class="tome" aria-hidden="true"></i><span class="kado" aria-hidden="true">'+hakke+'</span>' +
       '<div class="mcard-top"><span class="mcard-ic">'+m.ic+'</span>' +
-      '<div class="mcard-badges">'+(m.free?'':'<span class="badge free">無料で試す</span>')+tags+'</div></div>' +
+      '<div class="mcard-badges">'+(m.free?'':'<span class="badge free">ここまで無料</span>')+tags+'</div></div>' +
       '<h3>'+esc(m.t)+'</h3>' +
       '<p class="catch">'+esc(m.c)+'</p>' +
       '<p class="desc">'+esc(m.d)+'</p>' +
-      '<div class="foot"><span>'+EASE_LABEL[m.e]+'</span><span class="go">視てもらう</span></div></button>';
+      '<div class="foot"><span>'+EASE_LABEL[m.e]+'</span><span class="go">いま視てもらう</span></div></button>';
   }
   let curGenre = 'all';
   function renderMenus(swap){
@@ -379,7 +379,8 @@
     rBody.innerHTML = '<div class="wrap-narrow">' + askHead(menu) +
       '<div class="ask-box">' + fields +
       '<p class="ferr" id="askErr"></p>' +
-      '<div class="ask-foot"><button class="btn btn-gold btn-block btn-lg" id="askGo">視てもらう</button>' +
+      '<div class="ask-foot"><button class="btn btn-gold btn-block btn-lg" id="askGo">'+
+      (menu.e === 'seimei' ? 'この名前で、視てもらう' : 'この生年月日で、視てもらう')+'</button>' +
       LOCKNOTE + '</div></div></div>';
 
     if (menu.e === 'natal' || menu.e === 'compat'){
