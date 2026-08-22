@@ -59,12 +59,28 @@
     const hdr = $('#hdr'), tg = $('#navTg'), nav = $('#nav');
     const on = () => hdr.classList.toggle('stuck', scrollY > 36);
     on(); addEventListener('scroll', on, { passive:true });
+
+    // iOS Safari は overflow:hidden だけでは背景タッチスクロールを止めない。
+    // スクロール位置を固定して body ごと止め、閉じたら復元する。
+    let savedY = 0;
+    function openNav(){
+      savedY = scrollY;
+      document.body.style.top = -savedY + 'px';
+      document.body.classList.add('nav-open');
+      tg.setAttribute('aria-expanded', 'true');
+    }
+    function closeNav(){
+      document.body.classList.remove('nav-open');
+      document.body.style.top = '';
+      scrollTo(0, savedY);
+      tg.setAttribute('aria-expanded', 'false');
+    }
     tg.addEventListener('click', () => {
-      const o = document.body.classList.toggle('nav-open');
-      tg.setAttribute('aria-expanded', String(o));
+      document.body.classList.contains('nav-open') ? closeNav() : openNav();
     });
-    nav.addEventListener('click', e => { if (e.target.closest('a')) document.body.classList.remove('nav-open'); });
-    addEventListener('keydown', e => { if (e.key === 'Escape') document.body.classList.remove('nav-open'); });
+    nav.addEventListener('click', e => { if (e.target.closest('a')) closeNav(); });
+    $('#navScrim').addEventListener('click', closeNav);
+    addEventListener('keydown', e => { if (e.key === 'Escape' && document.body.classList.contains('nav-open')) closeNav(); });
   })();
 
   /* ================= 表出 ================= */
@@ -806,10 +822,12 @@
   /* ---------- 上にもどる（ホームのみ） ---------- */
   (function toTop(){
     const btn = $('#pageTop');
-    // 鑑定オーバーレイを開いているあいだは隠す
-    const on = () => btn.classList.toggle('on', scrollY > innerHeight * .6 && !reader.classList.contains('on'));
+    // 鑑定オーバーレイ／ハンバーガーメニューを開いているあいだは隠す
+    const on = () => btn.classList.toggle('on',
+      scrollY > innerHeight * .6 && !reader.classList.contains('on') && !document.body.classList.contains('nav-open'));
     on(); addEventListener('scroll', on, { passive:true });
     new MutationObserver(on).observe(reader, { attributes:true, attributeFilter:['class'] });
+    new MutationObserver(on).observe(document.body, { attributes:true, attributeFilter:['class'] });
     btn.addEventListener('click', () => scrollTo({ top:0, behavior: REDUCED ? 'auto' : 'smooth' }));
   })();
 
