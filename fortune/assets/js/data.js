@@ -538,6 +538,18 @@
     { id:'t-love', g:'tarot', e:'tarot', theme:'love', n:3, ic:'札', teller:'yoi',
       t:'恋の行方', c:'この恋は、どこへ向かうか。',
       d:'三ヶ月先までを、三枚で。', tags:['手ぶら'] },
+    { id:'t-soul', g:'tarot', e:'tarot', theme:'soulflow', n:3, ic:'札', teller:'yoi',
+      t:'魂の伴侶', c:'その人は、もう近くにいる。',
+      d:'出会いの気配・本質・深まる条件を三枚で。', tags:['手ぶら','人気'] },
+    { id:'t-career', g:'tarot', e:'tarot', theme:'career', n:3, ic:'札', teller:'yoi',
+      t:'仕事の流れ', c:'いま、何が動いているか。',
+      d:'現状・壁・展望を三枚で。', tags:['手ぶら'] },
+    { id:'t-week', g:'tarot', e:'tarot', theme:'week', n:3, ic:'札', teller:'yoi',
+      t:'週の流れ', c:'この一週間、何が起こるか。',
+      d:'前半・後半・鍵の日を三枚で。', tags:['手ぶら'] },
+    { id:'t-money', free:true, g:'tarot', e:'tarot', theme:'money', n:1, ic:'札', teller:'yoi',
+      t:'金運の兆し', c:'財は、もう動き出している。',
+      d:'一枚で、今日の金運を。', tags:['全部無料','手ぶら','10秒'] },
 
     /* --- 姓名判断 --- */
     { id:'s-basic', g:'seimei', e:'seimei', theme:'basic', ic:'名', teller:'kotone',
@@ -552,6 +564,15 @@
     { id:'s-pair', g:'seimei', e:'seimei', theme:'pair', pair:true, ic:'名', teller:'kotone',
       t:'名の相性', c:'ふたつの名は、響き合うか。',
       d:'おふたりの姓名から、縁の質を。', tags:['名前だけ','人気'] },
+    { id:'s-fortune', g:'seimei', e:'seimei', theme:'fortune', ic:'名', teller:'kotone',
+      t:'開運の糸口', c:'足りないのは、運ではない。',
+      d:'名前から、いま整えるべき一点を。', tags:['名前だけ'] },
+    { id:'s-guardian', g:'seimei', e:'seimei', theme:'guardian', ic:'名', teller:'kotone',
+      t:'名と守護', c:'その名は、独りでは選ばれなかった。',
+      d:'名前に宿る守りの気を視ます。', tags:['名前だけ','深部'] },
+    { id:'s-child', g:'seimei', e:'seimei', theme:'child', ic:'名', teller:'kotone',
+      t:'子の名前運', c:'贈った名が、その子を導く。',
+      d:'お子さまのお名前で、資質と運を。', tags:['名前だけ'] },
 
     /* --- 相性 --- */
     { id:'a-love', g:'aisho', e:'compat', theme:'love', ic:'縁', teller:'kotone',
@@ -569,11 +590,17 @@
     { id:'a-friend', free:true, g:'aisho', e:'compat', theme:'friend', ic:'縁', teller:'kotone',
       t:'組む縁', c:'この人と、組んでよいか。',
       d:'友・同僚・取引先の相性。', tags:['全部無料'] },
+    { id:'a-twin', g:'aisho', e:'compat', theme:'twin', ic:'縁', teller:'kotone',
+      t:'ツインレイ', c:'魂は、二つに分かれて生まれた。',
+      d:'前世からの絆を、生年月日で視ます。', tags:['人気','深部'] },
 
     /* --- 恋愛 --- */
     { id:'l-honshitsu', g:'love', e:'natal', theme:'love', ic:'恋', teller:'akari',
       t:'恋の宿業', c:'なぜ、同じ場所で躓くのか。',
       d:'繰り返してきた恋の型を、暴きます。', tags:['人気','本式'] },
+    { id:'l-akaito', g:'love', e:'natal', theme:'redstring', ic:'恋', teller:'akari',
+      t:'赤い糸', c:'見えないだけで、繋がっている。',
+      d:'宿縁の相手の気配を視ます。', tags:['人気'] },
     { id:'l-deai', g:'love', e:'natal', theme:'meet', ic:'恋', teller:'akari',
       t:'出逢いの刻', c:'その日は、決まっている。',
       d:'出会いの時期を、年月まで。', tags:['人気'] },
@@ -600,6 +627,9 @@
     { id:'w-ningen', g:'work', e:'natal', theme:'social', ic:'財', teller:'akari',
       t:'厄介な人', c:'その疲れは、あなたのせいではない。',
       d:'離れるべき相手と、境界の引き方。', tags:['深部'] },
+    { id:'w-kaiun', g:'work', e:'natal', theme:'ritual', ic:'財', teller:'akari',
+      t:'金運の作法', c:'呼び込むには、作法がある。',
+      d:'あなたの気に合う、開運習慣を。', tags:['人気'] },
 
     /* --- 人生・宿命 --- */
     { id:'f-shukumei', g:'life', e:'natal', theme:'destiny', ic:'命', teller:'akari',
@@ -619,7 +649,13 @@
       d:'十二ヶ月を、月ごとに。', tags:['本式'] },
     { id:'f-kenko', free:true, g:'life', e:'natal', theme:'health', ic:'命', teller:'akari',
       t:'気の巡り', c:'その不調は、性格ではない。',
-      d:'五行の過不足から、体質と養生を。', tags:['全部無料'] }
+      d:'五行の過不足から、体質と養生を。', tags:['全部無料'] },
+    { id:'f-shugorei', g:'life', e:'natal', theme:'guardian', ic:'命', teller:'akari',
+      t:'守護の声', c:'いつも、傍らに在る。',
+      d:'守護霊があなたに伝えたいことを。', tags:['深部'] },
+    { id:'f-innen', g:'life', e:'natal', theme:'karma', ic:'命', teller:'akari',
+      t:'因縁', c:'今生に持ち越した、約束がある。',
+      d:'カルマの正体と、その解き方を。', tags:['深部'] }
   ];
 
   global.HOSHI_DATA = { SIGNS, NUMBERS, ELEMENTS, BRANCHES, STEMS, MOONS, TAROT, TAROT_ART, COLORS, KANA, KAKU, GENRES, MENUS, TELLERS };
