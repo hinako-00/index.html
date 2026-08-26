@@ -218,7 +218,7 @@ export default function Home() {
           <p className="hero-note">※ 登録もメールも要りません。入力はこの端末から出ません。</p>
         </div>
         <aside className="oracle-card lavish">
-          <div className="oracle-orbit"><img src="/avatar-love.png" alt="恋愛を司る守護獣 むすび" /></div>
+          <div className="oracle-orbit"><img src="/avatar-love.webp" alt="恋愛を司る守護獣 むすび" /></div>
           <p className="oracle-status"><i /> 恋縁の守護獣</p>
           <h2>むすび <small>MUSUBI</small></h2>
           <blockquote>「見ないふりをしている本音ほど、<br />赤い糸にはよく映るのです。」</blockquote>

@@ -1,7 +1,26 @@
-# GitHub 連携でデプロイする場合の設定。
-# 占いサイト（fortune/）を公開ディレクトリにします。
+# GitHub 連携で Netlify にデプロイするときの設定。
+#
+# 公開するのは site/（Next.js 版・改善後）の静的書き出しです。
+# 鑑定の処理はすべて端末側で動くため、サーバなしで同じ機能が動きます。
+# /faq や /legal/commerce は、それぞれの index.html を Netlify が返します。
+#
+# 旧版（fortune/ の素の HTML 版）を公開したい場合は、
+# [build] を publish = "fortune" の一行だけに戻してください。
+
 [build]
-  publish = "fortune"
+  base    = "site"
+  command = "npm ci && npm run build:static"
+  # base を指定しているので、publish は base からの相対
+  publish = "dist-static"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+# 生成物（ファイル名にハッシュが付く）は長期キャッシュ、HTML は毎回確認
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
 
 [[headers]]
   for = "/*.html"
@@ -9,12 +28,9 @@
     Cache-Control = "public, max-age=0, must-revalidate"
 
 [[headers]]
-  for = "/assets/*"
-  [headers.values]
-    Cache-Control = "public, max-age=31536000, immutable"
-
-[[headers]]
   for = "/*"
   [headers.values]
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
+    X-Frame-Options = "SAMEORIGIN"
+    Permissions-Policy = "geolocation=(), microphone=(), camera=()"

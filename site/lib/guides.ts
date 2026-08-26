@@ -9,28 +9,28 @@ import type { Group } from "./readings";
 export const GUIDES = [
   {
     id: "love", name: "むすび", en: "MUSUBI", role: "恋縁の守護獣",
-    image: "/avatar-love.png", mark: "恋", color: "rose",
+    image: "/avatar-love.webp", mark: "恋", color: "rose",
     greeting: "隠した本音と、縁の結び目を視ます。きれいな答えだけを欲しがるなら、わたしは向きません。",
     signOff: "縁は、結ぶより先に、ほどく順番を間違えないことです。",
     seal: "結",
   },
   {
     id: "work", name: "ひらめき", en: "HIRAMEKI", role: "仕事運の守護獣",
-    image: "/avatar-work.png", mark: "業", color: "blue",
+    image: "/avatar-work.webp", mark: "業", color: "blue",
     greeting: "才能より、あなたが何から逃げているかを先に視ます。仕事の迷いを、そのまま置いてください。",
     signOff: "才は足りています。足りないのは、始める日を決めることだけです。",
     seal: "業",
   },
   {
     id: "money", name: "こがね", en: "KOGANE", role: "財運の守護獣",
-    image: "/avatar-money.png", mark: "財", color: "green",
+    image: "/avatar-money.webp", mark: "財", color: "green",
     greeting: "金運は財布ではなく、選び方に棲みます。増やす話より先に、漏れている運を探しましょう。",
     signOff: "増やす前に、漏れを一つ塞ぐ。財はそれだけで形が変わります。",
     seal: "財",
   },
   {
     id: "star", name: "あかり", en: "AKARI", role: "宿命の守護獣",
-    image: "/akari.png", mark: "命", color: "violet",
+    image: "/akari.webp", mark: "命", color: "violet",
     greeting: "当てには来ていません。あなたが自分に隠していることを、先に読みます。",
     signOff: "未来は当てるものではなく、見抜いた癖の先で変わります。",
     seal: "命",

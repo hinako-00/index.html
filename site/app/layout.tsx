@@ -13,8 +13,8 @@ export async function generateMetadata(): Promise<Metadata> {
   const metadataBase = new URL(`${host.startsWith("localhost") || host.startsWith("127.") ? "http" : "https"}://${trusted ? host : "localhost:3000"}`);
   return {
     metadataBase, title, description,
-    openGraph: { title, description, type: "website", locale: "ja_JP", images: [{ url: "/og.png", width: 1733, height: 917, alt: "星詠堂 あなたの答えを照らすAI鑑定" }] },
-    twitter: { card: "summary_large_image", title, description, images: ["/og.png"] },
+    openGraph: { title, description, type: "website", locale: "ja_JP", images: [{ url: "/og.jpg", width: 1200, height: 675, alt: "星詠堂 あなたの答えを照らすAI鑑定" }] },
+    twitter: { card: "summary_large_image", title, description, images: ["/og.jpg"] },
   };
 }
 

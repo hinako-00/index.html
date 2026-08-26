@@ -39,3 +39,6 @@ next-env.d.ts
 
 # typescript incremental build
 *.tsbuildinfo
+
+# 静的書き出し（Netlify がビルド時に生成）
+/dist-static/

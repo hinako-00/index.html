@@ -1,0 +1,4 @@
+# 配布用の書き出し（ビルドで作れるのでリポジトリには入れない）
+hoshiyomido-netlify.zip
+hoshiyomido-netlify/
+netlify-manual-deploy*
