@@ -1,0 +1,315 @@
+/* =========================================================
+   鑑定書と、新しい導線のための意匠
+   既存の globals.css / guardian.css の変数をそのまま使う。
+   配色・世界観は変えず、密度と一貫性だけを足す。
+   ========================================================= */
+
+/* ---------- 章レール（あと何章かが見える） ---------- */
+.r-rail{
+  position:sticky;top:0;z-index:4;display:flex;gap:2px;
+  padding:10px 0 12px;margin:-8px 0 18px;
+  background:linear-gradient(var(--card) 72%,transparent);
+  overflow-x:auto;scrollbar-width:none;
+}
+.r-rail::-webkit-scrollbar{display:none}
+.r-rail a{display:flex;flex-direction:column;gap:5px;flex:1 0 auto;min-width:58px;padding:0 4px;}
+.r-rail i{display:block;height:2px;border-radius:2px;background:var(--line);transition:background .35s}
+.r-rail span{font-size:10.5px;letter-spacing:.06em;color:var(--muted);white-space:nowrap;opacity:.55;transition:opacity .35s,color .35s}
+.r-rail a.done i{background:rgba(216,184,107,.5)}
+.r-rail a.done span{opacity:.8}
+.r-rail a.on i{background:var(--gold2)}
+.r-rail a.on span{color:var(--gold2);opacity:1}
+
+/* ---------- 見出し ---------- */
+.r-head{text-align:center;padding:6px 0 26px;border-bottom:1px solid var(--line);margin-bottom:30px}
+.r-head .r-guide{width:74px;height:74px;border-radius:50%;object-fit:cover;border:1px solid rgba(216,184,107,.45);margin-bottom:12px}
+.r-head p{font-size:12px;letter-spacing:.16em;color:var(--gold);margin:0 0 8px}
+.r-head p b{color:var(--gold2)}
+.r-head h2{font-size:clamp(24px,5vw,38px);margin:0 0 10px;letter-spacing:.04em;text-wrap:balance;word-break:keep-all;line-height:1.45}
+.r-head small{color:var(--muted);font-size:12.5px;letter-spacing:.08em}
+.r-pillars{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:18px 0 14px}
+.r-pillars span{
+  display:inline-flex;align-items:baseline;gap:6px;font-size:12.5px;
+  border:1px solid var(--line);padding:6px 12px;border-radius:2px;color:var(--paper);
+}
+.r-pillars i{font-style:normal;font-size:10px;letter-spacing:.14em;color:var(--gold)}
+.constellation-code{font:11px/1 Georgia,serif;letter-spacing:.22em;color:rgba(216,184,107,.66)}
+
+/* ---------- 章 ---------- */
+.r-chapter{padding:26px 0;border-bottom:1px solid rgba(232,210,160,.1);scroll-margin-top:80px}
+.r-chapter:last-of-type{border-bottom:0}
+.r-chapter .chapter{
+  display:flex;align-items:center;gap:10px;font-size:13px;letter-spacing:.2em;
+  color:var(--gold);margin:0 0 16px;
+}
+.r-chapter .chapter b{
+  width:30px;height:30px;display:grid;place-items:center;flex:none;
+  border:1px solid rgba(216,184,107,.5);border-radius:50%;font-size:13px;font-weight:400;
+}
+.r-chapter .chapter span{
+  margin-left:auto;font:10px/1 Georgia,serif;letter-spacing:.3em;
+  color:rgba(167,160,173,.6);text-transform:uppercase;
+}
+.r-chapter p{margin:0 0 1.15em;font-size:15.5px;line-height:2.05}
+.r-chapter strong{color:var(--gold2);font-weight:400}
+.hl{font-style:normal;color:var(--gold2)}
+.hl-lg{font-style:normal;color:var(--gold2);font-size:1.14em;letter-spacing:.04em}
+.warn{font-style:normal;color:#e08a95}
+.calm{font-style:normal;color:var(--jade)}
+.mark{background:linear-gradient(transparent 62%,rgba(216,184,107,.3) 62%);padding:0 .12em}
+
+/* ---------- 引用（縦書きを一箇所だけ） ---------- */
+.r-quote{
+  margin:22px 0;padding:16px 20px;border-left:2px solid rgba(216,184,107,.5);
+  background:rgba(216,184,107,.05);font-size:15px;line-height:2.1;color:var(--paper)
+}
+.r-next{
+  display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;
+  margin:26px 0;padding:24px;border:1px solid var(--line);border-radius:3px;
+  background:radial-gradient(circle at 50% 0%,rgba(93,57,123,.2),transparent 70%)
+}
+.r-next p{font-size:12px;letter-spacing:.18em;color:var(--gold);margin:0}
+.r-next b{font-size:22px;color:var(--gold2);letter-spacing:.06em}
+.r-next small{color:var(--muted);font-size:12.5px}
+
+/* ---------- 託宣 ---------- */
+.oracle-verdict{
+  margin:24px 0;padding:26px 24px;text-align:center;border:1px solid rgba(216,184,107,.4);
+  border-radius:3px;background:linear-gradient(160deg,rgba(93,57,123,.26),rgba(10,7,20,.7))
+}
+.oracle-verdict span{font-size:11px;letter-spacing:.34em;color:var(--gold)}
+.oracle-verdict b{display:block;margin:12px 0 10px;font-size:clamp(18px,3.4vw,23px);line-height:1.75;color:var(--gold2)}
+.oracle-verdict p{margin:0;font-size:13.5px;color:var(--muted)}
+
+/* ---------- 表・箇条 ---------- */
+.r-kv{display:grid;gap:1px;background:var(--line);border:1px solid var(--line);margin:20px 0}
+.r-kv > div{display:grid;grid-template-columns:minmax(96px,148px) 1fr;background:var(--card)}
+.r-kv dt{padding:13px 15px;font-size:12.5px;letter-spacing:.1em;color:var(--gold);border-right:1px solid var(--line)}
+.r-kv dd{padding:14px 16px;margin:0;font-size:14.5px;line-height:2}
+.r-kv-tight dt{font-size:12px;padding:9px 12px}
+.r-kv-tight dd{padding:9px 13px;font-size:13.5px;line-height:1.85}
+.r-list{margin:18px 0;padding-left:1.3em}
+.r-list li{margin-bottom:.85em;font-size:15px;line-height:2}
+.r-list li::marker{color:var(--gold)}
+.r-steps{display:flex;flex-direction:column;gap:14px;margin:20px 0}
+.r-step{display:flex;gap:14px;align-items:flex-start}
+.r-step > span{
+  flex:none;width:28px;height:28px;display:grid;place-items:center;margin-top:2px;
+  border:1px solid rgba(216,184,107,.45);border-radius:50%;font:12px/1 Georgia,serif;color:var(--gold)
+}
+.r-step h5{margin:0 0 3px;font-size:14.5px;color:var(--gold2);font-weight:400}
+.r-step p{margin:0;font-size:14px;line-height:1.95;color:var(--paper)}
+
+/* ---------- 十二か月 ---------- */
+.r-months-chart{
+  display:flex;align-items:flex-end;gap:4px;height:120px;margin:18px 0 6px;
+  padding:0 2px 20px;border-bottom:1px solid var(--line);position:relative
+}
+.r-mbar{flex:1;display:flex;flex-direction:column;justify-content:flex-end;height:100%;position:relative}
+.r-mbar i{display:block;border-radius:2px 2px 0 0;background:rgba(216,184,107,.4);min-height:3px}
+.r-mbar i.up{background:linear-gradient(180deg,var(--gold2),rgba(216,184,107,.5))}
+.r-mbar i.down{background:rgba(224,138,149,.5)}
+.r-mbar small{position:absolute;bottom:-19px;left:0;right:0;text-align:center;font-size:9.5px;color:var(--muted)}
+
+/* ---------- 札 ---------- */
+.r-cards{display:flex;flex-wrap:wrap;gap:16px;justify-content:center;margin:22px 0}
+.r-card{margin:0;flex:0 0 auto;width:min(100%,300px);display:flex;gap:14px;align-items:flex-start}
+.r-card-face{
+  flex:none;width:104px;aspect-ratio:5/8;border-radius:5px;position:relative;
+  border:1px solid rgba(216,184,107,.45);display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:2px;padding:8px 6px;
+  background:linear-gradient(165deg,#1c1436,#0a0716);color:var(--gold2)
+}
+.r-card-art{width:66%;height:auto;color:var(--gold2)}
+.r-card.rev .r-card-art{transform:rotate(180deg)}
+.r-ori{
+  position:absolute;top:5px;right:6px;font-size:10px;line-height:1;
+  color:var(--gold);opacity:.9
+}
+.r-card.rev .r-ori{color:#e08a95}
+.r-pos{position:absolute;top:5px;left:6px;font-size:8.5px;letter-spacing:.06em;color:var(--muted);max-width:60px;text-align:left;line-height:1.3}
+.r-card-face b{font-size:13px;margin-top:3px}
+.r-card-face small{font:8px/1 Georgia,serif;letter-spacing:.14em;color:rgba(167,160,173,.8)}
+.r-card-face em{font-style:normal;font-size:9.5px;color:var(--gold);letter-spacing:.08em}
+.r-card-face em.rev{color:#e08a95}
+.r-card figcaption{flex:1;min-width:0}
+.r-card figcaption b{display:block;font-size:12.5px;color:var(--gold);letter-spacing:.08em;margin-bottom:5px}
+.r-card figcaption p{margin:0 0 8px;font-size:13.5px;line-height:1.9}
+.r-lens{
+  display:block;padding:8px 11px;border-left:2px solid rgba(216,184,107,.45);
+  background:rgba(216,184,107,.06);font-size:12.5px;line-height:1.85;color:var(--muted)
+}
+.r-lens i{display:block;font-style:normal;font-size:10px;letter-spacing:.14em;color:var(--gold);margin-bottom:2px}
+
+/* ---------- 前回との差分 ---------- */
+.r-diff{
+  margin:0 0 26px;padding:18px 20px;border:1px solid rgba(134,190,167,.35);
+  border-radius:3px;background:rgba(134,190,167,.06)
+}
+.r-diff-h{display:flex;flex-direction:column;gap:3px;margin:0 0 12px !important}
+.r-diff-h b{font-size:13.5px;color:var(--jade);letter-spacing:.1em}
+.r-diff-h span{font-size:11.5px;color:var(--muted)}
+.r-diff-prev{margin:0 0 10px !important;font-size:13.5px;color:var(--paper)}
+.r-diff-same{margin:0 !important;font-size:13.5px;color:var(--muted)}
+.r-diff s{color:rgba(167,160,173,.7)}
+.r-diff b{color:var(--gold2)}
+
+/* ---------- ペイウォール ---------- */
+.paywall{
+  margin-top:26px;padding:32px 24px;text-align:center;border:1px solid rgba(216,184,107,.4);
+  border-radius:4px;background:linear-gradient(180deg,rgba(93,57,123,.24),rgba(10,7,20,.86))
+}
+.paywall > span{font-size:24px;color:var(--gold);display:block;margin-bottom:12px}
+.pw-lead{font-size:13px;letter-spacing:.14em;color:var(--muted);margin:0 0 8px}
+.paywall h3{font-size:clamp(19px,3.6vw,25px);margin:0 0 12px;color:var(--gold2);line-height:1.6}
+.pw-why{font-size:13.5px;color:var(--muted);margin:0 auto 22px;max-width:34em;line-height:2}
+.pw-list{list-style:none;padding:0;margin:0 auto 18px;max-width:30em;text-align:left;display:grid;gap:1px;background:var(--line);border:1px solid var(--line)}
+.pw-list li{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:baseline;padding:11px 14px;background:rgba(10,7,20,.72)}
+.pw-list b{font-size:13.5px;color:var(--gold2);letter-spacing:.08em;white-space:nowrap}
+.pw-list span{font-size:12.5px;color:var(--muted);line-height:1.7}
+.pw-list i{font:10.5px/1 Georgia,serif;color:var(--gold);font-style:normal;white-space:nowrap}
+.pw-total{font-size:14px;color:var(--paper);margin:0 0 18px}
+.pw-total b{color:var(--gold2);font-size:1.2em}
+.pw-save{
+  display:block;width:100%;max-width:26em;margin:0 auto 12px;padding:13px 18px;
+  border:1px dashed rgba(216,184,107,.55);background:transparent;color:var(--gold2);
+  border-radius:3px;font-size:14px;letter-spacing:.06em
+}
+.pw-save:hover{background:rgba(216,184,107,.08)}
+.pw-saved{font-size:13.5px;color:var(--jade);margin:0 0 14px}
+.pw-saved b{color:var(--gold2)}
+.pw-fine{font-size:12px;color:var(--muted);margin:14px 0 0}
+
+/* ---------- 署名と落款 ---------- */
+.r-end{padding-top:24px}
+.r-sign{
+  display:flex;gap:18px;align-items:center;justify-content:space-between;
+  padding:20px 22px;border:1px solid var(--line);border-radius:3px;margin-bottom:18px
+}
+.r-sign-body p{margin:0 0 8px;font-size:14px;line-height:1.95;color:var(--paper)}
+.r-sign-body b{font-size:12.5px;color:var(--gold);letter-spacing:.1em;font-weight:400}
+.r-seal{
+  flex:none;width:64px;height:64px;display:grid;place-items:center;border-radius:6px;
+  background:#8c2b2b;color:#f4efe4;font-size:30px;letter-spacing:0;
+  box-shadow:0 0 0 1px rgba(244,239,228,.16) inset
+}
+.r-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:6px}
+.r-kept{text-align:center;font-size:12.5px;color:var(--muted);margin:14px 0 0}
+
+/* ---------- 一覧カードに足した事実 ---------- */
+.reading-facts{list-style:none;display:flex;flex-wrap:wrap;gap:6px;padding:0;margin:10px 0 0}
+.reading-facts li{
+  font-size:10.5px;letter-spacing:.06em;color:var(--muted);
+  border:1px solid var(--line);border-radius:100px;padding:3px 9px
+}
+.more-readings{
+  display:block;margin:26px auto 0;padding:13px 26px;background:transparent;
+  border:1px solid rgba(216,184,107,.45);color:var(--gold2);border-radius:3px;letter-spacing:.1em
+}
+.more-readings:hover{background:rgba(216,184,107,.08)}
+
+/* ---------- 門のあとの一択 ---------- */
+.primary-pick{
+  display:flex;align-items:center;gap:14px;width:100%;text-align:left;margin:6px 0 18px;
+  padding:18px 20px;border:1px solid rgba(216,184,107,.5);border-radius:3px;
+  background:linear-gradient(120deg,rgba(93,57,123,.3),rgba(10,7,20,.6))
+}
+.primary-pick > span{
+  flex:none;width:44px;height:44px;display:grid;place-items:center;border-radius:50%;
+  border:1px solid rgba(216,184,107,.5);color:var(--gold);font-size:17px
+}
+.primary-pick div{flex:1;min-width:0}
+.primary-pick b{display:block;font-size:17px;color:var(--gold2);margin-bottom:3px}
+.primary-pick small{display:block;font-size:12.5px;color:var(--muted);margin-bottom:5px}
+.primary-pick i{font-style:normal;font-size:10.5px;letter-spacing:.08em;color:var(--gold)}
+.primary-pick em{font-style:normal;color:var(--gold);font-size:18px}
+.alt-picks{margin-top:18px;border-top:1px solid var(--line);padding-top:14px}
+.alt-picks p{font-size:11.5px;letter-spacing:.16em;color:var(--muted);margin:0 0 8px}
+.alt-picks button{
+  display:flex;justify-content:space-between;width:100%;padding:10px 2px;background:transparent;
+  border:0;border-bottom:1px solid rgba(232,210,160,.12);color:var(--paper);font-size:13.5px
+}
+.alt-picks button i{font-style:normal;color:var(--gold)}
+.q-field{display:block;margin-top:6px;font-size:12.5px;letter-spacing:.08em;color:var(--gold)}
+.q-field textarea{
+  display:block;width:100%;margin:8px 0 4px;min-height:74px;resize:vertical;padding:11px 13px;
+  background:rgba(255,255,255,.03);border:1px solid var(--line);color:var(--paper);border-radius:3px
+}
+.q-field small{color:var(--muted);font-size:11.5px;letter-spacing:0}
+
+/* ---------- 星詠帳 ---------- */
+.book-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);margin:18px 0}
+.book-stats div{background:var(--card);padding:16px 10px;text-align:center}
+.book-stats b{display:block;font-size:26px;color:var(--gold2)}
+.book-stats small{font-size:11px;color:var(--muted)}
+.book-reward{
+  padding:11px 14px;border:1px solid rgba(134,190,167,.4);background:rgba(134,190,167,.08);
+  color:var(--jade);font-size:13px;border-radius:3px;margin:0 0 16px
+}
+.book-next{padding:15px 17px;border:1px solid var(--line);border-radius:3px;margin-bottom:18px}
+.book-next b{display:block;font-size:11.5px;letter-spacing:.16em;color:var(--gold);margin-bottom:5px}
+.book-next p{margin:0 0 4px;font-size:16px;color:var(--gold2)}
+.book-next small{font-size:12px;color:var(--muted);line-height:1.8}
+.book-list{list-style:none;padding:0;margin:0;display:grid;gap:1px;background:var(--line);border:1px solid var(--line)}
+.book-list button{
+  display:grid;grid-template-columns:1fr auto;gap:4px 12px;width:100%;text-align:left;
+  padding:13px 15px;background:var(--card);border:0
+}
+.book-list b{font-size:14px;color:var(--paper);font-weight:400}
+.book-list small{font-size:11.5px;color:var(--muted);grid-row:2}
+.book-list i{grid-row:1/3;align-self:center;font-style:normal;font-size:10.5px;color:var(--gold)}
+.book-empty{font-size:13.5px;color:var(--muted)}
+
+/* ---------- 連続日数 ---------- */
+.daily-act{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.streak{
+  font-size:11px;letter-spacing:.08em;color:var(--gold);
+  border:1px solid rgba(216,184,107,.4);border-radius:100px;padding:4px 11px;white-space:nowrap
+}
+
+/* ---------- 口コミ ---------- */
+.voices-section{padding:clamp(56px,9vw,110px) clamp(22px,5vw,72px)}
+.voices{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(276px,1fr))}
+.voice{
+  display:flex;flex-direction:column;padding:22px;border:1px solid var(--line);
+  border-radius:3px;background:rgba(18,16,29,.6)
+}
+.voice p{margin:0 0 16px;font-size:14px;line-height:2.05}
+.voice footer{margin-top:auto;padding-top:13px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:8px;align-items:baseline;justify-content:space-between}
+.voice footer b{font-size:12.5px;color:var(--gold2);font-weight:400}
+.voice footer small{font-size:11px;color:var(--muted)}
+.stars{color:var(--gold);font-size:12px;letter-spacing:.16em;white-space:nowrap}
+.stars i{color:rgba(167,160,173,.32);font-style:normal}
+
+/* ---------- 札を選ぶ画面：15枚を5×3に ---------- */
+.tarot-deck{
+  --g:clamp(5px,1.2vw,12px);
+  /* 15枚を必ず 5×3 に収める。端数の空きを出さないため grid を使う */
+  display:grid;grid-template-columns:repeat(5,1fr);gap:var(--g);
+  max-width:calc(84px * 5 + var(--g) * 4);margin:0 auto
+}
+.tarot-deck button{
+  width:100%;aspect-ratio:5/8;border-radius:5px;
+  border:1px solid rgba(216,184,107,.45);background:linear-gradient(150deg,#2f1f4d,#0b0818);
+  display:grid;place-items:center;transition:transform .4s,box-shadow .4s,border-color .4s
+}
+.tarot-deck button:hover{transform:translateY(-10px);border-color:var(--gold2)}
+.tarot-deck button.picked{transform:translateY(-14px) scale(1.05);border-color:var(--gold2);box-shadow:0 0 26px -6px rgba(226,194,127,.85)}
+.tarot-back{display:grid;place-items:center;color:var(--gold);font-size:15px}
+
+@media (max-width:640px){
+  .r-card{width:100%;}
+  .r-kv > div{grid-template-columns:1fr}
+  .r-kv dt{border-right:0;border-bottom:1px solid var(--line);padding-bottom:5px}
+  .pw-list li{grid-template-columns:1fr;gap:3px}
+  .r-sign{flex-direction:column;align-items:flex-start;gap:14px}
+}
+@media print{
+  .r-rail,.paywall,.r-actions,.modal-close,.site-header,.footer{display:none !important}
+  body{background:#fff;color:#111}
+  .modal-backdrop{position:static;background:none}
+  .modal{max-height:none;overflow:visible;border:0}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none !important;transition:none !important}
+}
